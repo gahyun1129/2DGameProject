@@ -1,5 +1,5 @@
 from pico2d import *
-from Player import Pitcher
+from Player import Pitcher, Hitter
 
 
 def handle_events():
@@ -17,20 +17,24 @@ def handle_events():
 
 def create_world():
     global running
+    global hitter
     global pitcher
 
     running = True
 
     pitcher = Pitcher()
+    hitter = Hitter()
 
 
 def update_world():
     pitcher.update()
+    hitter.update()
 
 
 def render_world():
     clear_canvas()
     pitcher.render()
+    hitter.render()
     update_canvas()
 
 

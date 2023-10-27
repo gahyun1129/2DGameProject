@@ -12,7 +12,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             running = False
         else:
-            pitcher.handle_event(event)
+            pitcher.handle_events(event)
 
 
 def create_world():
@@ -43,6 +43,6 @@ while running:
     handle_events()
     update_world()
     render_world()
-    delay(0.01)
+    delay(0.2)
 # finalization code
 close_canvas()

@@ -1,22 +1,48 @@
 from pico2d import *
+from Player import Pitcher
 
 
-running = True
-open_canvas()
-grass = load_image('resource/image/grass.png')
-character = load_image('resource/image/character_hitter.png')
-character2 = load_image('resource/image/character_pitcher.png')
-frame = 0
-frame2 = 0
+def handle_events():
+    global running
 
-while running:
+    events = get_events()
+    for event in events:
+        if event.type == SDL_QUIT:
+            running = False
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            running = False
+        else:
+            pitcher.handle_event(event)
+
+
+def create_world():
+    global running
+    global pitcher
+
+    running = True
+
+    pitcher = Pitcher()
+
+
+def update_world():
+    pitcher.update()
+
+
+def render_world():
     clear_canvas()
-    grass.draw(400, 30)
-    character.clip_draw(frame * 50, 0, 50, 50, 200, 70)
-    character2.clip_draw(frame * 50, 0, 50, 50, 600, 70)
-    frame = (frame+1) % 6
-    frame2 = (frame+1) % 8
+    pitcher.render()
     update_canvas()
-    delay(0.2)
 
+
+open_canvas()
+create_world()
+
+
+# game loop
+while running:
+    handle_events()
+    update_world()
+    render_world()
+    delay(0.01)
+# finalization code
 close_canvas()

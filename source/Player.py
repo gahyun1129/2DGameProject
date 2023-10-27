@@ -2,13 +2,13 @@ class Player:
     def __init__(self):
         self.x, self.y = 400, 60
         self.frame = 0
-        self.action = 3
+        self.action = 0
         self.dir = 0
 
     def update(self):
         pass
 
-    def handle_events(self):
+    def handle_events(self, event):
         pass
 
     def render(self):

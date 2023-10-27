@@ -1,23 +1,24 @@
-class Palyer:
+class Player:
     def __init__(self):
         self.x, self.y = 400, 60
         self.frame = 0
         self.action = 3
         self.dir = 0
-        self.face_dir = 1
-        self.image = load_image('animation_sheet.png')
-        self.state_machine = StateMachine(self)
-        self.state_machine.start()
 
     def update(self):
-        self.state_machine.update()
+        pass
 
-    def handle_event(self, event):
-        self.state_machine.handle_event(('INPUT', event))
+    def handle_events(self):
+        pass
 
-    def draw(self):
-        self.state_machine.draw()
+    def render(self):
+        pass
 
-    def fire_ball(self):
-        ball = Ball(self.x, self.y, self.face_dir*10)
-        game_world.add_object(ball, 1)
+
+class Pitcher(Player):
+    image = None
+
+    def __int__(self):
+        super.__init__()
+        if image == None:
+            image = load_image('resource/image/character_pitcher.png')

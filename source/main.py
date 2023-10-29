@@ -23,7 +23,7 @@ def create_world():
 
     running = True
 
-    game_world.init()
+    game_world.set_player_list_from_data_file()
 
     hitter = game_world.hitter_player[0]
     pitcher = game_world.pitcher_player[0]

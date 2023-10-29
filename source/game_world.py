@@ -2,3 +2,6 @@
 # 게임의 Object 관리
 
 from player import Pitcher, Hitter
+
+
+def init():

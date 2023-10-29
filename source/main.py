@@ -24,7 +24,6 @@ def create_world():
     running = True
 
     # pitcher = Pitcher()
-    # hitter = Hitter(400, 70, 0, 0, 6, 0, 0, 0, 0, 0, 0)
     game_world.init()
 
     hitter = game_world.hitter_player[0]

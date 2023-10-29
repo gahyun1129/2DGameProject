@@ -18,7 +18,7 @@ class Pitcher(Player):
 
     def __init__(self):
         super().__init__()
-        if Pitcher.image == None:
+        if Pitcher.image is None:
             Pitcher.image = load_image('resource/image/character_pitcher.png')
 
     def render(self):

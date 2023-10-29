@@ -5,8 +5,8 @@ from player import Pitcher, Hitter
 
 hitter_player = []
 
+
 def init():
-    global hitter_player
     file_path = 'resource/txt/Hitter.txt'
 
     with open(file_path, 'r', encoding='utf-8') as file:

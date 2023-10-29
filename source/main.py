@@ -23,7 +23,7 @@ def create_world():
     running = True
 
     # pitcher = Pitcher()
-    hitter = Hitter(400, 70, 0, 0, 6, 0, 0, 0, 0, 0, 0)
+    # hitter = Hitter(400, 70, 0, 0, 6, 0, 0, 0, 0, 0, 0)
 
     file_path = 'resource/txt/Hitter.txt'
 
@@ -37,6 +37,7 @@ def create_world():
             content[5]
             hitter_player.append(Hitter(x, y, action, dir, frame_number, name, hit, home_run, stolen_base, BA, OPS))
 
+    hitter = hitter_player[0]
 
 
 def update_world():

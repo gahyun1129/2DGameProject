@@ -23,21 +23,22 @@ def create_world():
 
     running = True
 
-    # pitcher = Pitcher()
     game_world.init()
 
     hitter = game_world.hitter_player[0]
+    pitcher = game_world.pitcher_player[0]
     print(hitter.name)
+    print(pitcher.name)
 
 
 def update_world():
-    # pitcher.update()
+    pitcher.update()
     hitter.update()
 
 
 def render_world():
     clear_canvas()
-    # pitcher.render()
+    pitcher.render()
     hitter.render()
     update_canvas()
 

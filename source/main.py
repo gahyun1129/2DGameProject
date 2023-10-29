@@ -1,5 +1,5 @@
 from pico2d import *
-from Player import Pitcher, Hitter
+from player import Pitcher, Hitter
 
 
 def handle_events():

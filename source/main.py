@@ -11,8 +11,8 @@ def handle_events():
             running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             running = False
-        else:
-            pitcher.handle_events(event)
+        # else:
+            # pitcher.handle_events(event)
 
 
 def create_world():
@@ -22,18 +22,31 @@ def create_world():
 
     running = True
 
-    pitcher = Pitcher()
-    hitter = Hitter()
+    # pitcher = Pitcher()
+    hitter = Hitter(400, 70, 0, 0, 6, 0, 0, 0, 0, 0, 0)
+
+    file_path = 'resource/txt/Hitter.txt'
+
+    hitter_player = []
+
+    with open(file_path, 'r', encoding='utf-8') as file:
+        x, y, action, dir, frame_number = 400, 70, 0, 0, 6
+        for content in file:
+            content = content.strip().split()
+            name, hit, home_run, stolen_base, BA, OPS = content[0], content[1], content[2], content[3], content[4], \
+            content[5]
+            hitter_player.append(Hitter(x, y, action, dir, frame_number, name, hit, home_run, stolen_base, BA, OPS))
+
 
 
 def update_world():
-    pitcher.update()
+    # pitcher.update()
     hitter.update()
 
 
 def render_world():
     clear_canvas()
-    pitcher.render()
+    # pitcher.render()
     hitter.render()
     update_canvas()
 

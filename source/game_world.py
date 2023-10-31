@@ -8,10 +8,11 @@ hitter_player_list = []
 pitcher_player_list = []
 
 
-player = []
+players = []
+other_players = []
 
 
-objects = [[]]
+objects = [[], []]
 
 
 def add_object(o, depth=0):
@@ -69,5 +70,6 @@ def set_player_list_from_data_file():
 
     make_team.make_team()
 
-    add_objects(player, 0)
+    add_objects(players, 1)
+    add_objects(other_players, 1)
 

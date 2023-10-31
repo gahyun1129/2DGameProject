@@ -6,10 +6,28 @@ import random
 
 
 def make_team():
-    game_world.player.append(game_world.pitcher_player_list[random.randint(0, len(game_world.pitcher_player_list)-1)])
-    for _ in range(0, 8):
-        game_world.player.append(
-            game_world.hitter_player_list.pop(random.randint(0, len(game_world.hitter_player_list) - 1)))
 
-    # for p in game_world.player:
-    #     print(p.name)
+    # 파란 팀
+    l = len(game_world.hitter_player_list)
+
+    # 투수 랜덤으로 정하기
+    game_world.players.append(game_world.pitcher_player_list[random.randint(0, len(game_world.pitcher_player_list)-1)])
+
+    # 타자 랜덤으로 정하기
+    r = random.randint(0, l)
+    for i in range(0, 8):
+        game_world.players.append(game_world.hitter_player_list[(r + i) % l])
+    for p in game_world.players:
+        print(p.name)
+
+    # 빨간 팀
+    # 투수 랜덤으로 정하기
+    game_world.other_players.append(
+        game_world.pitcher_player_list[random.randint(0, len(game_world.pitcher_player_list) - 1)])
+
+    # 타자 랜덤으로 정하기
+    r = random.randint(0, l)
+    for i in range(0, 8):
+        game_world.other_players.append(game_world.hitter_player_list[(r + i) % l])
+    for p in game_world.other_players:
+        print(p.name)

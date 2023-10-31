@@ -1,6 +1,13 @@
+# 게임 play 중 attack_mode
+# 공격: 파란 팀, 수비: 빨간 팀
+# 파란 팀을 주인공으로 진행함
+
 from pico2d import *
-from player import Pitcher, Hitter
+import game_framework
+
 import game_world
+from player import Pitcher, Hitter
+
 
 
 def handle_events():
@@ -17,11 +24,8 @@ def handle_events():
 
 
 def create_world():
-    global running
     global hitter
     global pitcher
-
-    running = True
 
     game_world.set_player_list_from_data_file()
 
@@ -43,15 +47,3 @@ def render_world():
     update_canvas()
 
 
-open_canvas()
-create_world()
-
-
-# game loop
-while running:
-    handle_events()
-    update_world()
-    render_world()
-    delay(0.2)
-# finalization code
-close_canvas()

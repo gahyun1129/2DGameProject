@@ -2,6 +2,7 @@
 # 게임의 Object 관리
 
 from player import Pitcher, Hitter
+import random
 
 hitter_player_list = []
 pitcher_player_list = []
@@ -68,3 +69,4 @@ def set_player_list_from_data_file():
 
     add_objects(hitter_player_list, 0)
     add_objects(pitcher_player_list, 0)
+

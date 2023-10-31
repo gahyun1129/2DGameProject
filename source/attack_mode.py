@@ -6,6 +6,7 @@ from pico2d import *
 import game_framework
 
 import game_world
+import make_team
 
 
 def handle_events():
@@ -22,6 +23,7 @@ def init():
     global pitcher
     
     game_world.set_player_list_from_data_file()
+    make_team.make_team()
 
 
 def update():

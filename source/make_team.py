@@ -15,10 +15,10 @@ def make_team():
 
     # 타자 랜덤으로 정하기
     r = random.randint(0, l)
-    for i in range(0, 8):
+    for i in range(0, 9):
         game_world.players.append(game_world.hitter_player_list[(r + i) % l])
-    for p in game_world.players:
-        print(p.name)
+    # for p in game_world.players:
+    #     print(p.name)
 
     # 빨간 팀
     # 투수 랜덤으로 정하기
@@ -27,7 +27,7 @@ def make_team():
 
     # 타자 랜덤으로 정하기
     r = random.randint(0, l)
-    for i in range(0, 8):
+    for i in range(0, 9):
         game_world.other_players.append(game_world.hitter_player_list[(r + i) % l])
     for p in game_world.other_players:
         print(p.name)

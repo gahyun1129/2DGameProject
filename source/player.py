@@ -1,5 +1,5 @@
 from pico2d import *
-
+from define import *
 
 class Player:
     def __init__(self, x, y, action, dir, frame_number, name):
@@ -8,6 +8,7 @@ class Player:
         self.frame, self.frame_number, self.action = 0, frame_number, action
         self.dir = dir
         self.name = name
+        self.is_draw = True
 
     def handle_events(self, event):
         pass
@@ -57,8 +58,20 @@ class Hitter(Player):
 
 
 def defence_position(players):
-    print('방어 구조')
+    (players[0].x, players[0].y) = mound
+    (players[1].x, players[1].y) = one_base
+    (players[2].x, players[2].y) = (two_base[0] + 70, two_base[1] - 20)
+    (players[3].x, players[3].y) = three_base
+    (players[4].x, players[4].y) = home
+    (players[5].x, players[5].y) = short
+    (players[6].x, players[6].y) = left
+    (players[7].x, players[7].y) = right
+    (players[8].x, players[8].y) = center
+    players[9].is_draw = False
 
 
-def attack_position(player):
-    print('공격 구조')
+def attack_position(players):
+    players[0].is_draw = False
+    (players[1].x, players[1].y) = attack_zone
+    for i in range(2, 10):
+        players[i].is_draw = False

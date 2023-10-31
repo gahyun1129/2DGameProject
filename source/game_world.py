@@ -32,7 +32,8 @@ def update():
 def render():
     for layer in objects:
         for o in layer:
-            o.draw()
+            if o.is_draw is True:
+                o.draw()
 
 
 def remove_object(o):
@@ -70,6 +71,6 @@ def set_player_list_from_data_file():
 
     make_team.make_team()
 
-    add_objects(players, 1)
+    # add_objects(players, 1)
     add_objects(other_players, 1)
 

@@ -2,7 +2,7 @@
 # 게임의 Object 관리
 
 from player import Pitcher, Hitter
-import random
+import make_team
 
 hitter_player_list = []
 pitcher_player_list = []
@@ -67,6 +67,7 @@ def set_player_list_from_data_file():
             name, strike_out, four_balls, ERA, pitching = content[0], content[1], content[2], content[3], [content[4], content[5], content[6]]
             pitcher_player_list.append(Pitcher(x, y, action, dir, frame_number, name, strike_out, four_balls, ERA, pitching))
 
-    add_objects(hitter_player_list, 0)
-    add_objects(pitcher_player_list, 0)
+    make_team.make_team()
+
+    add_objects(player, 0)
 

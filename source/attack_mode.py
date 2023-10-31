@@ -9,16 +9,14 @@ import game_world
 from player import Pitcher, Hitter
 
 
-
 def handle_events():
-    global running
 
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
-            running = False
+            game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            running = False
+            game_framework.quit()
         # else:
             # pitcher.handle_events(event)
 

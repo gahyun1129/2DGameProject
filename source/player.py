@@ -1,6 +1,7 @@
 from pico2d import *
 from define import *
 
+
 class Player:
     def __init__(self, x, y, action, dir, frame_number, name):
         # 위치, 프레임, anim 번호, 왼/오 방향
@@ -51,7 +52,8 @@ class Hitter(Player):
         self.hit, self.home_run, self.stolen_base, self.BA, self.OPS = hit, home_run, stolen_base, BA, OPS
 
     def draw(self):
-        Hitter.image.clip_draw(self.frame * 50, self.action, 50, 50, self.x, self.y)
+        if self.is_draw is True:
+            Hitter.image.clip_draw(self.frame * 50, self.action, 50, 50, self.x, self.y)
 
     def update(self):
         self.frame = (self.frame + 1) % self.frame_number

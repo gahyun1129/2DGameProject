@@ -7,8 +7,7 @@ hitter_player_list = []
 pitcher_player_list = []
 
 
-hitter_player = []
-pitcher_player = []
+player = []
 
 
 objects = [[]]

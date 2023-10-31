@@ -54,3 +54,11 @@ class Hitter(Player):
 
     def update(self):
         self.frame = (self.frame + 1) % self.frame_number
+
+
+def defence_position(players):
+    print('방어 구조')
+
+
+def attack_position(player):
+    print('공격 구조')

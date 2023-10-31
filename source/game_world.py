@@ -3,8 +3,13 @@
 
 from player import Pitcher, Hitter
 
+hitter_player_list = []
+pitcher_player_list = []
+
+
 hitter_player = []
 pitcher_player = []
+
 
 objects = [[]]
 
@@ -51,7 +56,7 @@ def set_player_list_from_data_file():
             content = content.strip().split()
             name, hit, home_run, stolen_base, BA, OPS = content[0], content[1], content[2], content[3], content[4], \
                 content[5]
-            hitter_player.append(Hitter(x, y, action, dir, frame_number, name, hit, home_run, stolen_base, BA, OPS))
+            hitter_player_list.append(Hitter(x, y, action, dir, frame_number, name, hit, home_run, stolen_base, BA, OPS))
 
     file_path = 'resource/txt/Pitcher.txt'
 
@@ -60,7 +65,7 @@ def set_player_list_from_data_file():
         for content in file:
             content = content.strip().split()
             name, strike_out, four_balls, ERA, pitching = content[0], content[1], content[2], content[3], [content[4], content[5], content[6]]
-            pitcher_player.append(Pitcher(x, y, action, dir, frame_number, name, strike_out, four_balls, ERA, pitching))
+            pitcher_player_list.append(Pitcher(x, y, action, dir, frame_number, name, strike_out, four_balls, ERA, pitching))
 
-    add_objects(hitter_player, 0)
-    add_objects(pitcher_player, 0)
+    add_objects(hitter_player_list, 0)
+    add_objects(pitcher_player_list, 0)

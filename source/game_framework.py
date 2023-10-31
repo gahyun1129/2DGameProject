@@ -1,3 +1,5 @@
+import pico2d
+
 running = None
 stack = None
 
@@ -49,6 +51,7 @@ def run(start_mode):
         stack[-1].handle_events()
         stack[-1].update()
         stack[-1].draw()
+        pico2d.delay(0.2)
 
     # repeatedly delete the top of the stack
     while (len(stack) > 0):

@@ -23,10 +23,10 @@ def handle_events():
             # pitcher.handle_events(event)
 
 
-def create_world():
+def init():
     global hitter
     global pitcher
-
+    
     game_world.set_player_list_from_data_file()
 
     hitter = game_world.hitter_player[0]
@@ -35,15 +35,25 @@ def create_world():
     print(pitcher.name)
 
 
-def update_world():
+def update():
     pitcher.update()
     hitter.update()
 
 
-def render_world():
+def draw():
     clear_canvas()
     pitcher.render()
     hitter.render()
     update_canvas()
 
 
+def finish():
+    pass
+
+
+def pause():
+    pass
+
+
+def resume():
+    pass

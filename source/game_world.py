@@ -6,6 +6,41 @@ from player import Pitcher, Hitter
 hitter_player = []
 pitcher_player = []
 
+objects = [[]]
+
+
+def add_object(o, depth=0):
+    objects[depth].append(o)
+
+
+def add_objects(ol, depth=0):
+    objects[depth] += ol
+
+
+def update():
+    for layer in objects:
+        for o in layer:
+            o.update()
+
+
+def render():
+    for layer in objects:
+        for o in layer:
+            o.draw()
+
+
+def remove_object(o):
+    for layer in objects:
+        if o in layer:
+            layer.remove(o)
+            return
+    raise ValueError('Cannot delete non existing object')
+
+
+def clear():
+    for layer in objects:
+        layer.clear()           # layer type은 list이므로
+
 
 def set_player_list_from_data_file():
     file_path = 'resource/txt/Hitter.txt'
@@ -26,3 +61,6 @@ def set_player_list_from_data_file():
             content = content.strip().split()
             name, strike_out, four_balls, ERA, pitching = content[0], content[1], content[2], content[3], [content[4], content[5], content[6]]
             pitcher_player.append(Pitcher(x, y, action, dir, frame_number, name, strike_out, four_balls, ERA, pitching))
+
+    add_objects(hitter_player, 0)
+    add_objects(pitcher_player, 0)

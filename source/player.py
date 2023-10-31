@@ -27,7 +27,7 @@ class Pitcher(Player):
         # 탈삼진, 볼넷, ERA, 투구법 2개
         self.strike_out, self.four_balls, self.ERA, self.pitching = strike_out, four_balls, ERA, pitching
 
-    def render(self):
+    def draw(self):
         Pitcher.image.clip_draw(self.frame*50, self.action, 50, 50, self.x, self.y)
 
     def update(self):
@@ -49,7 +49,7 @@ class Hitter(Player):
         # 안타, 홈런, 도루, 타율, 출루율 + 장타율
         self.hit, self.home_run, self.stolen_base, self.BA, self.OPS = hit, home_run, stolen_base, BA, OPS
 
-    def render(self):
+    def draw(self):
         Hitter.image.clip_draw(self.frame * 50, self.action, 50, 50, self.x, self.y)
 
     def update(self):

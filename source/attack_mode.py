@@ -10,7 +10,6 @@ from player import Pitcher, Hitter
 
 
 def handle_events():
-
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -27,25 +26,28 @@ def init():
     
     game_world.set_player_list_from_data_file()
 
-    hitter = game_world.hitter_player[0]
-    pitcher = game_world.pitcher_player[0]
-    print(hitter.name)
-    print(pitcher.name)
+    # hitter = game_world.hitter_player[0]
+    # pitcher = game_world.pitcher_player[0]
+    # print(hitter.name)
+    # print(pitcher.name)
 
 
 def update():
-    pitcher.update()
-    hitter.update()
+    game_world.update()
+    # pitcher.update()
+    # hitter.update()
 
 
 def draw():
     clear_canvas()
-    pitcher.render()
-    hitter.render()
+    game_world.render()
+    # pitcher.render()
+    # hitter.render()
     update_canvas()
 
 
 def finish():
+    game_world.clear()
     pass
 
 

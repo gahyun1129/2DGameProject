@@ -71,6 +71,8 @@ def set_player_list_from_data_file():
 
     make_team.make_team()
 
-    # add_objects(players, 1)
-    add_objects(other_players, 1)
+    add_objects(players, 1)
+    add_objects(other_players, 0)
+
+    print(objects)
 

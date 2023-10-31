@@ -21,6 +21,7 @@ def handle_events():
 def init():
     game_world.set_player_list_from_data_file()
     player.defence_position(game_world.other_players)
+    player.attack_position(game_world.players)
 
 
 def update():

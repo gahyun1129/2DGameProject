@@ -21,8 +21,8 @@ def handle_events():
 
 def init():
     make_team.set_player_list_from_data_file()
-    player.defence_position(make_team.other_players)
-    player.attack_position(make_team.players)
+    player.defence_position(make_team.com_players)
+    player.attack_position(make_team.user_players)
 
 
 def update():

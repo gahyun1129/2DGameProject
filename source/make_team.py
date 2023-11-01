@@ -10,8 +10,8 @@ import random
 hitter_player = []
 pitcher_player = []
 
-players = []
-other_players = []
+user_players = []
+com_players = []
 
 
 def make_team():
@@ -20,23 +20,27 @@ def make_team():
     l = len(hitter_player)
 
     # 투수 랜덤으로 정하기
-    players.append(pitcher_player[random.randint(0, len(pitcher_player)-1)])
+    user_players.append(pitcher_player[random.randint(0, len(pitcher_player) - 1)])
+    user_players[0].set_image('resource/image/character_pitcher.png')
 
     # 타자 랜덤으로 정하기
     r = random.randint(0, l)
     for i in range(0, 9):
-        players.append(hitter_player[(r + i) % l])
+        user_players.append(hitter_player[(r + i) % l])
+        user_players[-1].set_image('resource/image/character_hitter.png')
 
 
     # 빨간 팀
     # 투수 랜덤으로 정하기
-    other_players.append(
+    com_players.append(
         pitcher_player[random.randint(0, len(pitcher_player) - 1)])
+    com_players[0].set_image('resource/image/character_pitcher_red.png')
 
     # 타자 랜덤으로 정하기
     r = random.randint(0, l)
     for i in range(0, 9):
-        other_players.append(hitter_player[(r + i) % l])
+        com_players.append(hitter_player[(r + i) % l])
+        com_players[-1].set_image('resource/image/character_hitter.png')
 
 
 def set_player_list_from_data_file():
@@ -62,8 +66,8 @@ def set_player_list_from_data_file():
 
     make_team()
 
-    game_world.add_objects(players, 1)
-    game_world.add_objects(other_players, 0)
+    game_world.add_objects(user_players, 1)
+    game_world.add_objects(com_players, 0)
 
 
 

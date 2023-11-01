@@ -6,6 +6,7 @@ from pico2d import *
 import game_framework
 
 import game_world
+import make_team
 import player
 
 
@@ -19,9 +20,9 @@ def handle_events():
 
 
 def init():
-    game_world.set_player_list_from_data_file()
-    player.defence_position(game_world.other_players)
-    player.attack_position(game_world.players)
+    make_team.set_player_list_from_data_file()
+    player.defence_position(make_team.other_players)
+    player.attack_position(make_team.players)
 
 
 def update():

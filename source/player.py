@@ -18,12 +18,6 @@ class Player:
         self.image = load_image(image_path)
 
 
-
-
-
-
-
-
 def defence_position(players):
     for i in players:
         i.is_draw = True

@@ -1,6 +1,23 @@
 from player import Player
 
 
+class Idle:
+    @staticmethod
+    def enter():
+        print('Idle enter')
+
+    @staticmethod
+    def exit():
+        print('Idle exit')
+
+    @staticmethod
+    def do():
+        print('Idle do')
+
+    @staticmethod
+    def draw():
+        pass
+
 class Hitter(Player):
     def __init__(self, x, y, action, dir, frame_number, name, hit, home_run, stolen_base, BA, OPS):
         # 부모의 생성자 물려 받음.
@@ -15,3 +32,6 @@ class Hitter(Player):
 
     def update(self):
         self.frame = (self.frame + 1) % self.frame_number
+
+    def run_next_base(self, start, end):
+        pass

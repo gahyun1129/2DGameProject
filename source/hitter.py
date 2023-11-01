@@ -1,4 +1,14 @@
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE
+
 from player import Player
+
+
+def space_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
+
+
+def time_out(e):
+    return e[0] == 'TIME_OUT'
 
 
 class Idle:
@@ -14,6 +24,27 @@ class Idle:
     @staticmethod
     def do(hitter):
         hitter.frame = (hitter.frame + 1) % 6
+
+    @staticmethod
+    def draw(hitter):
+        hitter.image.clip_draw(hitter.frame * 50, hitter.action * 50, 50, 50, hitter.x, hitter.y)
+
+
+class Hit:
+    @staticmethod
+    def enter(hitter):
+        hitter.action = 0
+        hitter.frame = 0
+        print('Hit enter')
+
+    @staticmethod
+    def exit(hitter):
+        print('Hit exit')
+
+    @staticmethod
+    def do(hitter):
+        hitter.frame = (hitter.frame + 1) % 6
+        print('Hit do')
 
     @staticmethod
     def draw(hitter):

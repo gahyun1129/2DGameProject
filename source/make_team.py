@@ -40,7 +40,7 @@ def make_team():
     r = random.randint(0, l)
     for i in range(0, 9):
         com_players.append(hitter_player[(r + i) % l])
-        com_players[-1].set_image('resource/image/character_hitter.png')
+        com_players[-1].set_image('resource/image/character_hitter_red.png')
 
 
 def set_player_list_from_data_file():

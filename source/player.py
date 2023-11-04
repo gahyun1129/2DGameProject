@@ -5,6 +5,7 @@ import attack_mode
 
 class Player:
     image = None
+
     def __init__(self, x, y, action, dir, frame_number, name):
         # 위치, 프레임, anim 번호, 왼/오 방향
         self.x, self.y = x, y
@@ -29,4 +30,4 @@ def defence_position(players):
 
 def attack_position(p):
     attack_mode.cur_hitter = p[1]
-    (p[1].x, p[1].y) = attack_zone
+    (attack_mode.cur_hitter.x, attack_mode.cur_hitter.y) = attack_zone

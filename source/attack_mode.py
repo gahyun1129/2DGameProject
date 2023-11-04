@@ -3,11 +3,13 @@
 # 파란 팀을 주인공으로 진행함
 
 from pico2d import *
+from define import *
 import game_framework
 
 import game_world
 import make_team
 import player
+
 
 cur_hitter = None
 
@@ -24,13 +26,21 @@ def handle_events():
 
 
 def init():
+    global cur_hitter
+    # 팀을 구성하고
     make_team.set_player_list_from_data_file()
-    player.attack_position(make_team.user_players)
+
+    # 위치 잡고
+    player.defence_position(make_team.com_players)
+    cur_hitter = make_team.user_players[1]
+    (cur_hitter.x, cur_hitter.y) = attack_zone
+
+
+    # 그려질 객체 추가하기
     game_world.add_objects(make_team.com_players, 0)
     game_world.add_object(cur_hitter, 1)
 
-    player.defence_position(make_team.com_players)
-    # player.attack_position(make_team.user_players)
+    print(game_world.objects)
 
 
 def update():

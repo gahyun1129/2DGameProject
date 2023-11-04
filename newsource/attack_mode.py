@@ -6,6 +6,7 @@ import game_world
 
 cur_hitter = None
 
+
 def handle_events():
     events = get_events()
     for event in events:
@@ -13,7 +14,8 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
-
+        else:
+            cur_hitter.handle_event(event)
 
 def init():
     make_team.set_player_from_data_file()

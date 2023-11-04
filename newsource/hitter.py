@@ -1,6 +1,38 @@
 from pico2d import load_image
 
+## 상태머신 ##
+class Idle:
+    @staticmethod
+    def enter():
+        print('Idle Enter')
 
+    @staticmethod
+    def exit():
+        print('Idle Exit')
+
+    @staticmethod
+    def do():
+        print('Idle Do')
+
+    @staticmethod
+    def draw():
+        pass
+
+
+class StateMachine:
+    def __init__(self):
+        self.cur_state = Idle
+
+    def start(self):
+        self.cur_state.enter()
+
+    def update(self):
+        self.cur_state.do()
+
+    def draw(self):
+        self.cur_state.draw()
+
+## 클래스 ##
 class Hitter:
     image = None
 
@@ -17,8 +49,17 @@ class Hitter:
         if Hitter.image is None:
             Hitter.image = load_image('resource/image/character_hitter.png')
 
+        # 상태머신 추가
+        self.state_machine = StateMachine()
+        self.state_machine.start()
+
+    def handle_event(self, event):
+        pass
+
     def update(self):
-        self.frame = (self.frame + 1) % self.frame_number
+        self.state_machine.update()
+        # self.frame = (self.frame + 1) % self.frame_number
 
     def draw(self):
-        Hitter.image.clip_draw(self.frame * 50, self.action * 50, 50, 50, self.x, self.y)
+        self.state_machine.draw()
+        # Hitter.image.clip_draw(self.frame * 50, self.action * 50, 50, 50, self.x, self.y)

@@ -40,11 +40,10 @@ class Idle:
         # action 값은 파란, 빨간 팀 모두 같음
         # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
         hitter.frame, hitter.frame_number, hitter.action = 0, 1, 4
-        print('Idle Enter', hitter.name)
 
     @staticmethod
     def exit(hitter, e):
-        print('Idle Exit')
+        pass
 
     @staticmethod
     def do(hitter):
@@ -63,12 +62,11 @@ class Hit:
         # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
         hitter.frame, hitter.frame_number, hitter.action = 0, 1, 2
 
-        print('Hit Enter')
         hitter.wait_time = get_time()
 
     @staticmethod
     def exit(hitter, e):
-        print('Hit Exit')
+        pass
 
     @staticmethod
     def do(hitter):
@@ -109,13 +107,14 @@ class Run:
         hitter.goal_position = positions[hitter.pos]
         hitter.t = 0.0
 
-        print('Run Enter', hitter.name)
+        # home에 도착한 경우,,,
+        if hitter.goal_position == home:
+            attack_mode.goal_runner = hitter
 
     @staticmethod
     def exit(hitter, e):
         # 위치를 확실히 하기 위해 한 번 더 정의
         hitter.pos = hitter.goal_position
-        print('Run Exit', hitter.name)
 
     @staticmethod
     def do(hitter):

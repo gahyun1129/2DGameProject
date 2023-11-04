@@ -30,8 +30,6 @@ def render():
 def update_handle_event():
     if attack_mode.current_event[0] == 'HIT_SUCCESS':
         for o in objects[2]:
-            print(type(o))
-            print(attack_mode.current_event[0])
             o.state_machine.handle_event(('HIT_SUCCESS', 0))
 
 

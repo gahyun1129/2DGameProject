@@ -1,8 +1,6 @@
 import game_framework
 from pico2d import *
 
-from hitter import Hitter
-from pitcher import Pitcher
 import make_team
 
 
@@ -20,9 +18,10 @@ def init():
     global hitter
 
     make_team.set_player_from_data_file()
+    make_team.make_team()
 
-    pitcher = make_team.pitchers[0]
-    hitter = make_team.hitters[0]
+    pitcher = make_team.user_players[0]
+    hitter = make_team.computer_players[1]
 
 
 def update():

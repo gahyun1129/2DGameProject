@@ -16,7 +16,7 @@ class Idle:
     def enter(hitter, e):
         # 전 타자의 타석이 끝나고 변경되었을 때 히트 게이지를 맞추고 있을 때 플레이됨
         # enter action으로 변경, frame = 0으로 초기화
-        hitter.action = 0
+        hitter.action = 5
         hitter.frame = 0
 
         hitter.image = load_image('resource/image/idle.png')
@@ -29,7 +29,7 @@ class Idle:
     @staticmethod
     def do(hitter):
         # 프레임 업데이트
-        hitter.frame = (hitter.frame + 1) % 4
+        hitter.frame = (hitter.frame + 1) % 1
 
     @staticmethod
     def draw(hitter):

@@ -1,5 +1,9 @@
-objects = [[1, 2], [3, 4]]
+class test:
+    def __init__(self, x):
+        self.x = x
 
-for layer in objects:
-    for o in layer:
-        print(o)
+t1 = test(8)
+t2 = t1
+t2.x = 10
+print(t1.x)
+print(t2.x)

@@ -4,6 +4,7 @@ from pico2d import *
 import make_team
 import game_world
 
+cur_hitter = None
 
 def handle_events():
     events = get_events()
@@ -15,10 +16,9 @@ def handle_events():
 
 
 def init():
-    global pitcher
-    global hitter
-
-    make_team.add_to_game_world()
+    make_team.set_player_from_data_file()
+    make_team.make_team()
+    make_team.attack_position()
 
 
 def update():

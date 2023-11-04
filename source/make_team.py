@@ -22,7 +22,7 @@ def make_team():
 
     # 투수 랜덤으로 정하기
     user_players.append(pitcher_player[random.randint(0, len(pitcher_player) - 1)])
-    user_players[0].set_image('resource/image/character_pitcher.png')
+    user_players[0].set_image('resource/image/character_hitter.png')
 
     # 타자 랜덤으로 정하기
     r = random.randint(0, l)
@@ -35,13 +35,13 @@ def make_team():
     # 투수 랜덤으로 정하기
     com_players.append(
         pitcher_player[random.randint(0, len(pitcher_player) - 1)])
-    com_players[0].set_image('resource/image/character_pitcher_red.png')
+    com_players[0].set_image('resource/image/character_hitter.png')
 
     # 타자 랜덤으로 정하기
     r = random.randint(0, l)
     for i in range(0, 9):
         com_players.append(hitter_player[(r + i) % l])
-        com_players[-1].set_image('resource/image/character_hitter_red.png')
+        com_players[-1].set_image('resource/image/character_hitter.png')
 
 
 def set_player_list_from_data_file():
@@ -67,7 +67,7 @@ def set_player_list_from_data_file():
 
     make_team()
 
-    game_world.add_objects(user_players, 1)
+    # game_world.add_objects(user_players, 1)
     # game_world.add_objects(com_players, 0)
 
 

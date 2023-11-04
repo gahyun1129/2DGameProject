@@ -9,15 +9,12 @@ class Player:
         self.frame, self.frame_number, self.action = 0, frame_number, action
         self.dir = dir
         self.name = name
-        self.is_draw = False
 
     def set_image(self, image_path):
         self.image = load_image(image_path)
 
 
 def defence_position(players):
-    for i in players:
-        i.is_draw = True
     (players[0].x, players[0].y) = mound
     (players[1].x, players[1].y) = one_base
     (players[2].x, players[2].y) = (two_base[0] + 70, two_base[1] - 20)
@@ -27,10 +24,8 @@ def defence_position(players):
     (players[6].x, players[6].y) = left
     (players[7].x, players[7].y) = right
     (players[8].x, players[8].y) = center
-    players[9].is_draw = False
 
 
 def attack_position(p):
     attack_mode.cur_hitter = p[1]
-    p[1].is_draw = True
     (p[1].x, p[1].y) = attack_zone

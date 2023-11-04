@@ -104,8 +104,7 @@ class Hitter(Player):
         self.state_machine.start()
 
     def draw(self):
-        if self.is_draw is True:
-            self.state_machine.draw()
+        self.state_machine.draw()
 
     def update(self):
         self.state_machine.update()

@@ -3,8 +3,10 @@ from sdl2 import SDL_KEYDOWN, SDLK_SPACE
 from define import *
 import random
 
-from newsource import attack_mode
-from newsource import make_team
+import attack_mode
+import make_team
+import game_world
+
 
 ## 이벤트 체크 함수 ##
 def space_down(e):
@@ -38,7 +40,7 @@ class Idle:
         # action 값은 파란, 빨간 팀 모두 같음
         # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
         hitter.frame, hitter.frame_number, hitter.action = 0, 1, 4
-        print('Idle Enter')
+        print('Idle Enter', hitter.name)
 
     @staticmethod
     def exit(hitter, e):
@@ -73,7 +75,7 @@ class Hit:
         hitter.frame = (hitter.frame + 1) % hitter.frame_number
         if get_time() - hitter.wait_time > 2:
             hit = 0.3 + float(hitter.BA) * random.randint(0, 3)
-            if hit > 1:
+            if hit > 0:
                 hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
             else:
                 hitter.wait_time = get_time()
@@ -107,13 +109,13 @@ class Run:
         hitter.goal_position = positions[hitter.pos]
         hitter.t = 0.0
 
-        print('Run Enter')
+        print('Run Enter', hitter.name)
 
     @staticmethod
     def exit(hitter, e):
         # 위치를 확실히 하기 위해 한 번 더 정의
         hitter.pos = hitter.goal_position
-        print('Run Exit')
+        print('Run Exit', hitter.name)
 
     @staticmethod
     def do(hitter):
@@ -151,6 +153,8 @@ class StateMachine:
         for check_event, next_state in self.transitions[self.cur_state].items():
             if check_event(e):
                 self.cur_state.exit(self.hitter, e)
+                if move_to_next_hitter(self.hitter, e):
+                    return True
                 self.cur_state = next_state
                 self.cur_state.enter(self.hitter, e)
                 return True
@@ -214,6 +218,11 @@ class Hitter:
 
 
 ## 함수 정의 ##
-def move_to_next_hitter(hitter):
-    if hitter.pos is not home:
-        attack_mode.cur_hitter = make_team.user_players
+def move_to_next_hitter(hitter, event):
+    if event[0] == 'RUN_DONE':
+        attack_mode.cur_hitter = make_team.user_players[make_team.user_players.index(hitter)+1]
+        attack_mode.cur_hitter.pos = attack_zone
+        attack_mode.cur_hitter.init_state_machine()
+        game_world.add_object(attack_mode.cur_hitter, 1)
+        return True
+    return False

@@ -34,14 +34,14 @@ class Idle:
     @staticmethod
     def draw(hitter):
         # idle 이미지 무한 로딩
-        hitter.image.clip_draw(hitter.frame * 50, hitter.action * 50, 50, 50, hitter.x, hitter.y)
+        Player.image.clip_draw(hitter.frame * 50, hitter.action * 50, 50, 50, hitter.x, hitter.y)
 
 
 class Hit:
     @staticmethod
     def enter(hitter, e):
         # 스페이스 바를 눌렀을 때 플레이됨.
-        hitter.action = 0
+        hitter.action = 2
         hitter.frame = 0
         print('Hit enter')
 
@@ -55,14 +55,14 @@ class Hit:
     @staticmethod
     def do(hitter):
         # 프레임 업데이트 프레임이 한 바퀴 돌면 끝남
-        hitter.frame = (hitter.frame + 1) % 6
-        if hitter.frame == 0:
+        hitter.action = (hitter.action + 1)
+        if hitter.action == 5:
             hitter.state_machine.handle_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(hitter):
         # 휘두르는 애니메이션 출력
-        hitter.image.clip_draw(hitter.frame * 50, hitter.action * 50, 50, 50, hitter.x, hitter.y)
+        Player.image.clip_draw(hitter.frame * 50, hitter.action * 50, 50, 50, hitter.x, hitter.y)
 
 
 class StateMachine:

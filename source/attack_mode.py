@@ -27,7 +27,7 @@ def init():
     make_team.set_player_list_from_data_file()
     player.attack_position(make_team.user_players)
     game_world.add_objects(make_team.com_players, 0)
-    game_world.add_object(cur_hitter, 0)
+    game_world.add_object(cur_hitter, 1)
 
     player.defence_position(make_team.com_players)
     # player.attack_position(make_team.user_players)

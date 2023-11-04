@@ -19,7 +19,7 @@ class Pitcher(Player):
         self.strike_out, self.four_balls, self.ERA, self.pitching = strike_out, four_balls, ERA, pitching
 
     def draw(self):
-        self.image.clip_draw(self.frame*50, self.action, 50, 50, self.x, self.y)
+        Player.image.draw_now(self.x, self.y, 50, 300)
 
     def update(self):
         self.frame = (self.frame + 1) % self.frame_number
@@ -27,6 +27,6 @@ class Pitcher(Player):
 open_canvas()
 p = Pitcher(600, 70, 0, 0, 1, '이름', 3, 2, 1, ['아','이','오'])
 imag = load_image('resource/image/character_hitter.png')
-p.image.draw_now(p.x, p.y, 50, 300)
+p.draw()
 delay(5)
 close_canvas()

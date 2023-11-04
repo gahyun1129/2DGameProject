@@ -2,16 +2,17 @@ from pico2d import *
 from define import *
 import attack_mode
 
+
 class Player:
+    image = None
     def __init__(self, x, y, action, dir, frame_number, name):
         # 위치, 프레임, anim 번호, 왼/오 방향
         self.x, self.y = x, y
         self.frame, self.frame_number, self.action = 0, frame_number, action
         self.dir = dir
         self.name = name
-
-    def set_image(self, image_path):
-        self.image = load_image(image_path)
+        if Player.image is None:
+            Player.image = load_image('resource/image/character_hitter.png')
 
 
 def defence_position(players):

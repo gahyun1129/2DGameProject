@@ -10,7 +10,7 @@ class Pitcher(Player):
         self.strike_out, self.four_balls, self.ERA, self.pitching = strike_out, four_balls, ERA, pitching
 
     def draw(self):
-        self.image.clip_draw(self.frame*50, self.action, 50, 50, self.x, self.y)
+        Player.image.clip_draw(self.frame*50, self.action, 50, 50, self.x, self.y)
 
     def update(self):
         self.frame = (self.frame + 1) % self.frame_number

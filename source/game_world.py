@@ -2,7 +2,7 @@
 # 게임의 Object 관리
 
 
-objects = [[]]
+objects = [[], []]
 
 
 def add_object(o, depth=0):

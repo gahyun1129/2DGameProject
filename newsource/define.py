@@ -8,3 +8,11 @@ left = (100, 390)
 right = (700, 390)
 center = (400, 470)
 attack_zone = (370, 160)
+ball = None
+
+positions = {
+    attack_zone: one_base,
+    one_base: two_base,
+    two_base: three_base,
+    three_base: home
+}

@@ -1,6 +1,6 @@
 from pico2d import load_image, get_time
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE
-
+from define import *
 
 ## 이벤트 체크 함수 ##
 def space_down(e):
@@ -9,6 +9,10 @@ def space_down(e):
 
 def time_out(e):
     return e[0] == 'TIME_OUT'
+
+
+def run_success(e):
+    return e[0] == 'RUN_SUCCESS'
 
 
 ## 상태 ##
@@ -64,19 +68,27 @@ class Run:
         # action 값은 파란, 빨간 팀 모두 같음
         # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
         hitter.frame, hitter.frame_number, hitter.action = 0, 1, 0
-        # hitter.goal_position =
+        hitter.current_position = hitter.pos
+        hitter.goal_position = positions[hitter.pos]
+        # print(positions[hitter.pos])
+        hitter.t = 0.0
         print('Run Enter')
         hitter.wait_time = get_time()
 
     @staticmethod
     def exit(hitter, e):
+        hitter.pos = hitter.goal_position
         print('Run Exit')
 
     @staticmethod
     def do(hitter):
         hitter.frame = (hitter.frame + 1) % hitter.frame_number
-        if get_time() - hitter.wait_time > 2:
-            hitter.state_machine.handle_event(('TIME_OUT', 0))
+        x = (1-hitter.t)*hitter.current_position[0] + hitter.t*hitter.goal_position[0]
+        y = (1-hitter.t)*hitter.current_position[1] + hitter.t*hitter.goal_position[1]
+        hitter.pos = (x, y)
+        hitter.t += 0.1
+        if hitter.t > 1:
+            hitter.state_machine.handle_event(('RUN_SUCCESS', 0))
         # print('Run Do')
 
     @staticmethod
@@ -92,7 +104,7 @@ class StateMachine:
         self.transitions = {
             Hit: {time_out: Run},
             Idle: {space_down: Hit},
-            Run: {time_out: Idle}
+            Run: {run_success: Idle}
         }
 
     def handle_event(self, e):

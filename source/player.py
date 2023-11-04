@@ -1,6 +1,6 @@
 from pico2d import *
 from define import *
-
+import attack_mode
 
 class Player:
     def __init__(self, x, y, action, dir, frame_number, name):
@@ -10,9 +10,6 @@ class Player:
         self.dir = dir
         self.name = name
         self.is_draw = False
-
-    def handle_events(self, event):
-        pass
 
     def set_image(self, image_path):
         self.image = load_image(image_path)
@@ -34,5 +31,6 @@ def defence_position(players):
 
 
 def attack_position(p):
+    attack_mode.cur_hitter = p[1]
     p[1].is_draw = True
     (p[1].x, p[1].y) = attack_zone

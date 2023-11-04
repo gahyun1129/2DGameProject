@@ -1,5 +1,5 @@
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE
-
+from pico2d import load_image
 from player import Player
 
 
@@ -13,41 +13,55 @@ def time_out(e):
 
 class Idle:
     @staticmethod
-    def enter(hitter):
+    def enter(hitter, e):
+        # 전 타자의 타석이 끝나고 변경되었을 때 히트 게이지를 맞추고 있을 때 플레이됨
+        # enter action으로 변경, frame = 0으로 초기화
         hitter.action = 0
         hitter.frame = 0
 
+        hitter.image = load_image('resource/image/idle.png')
+
     @staticmethod
-    def exit(hitter):
+    def exit(hitter, e):
+        # user가 space를 누를 때 exit됨
         print('Idle exit')
 
     @staticmethod
     def do(hitter):
-        hitter.frame = (hitter.frame + 1) % 6
+        # 프레임 업데이트
+        hitter.frame = (hitter.frame + 1) % 4
 
     @staticmethod
     def draw(hitter):
+        # idle 이미지 무한 로딩
         hitter.image.clip_draw(hitter.frame * 50, hitter.action * 50, 50, 50, hitter.x, hitter.y)
 
 
 class Hit:
     @staticmethod
-    def enter(hitter):
+    def enter(hitter, e):
+        # 스페이스 바를 눌렀을 때 플레이됨.
         hitter.action = 0
         hitter.frame = 0
         print('Hit enter')
 
     @staticmethod
-    def exit(hitter):
+    def exit(hitter, e):
+        # 방망이 한 바퀴 흔들었을 때 끝남
+        # 만일, 스트라이크, 실패 시엔 다시 돌아와야 함. boy의 fire_ball같이
+        # 스트라이크가 3번 쌓이면 아예 모드를 바꿀 거임
         print('Hit exit')
 
     @staticmethod
     def do(hitter):
+        # 프레임 업데이트 프레임이 한 바퀴 돌면 끝남
         hitter.frame = (hitter.frame + 1) % 6
-        print('Hit do')
+        if hitter.frame == 0:
+            hitter.state_machine.handle_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(hitter):
+        # 휘두르는 애니메이션 출력
         hitter.image.clip_draw(hitter.frame * 50, hitter.action * 50, 50, 50, hitter.x, hitter.y)
 
 
@@ -55,9 +69,22 @@ class StateMachine:
     def __init__(self, hitter):
         self.hitter = hitter
         self.cur_state = Idle
+        self.transitions = {
+            Idle: {space_down: Hit},
+            Hit: {time_out: Idle}
+        }
+
+    def handle_event(self, e):
+        for check_event, next_state in self.transitions[self.cur_state].items():
+            if check_event(e):
+                self.cur_state.exit(self.hitter, e)
+                self.cur_state = next_state
+                self.cur_state.enter(self.hitter, e)
+                return True
+        return False
 
     def start(self):
-        self.cur_state.enter(self.hitter)
+        self.cur_state.enter(self.hitter, ('START', 0))
 
     def update(self):
         self.cur_state.do(self.hitter)
@@ -85,3 +112,6 @@ class Hitter(Player):
 
     def run_next_base(self, start, end):
         pass
+
+    def handle_event(self, event):
+        self.state_machine.handle_event(('INPUT', event))

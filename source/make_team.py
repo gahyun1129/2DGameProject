@@ -26,7 +26,7 @@ def make_team():
 
     # 타자 랜덤으로 정하기
     r = random.randint(0, l)
-    for i in range(0, 9):
+    for i in range(0, 1):
         user_players.append(hitter_player[(r + i) % l])
         user_players[-1].set_image('resource/image/character_hitter.png')
 
@@ -68,7 +68,7 @@ def set_player_list_from_data_file():
     make_team()
 
     game_world.add_objects(user_players, 1)
-    game_world.add_objects(com_players, 0)
+    # game_world.add_objects(com_players, 0)
 
 
 

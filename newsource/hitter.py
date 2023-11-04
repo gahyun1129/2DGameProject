@@ -1,6 +1,10 @@
 from pico2d import load_image, get_time
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE
 from define import *
+import random
+
+from newsource import attack_mode
+from newsource import make_team
 
 ## 이벤트 체크 함수 ##
 def space_down(e):
@@ -11,8 +15,20 @@ def time_out(e):
     return e[0] == 'TIME_OUT'
 
 
-def run_success(e):
-    return e[0] == 'RUN_SUCCESS'
+def run_done(e):
+    return e[0] == 'RUN_DONE'
+
+
+def hit_fail(e):
+    return e[0] == 'HIT_FAIL'
+
+
+def hit_success(e):
+    return e[0] == 'HIT_SUCCESS'
+
+
+def hit_done(e):
+    return e[0] == 'HIT_DONE'
 
 
 ## 상태 ##
@@ -44,8 +60,10 @@ class Hit:
         # action 값은 파란, 빨간 팀 모두 같음
         # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
         hitter.frame, hitter.frame_number, hitter.action = 0, 1, 2
+
         print('Hit Enter')
         hitter.wait_time = get_time()
+
     @staticmethod
     def exit(hitter, e):
         print('Hit Exit')
@@ -54,7 +72,22 @@ class Hit:
     def do(hitter):
         hitter.frame = (hitter.frame + 1) % hitter.frame_number
         if get_time() - hitter.wait_time > 2:
-            hitter.state_machine.handle_event(('TIME_OUT', 0))
+            hit = 0.3 + float(hitter.BA) * random.randint(0, 3)
+            if hit > 1:
+                hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
+            else:
+                hitter.wait_time = get_time()
+                if hit < 0.4:
+                    hitter.strike += 1
+                else:
+                    hitter.ball += 1
+                print(hitter.strike, hitter.ball)
+                hitter.state_machine.handle_event(('HIT_FAIL', 0))
+                if hitter.strike == 3:
+                    hitter.state_machine.handle_event(('HIT_DONE', 0))
+                elif hitter.ball == 4:
+                    hitter.state_machine.handle_event(('HIT_DONE', 0))
+
         # print('Hit Do')
 
     @staticmethod
@@ -68,27 +101,34 @@ class Run:
         # action 값은 파란, 빨간 팀 모두 같음
         # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
         hitter.frame, hitter.frame_number, hitter.action = 0, 1, 0
+
+        # 현재 위치, 목표 위치, 매개 변수 t 정의
         hitter.current_position = hitter.pos
         hitter.goal_position = positions[hitter.pos]
-        # print(positions[hitter.pos])
         hitter.t = 0.0
+
         print('Run Enter')
-        hitter.wait_time = get_time()
 
     @staticmethod
     def exit(hitter, e):
+        # 위치를 확실히 하기 위해 한 번 더 정의
         hitter.pos = hitter.goal_position
         print('Run Exit')
 
     @staticmethod
     def do(hitter):
+        # 프레임 넘기기
         hitter.frame = (hitter.frame + 1) % hitter.frame_number
+
+        # 직선 이동 방정식
         x = (1-hitter.t)*hitter.current_position[0] + hitter.t*hitter.goal_position[0]
         y = (1-hitter.t)*hitter.current_position[1] + hitter.t*hitter.goal_position[1]
         hitter.pos = (x, y)
         hitter.t += 0.1
+
+        # 직선 이동이 끝날 때 run_success 이벤트 발생
         if hitter.t > 1:
-            hitter.state_machine.handle_event(('RUN_SUCCESS', 0))
+            hitter.state_machine.handle_event(('RUN_DONE', 0))
         # print('Run Do')
 
     @staticmethod
@@ -102,9 +142,9 @@ class StateMachine:
         self.hitter = hitter
         self.cur_state = Idle
         self.transitions = {
-            Hit: {time_out: Run},
+            Hit: {hit_success: Run, hit_fail: Idle, hit_done: Idle},
             Idle: {space_down: Hit},
-            Run: {run_success: Idle}
+            Run: {run_done: Idle}
         }
 
     def handle_event(self, e):
@@ -139,6 +179,9 @@ class Hitter:
         # 파일: 이름, 안타, 홈런, 도루, 타율, 출루율 + 장타율
         self.name, self.hit, self.home_run, self.stolen_base, self.BA, self.OPS = name, hit, home_run, stolen_base, BA, OPS
 
+        # 타자의 스트라이크, 볼 개수 저장 변수
+        self.strike, self.ball = 0, 0
+
         # 이미지 로드
         if Hitter.image is None:
             Hitter.image = load_image('resource/image/character_hitter.png')
@@ -170,3 +213,7 @@ class Hitter:
         # Hitter.image.clip_draw(self.frame * 50, self.action * 50, 50, 50, self.x, self.y)
 
 
+## 함수 정의 ##
+def move_to_next_hitter(hitter):
+    if hitter.pos is not home:
+        attack_mode.cur_hitter = make_team.user_players

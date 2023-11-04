@@ -22,6 +22,9 @@ def init():
     make_team.make_team()
     make_team.attack_position()
 
+    # for la in game_world.objects:
+    #     for o in la:
+    #         print(o.x, o.y)
 
 def update():
     game_world.update()

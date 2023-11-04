@@ -16,6 +16,9 @@ class Pitcher:
         if Pitcher.image is None:
             Pitcher.image = load_image('resource/image/character_hitter.png')
 
+    def init_state_machine(self):
+        pass
+
     def update(self):
         self.frame = (self.frame + 1) % self.frame_number
 

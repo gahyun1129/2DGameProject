@@ -39,7 +39,7 @@ def make_team():
     r = random.randint(0, hitters_len)
     for i in range(0, 9):
         h = copy.copy(hitters[(r + i) % hitters_len])
-        h.action += 1
+        h.set_team_color('파랑')
         user_players.append(h)
 
 
@@ -79,3 +79,7 @@ def attack_position():
 
     game_world.add_layer(computer_players[0:9])
     game_world.add_layer([attack_mode.cur_hitter])
+
+    for layer in game_world.objects:
+        for o in layer:
+            o.init_state_machine()

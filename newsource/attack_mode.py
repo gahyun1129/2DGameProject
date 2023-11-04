@@ -2,6 +2,7 @@ import game_framework
 from pico2d import *
 
 import make_team
+import game_world
 
 
 def handle_events():
@@ -17,22 +18,16 @@ def init():
     global pitcher
     global hitter
 
-    make_team.set_player_from_data_file()
-    make_team.make_team()
-
-    pitcher = make_team.user_players[0]
-    hitter = make_team.computer_players[1]
+    make_team.add_to_game_world()
 
 
 def update():
-    pitcher.update()
-    hitter.update()
+    game_world.update()
 
 
 def draw():
     clear_canvas()
-    pitcher.draw()
-    hitter.draw()
+    game_world.render()
     update_canvas()
 
 

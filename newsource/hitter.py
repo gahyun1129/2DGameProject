@@ -153,8 +153,36 @@ class StateMachine:
         for check_event, next_state in self.transitions[self.cur_state].items():
             if check_event(e):
                 self.cur_state.exit(self.hitter, e)
-                if move_to_next_hitter(self.hitter, e):
-                    return True
+                attack_mode.current_event = e
+                self.cur_state = next_state
+                self.cur_state.enter(self.hitter, e)
+                return True
+        return False
+
+    def start(self):
+        self.cur_state.enter(self.hitter, ('START', 0))
+
+    def update(self):
+        self.cur_state.do(self.hitter)
+
+    def draw(self):
+        self.cur_state.draw(self.hitter)
+
+
+class StateMachine2:
+    def __init__(self, hitter):
+        self.hitter = hitter
+        self.cur_state = Idle
+        self.transitions = {
+            Idle: {hit_success: Run},
+            Run: {run_done: Idle}
+        }
+
+    def handle_event(self, e):
+        for check_event, next_state in self.transitions[self.cur_state].items():
+            if check_event(e):
+                self.cur_state.exit(self.hitter, e)
+                attack_mode.current_event = e
                 self.cur_state = next_state
                 self.cur_state.enter(self.hitter, e)
                 return True
@@ -205,6 +233,9 @@ class Hitter:
         self.state_machine = StateMachine(self)
         self.state_machine.start()
 
+    def set_runner_state_machine(self):
+        self.state_machine = StateMachine2(self)
+
     def handle_event(self, event):
         self.state_machine.handle_event(('INPUT', event))
 
@@ -215,14 +246,3 @@ class Hitter:
     def draw(self):
         self.state_machine.draw()
         # Hitter.image.clip_draw(self.frame * 50, self.action * 50, 50, 50, self.x, self.y)
-
-
-## 함수 정의 ##
-def move_to_next_hitter(hitter, event):
-    if event[0] == 'RUN_DONE':
-        attack_mode.cur_hitter = make_team.user_players[make_team.user_players.index(hitter)+1]
-        attack_mode.cur_hitter.pos = attack_zone
-        attack_mode.cur_hitter.init_state_machine()
-        game_world.add_object(attack_mode.cur_hitter, 1)
-        return True
-    return False

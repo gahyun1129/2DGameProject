@@ -1,3 +1,3 @@
 players = ['rkguis', 'dsjhs',  'rkgus', 'hey']
 
-print(players['rkgu'])
+print(players[0:-1])

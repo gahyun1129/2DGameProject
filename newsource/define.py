@@ -14,5 +14,6 @@ positions = {
     attack_zone: one_base,
     one_base: two_base,
     two_base: three_base,
-    three_base: home
+    three_base: home,
+    home: (0, 0)
 }

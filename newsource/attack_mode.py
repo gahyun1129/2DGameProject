@@ -3,6 +3,7 @@ from pico2d import *
 
 from hitter import Hitter
 from pitcher import Pitcher
+import make_team
 
 
 def handle_events():
@@ -18,8 +19,10 @@ def init():
     global pitcher
     global hitter
 
-    pitcher = Pitcher(300, 100, 0, 1, 0, 0, '박가현', 0, 0, 0, ['e', 'f'])
-    hitter = Hitter(600, 100, 0, 1, 4, 1, '박가현', 0, 0, 0, 0, 0)
+    make_team.set_player_from_data_file()
+
+    pitcher = make_team.pitchers[0]
+    hitter = make_team.hitters[0]
 
 
 def update():

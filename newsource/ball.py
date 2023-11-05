@@ -9,6 +9,9 @@ class Ball:
         # 위치, 현재 프레임, 프레임의 길이
         self.pos = mound
         self.frame, self.frame_number = 0, 1
+        self.current_pos = mound
+        self.goal_pos = home
+        self.t = 0.0
 
         # 이미지 로드
         if Ball.image is None:
@@ -18,7 +21,15 @@ class Ball:
         # self.state_machine = None
         # self.state_machine.start()
     def update(self):
-        self.frame = (self.frame + 1) % self.frame_number
+        if self.t < 1.0:
+            self.frame = (self.frame + 1) % self.frame_number
+            x = (1-self.t)*self.current_pos[0] + self.t*self.goal_pos[0]
+            y = (1-self.t)*self.current_pos[1] + self.t*self.goal_pos[1]
+            self.pos = (x, y)
+            self.t += 0.1
+        else:
+            self.pos = home
 
     def draw(self):
         Ball.image.clip_draw(self.frame*50, 0, 50, 50, self.pos[0], self.pos[1], 20, 20)
+        

@@ -4,11 +4,13 @@ from pico2d import *
 import make_team
 import game_world
 from define import *
+from ball import Ball
 
 cur_hitter = None
 current_event = ('None', 0)
 # goal_runner가 삭제될 때 점수 +1
 goal_runner = None
+ball = None
 
 
 def handle_events():
@@ -32,6 +34,7 @@ def update():
     global cur_hitter
     global current_event
     global goal_runner
+    global ball
 
     game_world.update()
 
@@ -64,6 +67,11 @@ def update():
         cur_hitter.pos = attack_zone
         cur_hitter.init_state_machine()
         game_world.add_object(cur_hitter, 2)
+        current_event = ('None', 0)
+
+    if current_event[0] == 'INPUT' and current_event[1].type == SDL_KEYDOWN and current_event[1].key == SDLK_SPACE:
+        ball = Ball()
+        game_world.add_layer([ball])
         current_event = ('None', 0)
 
 

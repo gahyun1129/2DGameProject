@@ -81,12 +81,14 @@ class Hit:
                     hitter.strike += 1
                 else:
                     hitter.ball += 1
-                print(hitter.strike, hitter.ball)
-                hitter.state_machine.handle_event(('HIT_FAIL', 0))
                 if hitter.strike == 3:
+                    print('STRIKE_3')
                     hitter.state_machine.handle_event(('HIT_DONE', 0))
                 elif hitter.ball == 4:
-                    hitter.state_machine.handle_event(('HIT_DONE', 0))
+                    print('BALL_4')
+                    hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
+                else:
+                    hitter.state_machine.handle_event(('HIT_FAIL', 0))
 
         # print('Hit Do')
 
@@ -138,7 +140,7 @@ class Run:
 
 
 ## 상태 머신 ##
-class StateMachine:
+class StateMachineHit:
     def __init__(self, hitter):
         self.hitter = hitter
         self.cur_state = Idle
@@ -168,7 +170,7 @@ class StateMachine:
         self.cur_state.draw(self.hitter)
 
 
-class StateMachine2:
+class StateMachineRun:
     def __init__(self, hitter):
         self.hitter = hitter
         self.cur_state = Idle
@@ -211,7 +213,7 @@ class Hitter:
         self.name, self.hit, self.home_run, self.stolen_base, self.BA, self.OPS = name, hit, home_run, stolen_base, BA, OPS
 
         # 타자의 스트라이크, 볼 개수 저장 변수
-        self.strike, self.ball = 0, 0
+        self.strike, self.ball = 2, 3
 
         # 이미지 로드
         if Hitter.image is None:
@@ -229,11 +231,11 @@ class Hitter:
 
     def init_state_machine(self):
         # 객체를 따로 만들어 주었으므로, 상태 머신 시작을 다시 해야 함.
-        self.state_machine = StateMachine(self)
+        self.state_machine = StateMachineHit(self)
         self.state_machine.start()
 
     def set_runner_state_machine(self):
-        self.state_machine = StateMachine2(self)
+        self.state_machine = StateMachineRun(self)
 
     def handle_event(self, event):
         self.state_machine.handle_event(('INPUT', event))

@@ -59,6 +59,7 @@ def update():
     # 현재 타자가 hit을 실패한 경우, 현재 타자 삭제 및 다음 타자 불러옴
     if current_event[0] == 'HIT_DONE':
         next_hitter = make_team.user_players[make_team.user_players.index(cur_hitter) + 1 % 9]
+        print(next_hitter.name, cur_hitter.name)
         game_world.remove_object(cur_hitter)
         cur_hitter = next_hitter
         cur_hitter.pos = attack_zone

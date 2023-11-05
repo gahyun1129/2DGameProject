@@ -15,5 +15,10 @@ class Ball:
             Ball.image = load_image('resource/image/ball.png')
 
         # 상태머신 추가
-        self.state_machine = None
-        self.state_machine.start()
+        # self.state_machine = None
+        # self.state_machine.start()
+    def update(self):
+        self.frame = (self.frame + 1) % self.frame_number
+
+    def draw(self):
+        Ball.image.clip_draw(self.frame*50, 0, 50, 50, self.pos[0], self.pos[1], 20, 20)

@@ -1,7 +1,6 @@
 import game_framework
 from pico2d import *
 
-
 import make_team
 import game_world
 from define import *

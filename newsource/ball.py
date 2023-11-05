@@ -21,6 +21,7 @@ class Ball:
         # self.state_machine = None
         # self.state_machine.start()
     def update(self):
+        self.frame = (self.frame + 1) % self.frame_number
         if self.t < 1.0:
             self.frame = (self.frame + 1) % self.frame_number
             x = (1-self.t)*self.current_pos[0] + self.t*self.goal_pos[0]
@@ -32,4 +33,9 @@ class Ball:
 
     def draw(self):
         Ball.image.clip_draw(self.frame*50, 0, 50, 50, self.pos[0], self.pos[1], 20, 20)
-        
+
+    def hit_success(self):
+        pass
+
+    def hit_fail(self):
+        pass

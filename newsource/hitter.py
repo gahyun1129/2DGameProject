@@ -73,7 +73,7 @@ class Hit:
         hitter.frame = (hitter.frame + 1) % hitter.frame_number
         if get_time() - hitter.wait_time > 2:
             hit = 0.3 + float(hitter.BA) * random.randint(0, 3)
-            if hit > 0:
+            if hit > 1:
                 hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
             else:
                 hitter.wait_time = get_time()

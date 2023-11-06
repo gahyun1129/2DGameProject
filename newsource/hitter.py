@@ -170,7 +170,46 @@ class RunDefence:
         hitter.pos = (x, y)
         hitter.t += 0.1
 
-        # 직선 이동이 끝날 때 run_success 이벤트 발생
+        # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
+        if hitter.t > 1:
+            hitter.state_machine.handle_event(('RUN_DONE', 0))
+        # print('Run Do')
+
+    @staticmethod
+    def draw(hitter):
+        hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0],
+                               hitter.pos[1])
+
+
+class RunPosition:
+    @staticmethod
+    def enter(hitter, e):
+        # action 값은 파란, 빨간 팀 모두 같음
+        # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
+        hitter.frame, hitter.frame_number, hitter.action = 0, 1, 0
+
+        # 현재 위치, 목표 위치, 매개 변수 t 정의
+        hitter.current_position = hitter.pos
+        hitter.goal_position = hitter.defence_pos
+        hitter.t = 0.0
+
+    @staticmethod
+    def exit(hitter, e):
+        # 위치를 확실히 하기 위해 한 번 더 정의
+        hitter.pos = hitter.defence_pos
+
+    @staticmethod
+    def do(hitter):
+        # 프레임 넘기기
+        hitter.frame = (hitter.frame + 1) % hitter.frame_number
+
+        # 직선 이동 방정식
+        x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
+        y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
+        hitter.pos = (x, y)
+        hitter.t += 0.1
+
+        # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
         if hitter.t > 1:
             hitter.state_machine.handle_event(('RUN_DONE', 0))
         # print('Run Do')
@@ -247,7 +286,8 @@ class StateMachineDefence:
         self.cur_state = Idle
         self.transitions = {
             Idle: {hit_success: RunDefence},
-            RunDefence: {run_done: Idle}
+            RunDefence: {run_done: RunPosition},
+            RunPosition: {run_done: Idle},
         }
 
     def handle_event(self, e):
@@ -286,9 +326,6 @@ class Hitter:
         # 타자의 스트라이크, 볼 개수 저장 변수
         self.strike, self.ball = 2, 3
 
-        # 수비수의 수비 위치
-        self.defence_pos = self.pos
-
         # 이미지 로드
         if Hitter.image is None:
             Hitter.image = load_image('resource/image/character_hitter.png')
@@ -312,9 +349,8 @@ class Hitter:
         elif type == '주자':
             self.state_machine = StateMachineRun(self)
         self.state_machine.start()
-
-    def set_runner_state_machine(self):
-        self.state_machine = StateMachineRun(self)
+        # 수비수의 수비 위치
+        self.defence_pos = self.pos
 
     def handle_event(self, event):
         self.state_machine.handle_event(('INPUT', event))
@@ -337,4 +373,3 @@ class Hitter:
         # x: 400 이하, y: 300 이하 > 유격수, 3루수
         if goal_pos[0] <= 400 and self.pos[0] <= 400 and goal_pos[1] <= 350 and self.pos[1] <= 350: return True
         return False
-

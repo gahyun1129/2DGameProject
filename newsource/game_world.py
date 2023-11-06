@@ -43,4 +43,4 @@ def remove_object(o):
 
 def clear():
     for layer in objects:
-        layer.clear()           # layer type은 list이므로
+        layer.clear()  # layer type은 list이므로

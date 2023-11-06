@@ -20,19 +20,20 @@ class Ball:
         # 상태머신 추가
         # self.state_machine = None
         # self.state_machine.start()
+
     def update(self):
         self.frame = (self.frame + 1) % self.frame_number
         if self.t < 1.0:
             self.frame = (self.frame + 1) % self.frame_number
-            x = (1-self.t)*self.current_pos[0] + self.t*self.goal_pos[0]
-            y = (1-self.t)*self.current_pos[1] + self.t*self.goal_pos[1]
+            x = (1 - self.t) * self.current_pos[0] + self.t * self.goal_pos[0]
+            y = (1 - self.t) * self.current_pos[1] + self.t * self.goal_pos[1]
             self.pos = (x, y)
             self.t += 0.1
         else:
             self.pos = home
 
     def draw(self):
-        Ball.image.clip_draw(self.frame*50, 0, 50, 50, self.pos[0], self.pos[1], 20, 20)
+        Ball.image.clip_draw(self.frame * 50, 0, 50, 50, self.pos[0], self.pos[1], 20, 20)
 
     def hit_success(self):
         pass

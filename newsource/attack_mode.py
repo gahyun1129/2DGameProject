@@ -42,7 +42,7 @@ def update():
     # 다음 순서로 타자 변경, 현재 타자는 주루 플레이어로 상태 머신 업데이트
     # 목표로 하는 position이 home인 경우, home으로 도착 후 타자 객체 game_world에서 삭제
     if current_event[0] == 'RUN_DONE':
-        next_hitter = make_team.user_players[make_team.user_players.index(cur_hitter)+1 % 9]
+        next_hitter = make_team.user_players[make_team.user_players.index(cur_hitter) + 1 % 9]
         cur_hitter.set_runner_state_machine()
         cur_hitter = next_hitter
         cur_hitter.pos = attack_zone

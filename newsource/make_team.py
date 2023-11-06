@@ -7,10 +7,8 @@ from pitcher import Pitcher
 from define import *
 import random
 
-
 hitters = []
 pitchers = []
-
 
 user_players = []
 computer_players = []

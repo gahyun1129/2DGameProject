@@ -68,4 +68,4 @@ class Pitcher:
         #     game_world.add_layer([self.ball])
 
     def draw(self):
-        Pitcher.image.clip_draw(self.frame*50, self.action * 50, 50, 50, self.x, self.y)
+        Pitcher.image.clip_draw(self.frame * 50, self.action * 50, 50, 50, self.x, self.y)

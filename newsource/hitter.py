@@ -52,7 +52,8 @@ class Idle:
 
     @staticmethod
     def draw(hitter):
-        hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0], hitter.pos[1])
+        hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0],
+                               hitter.pos[1])
 
 
 class Hit:
@@ -94,7 +95,8 @@ class Hit:
 
     @staticmethod
     def draw(hitter):
-        hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0], hitter.pos[1])
+        hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0],
+                               hitter.pos[1])
 
 
 class Run:
@@ -124,8 +126,8 @@ class Run:
         hitter.frame = (hitter.frame + 1) % hitter.frame_number
 
         # 직선 이동 방정식
-        x = (1-hitter.t)*hitter.current_position[0] + hitter.t*hitter.goal_position[0]
-        y = (1-hitter.t)*hitter.current_position[1] + hitter.t*hitter.goal_position[1]
+        x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
+        y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
         hitter.pos = (x, y)
         hitter.t += 0.1
 
@@ -136,7 +138,8 @@ class Run:
 
     @staticmethod
     def draw(hitter):
-        hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0], hitter.pos[1])
+        hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0],
+                               hitter.pos[1])
 
 
 ## 상태 머신 ##

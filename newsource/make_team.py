@@ -78,6 +78,7 @@ def attack_position():
     game_world.add_layer(computer_players[0:9])
     game_world.add_layer([attack_mode.cur_hitter])
 
-    for layer in game_world.objects:
-        for o in layer:
-            o.init_state_machine()
+    for o in game_world.objects[1][1:9]:
+        o.init_state_machine('수비수')
+    for o in game_world.objects[2]:
+        o.init_state_machine('타자')

@@ -37,8 +37,8 @@ class Ball:
 
     def hit_success(self):
         self.current_pos = home
-        x = random.randint(-1, 1) * random.randint(200, 350)
-        y = random.randint(400, 500)
+        x = random.randint(50, 750)
+        y = random.randint(300, 500)
         self.goal_pos = (x, y)
         self.t = 0.0
 

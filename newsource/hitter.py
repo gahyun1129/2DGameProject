@@ -142,6 +142,45 @@ class Run:
                                hitter.pos[1])
 
 
+class RunDefence:
+    @staticmethod
+    def enter(hitter, e):
+        # action 값은 파란, 빨간 팀 모두 같음
+        # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
+        hitter.frame, hitter.frame_number, hitter.action = 0, 1, 0
+
+        # 현재 위치, 목표 위치, 매개 변수 t 정의
+        hitter.current_position = hitter.pos
+        hitter.goal_position = attack_mode.ball.goal_pos
+        hitter.t = 0.0
+
+    @staticmethod
+    def exit(hitter, e):
+        # 위치를 확실히 하기 위해 한 번 더 정의
+        hitter.pos = hitter.goal_position
+
+    @staticmethod
+    def do(hitter):
+        # 프레임 넘기기
+        hitter.frame = (hitter.frame + 1) % hitter.frame_number
+
+        # 직선 이동 방정식
+        x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
+        y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
+        hitter.pos = (x, y)
+        hitter.t += 0.1
+
+        # 직선 이동이 끝날 때 run_success 이벤트 발생
+        if hitter.t > 1:
+            hitter.state_machine.handle_event(('RUN_DONE', 0))
+        # print('Run Do')
+
+    @staticmethod
+    def draw(hitter):
+        hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0],
+                               hitter.pos[1])
+
+
 ## 상태 머신 ##
 class StateMachineHit:
     def __init__(self, hitter):
@@ -202,6 +241,35 @@ class StateMachineRun:
         self.cur_state.draw(self.hitter)
 
 
+class StateMachineDefence:
+    def __init__(self, hitter):
+        self.hitter = hitter
+        self.cur_state = Idle
+        self.transitions = {
+            Idle: {hit_success: RunDefence},
+            RunDefence: {run_done: Idle}
+        }
+
+    def handle_event(self, e):
+        for check_event, next_state in self.transitions[self.cur_state].items():
+            if check_event(e):
+                self.cur_state.exit(self.hitter, e)
+                attack_mode.current_event = e
+                self.cur_state = next_state
+                self.cur_state.enter(self.hitter, e)
+                return True
+        return False
+
+    def start(self):
+        self.cur_state.enter(self.hitter, ('START', 0))
+
+    def update(self):
+        self.cur_state.do(self.hitter)
+
+    def draw(self):
+        self.cur_state.draw(self.hitter)
+
+
 ## 클래스 ##
 class Hitter:
     image = None
@@ -218,6 +286,9 @@ class Hitter:
         # 타자의 스트라이크, 볼 개수 저장 변수
         self.strike, self.ball = 2, 3
 
+        # 수비수의 수비 위치
+        self.defence_pos = self.pos
+
         # 이미지 로드
         if Hitter.image is None:
             Hitter.image = load_image('resource/image/character_hitter.png')
@@ -232,9 +303,14 @@ class Hitter:
         elif color == '빨강':
             self.team_color = 0
 
-    def init_state_machine(self):
+    def init_state_machine(self, type):
         # 객체를 따로 만들어 주었으므로, 상태 머신 시작을 다시 해야 함.
-        self.state_machine = StateMachineHit(self)
+        if type == '수비수':
+            self.state_machine = StateMachineDefence(self)
+        elif type == '타자':
+            self.state_machine = StateMachineHit(self)
+        elif type == '주자':
+            self.state_machine = StateMachineRun(self)
         self.state_machine.start()
 
     def set_runner_state_machine(self):
@@ -250,3 +326,15 @@ class Hitter:
     def draw(self):
         self.state_machine.draw()
         # Hitter.image.clip_draw(self.frame * 50, self.action * 50, 50, 50, self.x, self.y)
+
+    def run_to_ball(self, goal_pos):
+        # x: 400 이상, y: 300 이상 > 중견수, 우익수
+        if goal_pos[0] >= 400 and self.pos[0] >= 400 and goal_pos[1] >= 300 and self.pos[1] >= 300: return True
+        # x: 400 이하, y: 300 이상 > 좌익수, 중견수
+        if goal_pos[0] <= 400 and self.pos[0] <= 400 and goal_pos[1] >= 300 and self.pos[1] >= 300: return True
+        # x: 400 이상, y: 300 이하 > 1루수, 2루수
+        if goal_pos[0] >= 400 and self.pos[0] >= 400 and goal_pos[1] >= 300 and self.pos[1] >= 300: return True
+        # x: 400 이하, y: 300 이하 > 유격수, 3루수
+        if goal_pos[0] <= 400 and self.pos[0] <= 400 and goal_pos[1] <= 300 and self.pos[1] <= 300: return True
+        return False
+

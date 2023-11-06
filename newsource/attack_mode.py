@@ -42,11 +42,11 @@ def update():
     # 다음 순서로 타자 변경, 현재 타자는 주루 플레이어로 상태 머신 업데이트
     # 목표로 하는 position이 home인 경우, home으로 도착 후 타자 객체 game_world에서 삭제
     if current_event[0] == 'RUN_DONE':
-        next_hitter = make_team.user_players[make_team.user_players.index(cur_hitter) + 1 % 9]
-        cur_hitter.set_runner_state_machine()
+        next_hitter = make_team.user_players[(make_team.user_players.index(cur_hitter) + 1) % 9]
+        cur_hitter.init_state_machine('주자')
         cur_hitter = next_hitter
         cur_hitter.pos = attack_zone
-        cur_hitter.init_state_machine()
+        cur_hitter.init_state_machine('타자')
         game_world.add_object(cur_hitter, 2)
         current_event = ('None', 0)
         if goal_runner is not None:
@@ -55,6 +55,7 @@ def update():
 
     # 현재 타자가 hit을 성공한 경우, 주루 플레이어들은 달림
     if current_event[0] == 'HIT_SUCCESS':
+        ball.hit_success()
         game_world.update_handle_event()
         current_event = ('None', 0)
 
@@ -65,14 +66,13 @@ def update():
         game_world.remove_object(cur_hitter)
         cur_hitter = next_hitter
         cur_hitter.pos = attack_zone
-        cur_hitter.init_state_machine()
+        cur_hitter.init_state_machine('타자')
         game_world.add_object(cur_hitter, 2)
         current_event = ('None', 0)
 
     if current_event[0] == 'INPUT' and current_event[1].type == SDL_KEYDOWN and current_event[1].key == SDLK_SPACE:
         ball = Ball()
         game_world.add_layer([ball])
-        ball.hit_success()
         current_event = ('None', 0)
 
 

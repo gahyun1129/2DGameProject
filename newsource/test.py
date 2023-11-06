@@ -1,3 +1,3 @@
-players = ['rkguis', 'dsjhs', 'rkgus', 'hey']
+import random
 
-print(players[0:-1])
+print(random.randint(-1, 1))

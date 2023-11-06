@@ -1,6 +1,6 @@
 from define import *
 from pico2d import load_image
-
+import random
 
 class Ball:
     image = None
@@ -30,13 +30,17 @@ class Ball:
             self.pos = (x, y)
             self.t += 0.1
         else:
-            self.pos = home
+            self.pos = self.goal_pos
 
     def draw(self):
         Ball.image.clip_draw(self.frame * 50, 0, 50, 50, self.pos[0], self.pos[1], 20, 20)
 
     def hit_success(self):
-        pass
+        self.current_pos = home
+        x = random.randint(-1, 1) * random.randint(200, 350)
+        y = random.randint(400, 500)
+        self.goal_pos = (x, y)
+        self.t = 0.0
 
     def hit_fail(self):
         pass

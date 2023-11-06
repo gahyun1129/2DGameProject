@@ -72,6 +72,7 @@ def update():
     if current_event[0] == 'INPUT' and current_event[1].type == SDL_KEYDOWN and current_event[1].key == SDLK_SPACE:
         ball = Ball()
         game_world.add_layer([ball])
+        ball.hit_success()
         current_event = ('None', 0)
 
 

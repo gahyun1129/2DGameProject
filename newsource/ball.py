@@ -1,3 +1,4 @@
+import game_world
 from define import *
 from pico2d import load_image
 import random
@@ -42,5 +43,5 @@ class Ball:
         self.goal_pos = (x, y)
         self.t = 0.0
 
-    def hit_fail(self):
-        pass
+    def delete_self(self):
+        game_world.remove_object(self)

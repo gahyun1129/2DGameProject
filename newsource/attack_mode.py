@@ -68,6 +68,7 @@ def update():
         cur_hitter.pos = attack_zone
         cur_hitter.init_state_machine('타자')
         game_world.add_object(cur_hitter, 2)
+        ball.delete_self()
         current_event = ('None', 0)
 
     if current_event[0] == 'INPUT' and current_event[1].type == SDL_KEYDOWN and current_event[1].key == SDLK_SPACE:

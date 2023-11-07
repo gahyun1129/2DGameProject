@@ -11,6 +11,10 @@ def space_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
 
 
+def throw_done(e):
+    return e[0] == 'THROW_DONE'
+
+
 class Idle:
     @staticmethod
     def enter(pitcher, e):
@@ -30,7 +34,7 @@ class Idle:
     @staticmethod
     def draw(pitcher):
         pitcher.image.clip_draw(pitcher.frame * 50, (pitcher.action + pitcher.team_color) * 50, 50, 50, pitcher.pos[0],
-                               pitcher.pos[1])
+                                pitcher.pos[1])
 
 
 class Throw:
@@ -50,7 +54,7 @@ class Throw:
     def do(pitcher):
         pitcher.frame = (pitcher.frame + 1) % pitcher.frame_number
         if get_time() - pitcher.wait_time > 2:
-            pass
+            pitcher.state_machine.handle_event(('THROW_DONE', 0))
 
     @staticmethod
     def draw(pitcher):
@@ -64,7 +68,7 @@ class StateMachineThrow:
         self.pitcher = pitcher
         self.cur_state = Idle
         self.transitions = {
-            Throw: {space_down: Idle},
+            Throw: {throw_done: Idle},
             Idle: {space_down: Throw},
         }
 
@@ -112,6 +116,9 @@ class Pitcher:
             self.state_machine = StateMachineThrow(self)
         self.state_machine.start()
         pass
+
+    def handle_event(self, event):
+        self.state_machine.handle_event(('INPUT', event))
 
     def update(self):
         self.state_machine.update()

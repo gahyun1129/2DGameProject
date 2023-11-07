@@ -48,13 +48,18 @@ class Throw:
 
     @staticmethod
     def exit(pitcher, e):
-        pass
+        attack_mode.ball = Ball()
+        game_world.add_layer([attack_mode.ball])
+        attack_mode.cur_hitter.state_machine.handle_event(('HIT_START', 0))
 
     @staticmethod
     def do(pitcher):
         pitcher.frame = (pitcher.frame + 1) % pitcher.frame_number
+
+        # 나중엔 프레임 한 번 다 돌았을 때로 체크 할 것!
         if get_time() - pitcher.wait_time > 2:
             pitcher.state_machine.handle_event(('THROW_DONE', 0))
+
 
     @staticmethod
     def draw(pitcher):
@@ -68,8 +73,8 @@ class StateMachineThrow:
         self.pitcher = pitcher
         self.cur_state = Idle
         self.transitions = {
-            Throw: {throw_done: Idle},
             Idle: {space_down: Throw},
+            Throw: {throw_done: Idle},
         }
 
     def handle_event(self, e):

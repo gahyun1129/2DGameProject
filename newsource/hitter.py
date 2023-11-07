@@ -33,6 +33,10 @@ def hit_done(e):
     return e[0] == 'HIT_DONE'
 
 
+def hit_start(e):
+    return e[0] == 'HIT_START'
+
+
 ## 상태 ##
 class Idle:
     @staticmethod
@@ -227,7 +231,7 @@ class StateMachineHit:
         self.cur_state = Idle
         self.transitions = {
             Hit: {hit_success: Run, hit_fail: Idle, hit_done: Idle},
-            Idle: {space_down: Hit},
+            Idle: {hit_start: Hit},
             Run: {run_done: Idle}
         }
 

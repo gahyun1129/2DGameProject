@@ -37,6 +37,10 @@ def hit_start(e):
     return e[0] == 'HIT_START'
 
 
+def four_ball(e):
+    return e[0] == 'FOUR_BALL'
+
+
 ## 상태 ##
 class Idle:
     @staticmethod
@@ -95,7 +99,9 @@ class Hit:
                     attack_mode.ball.delete_self()
                 elif hitter.ball == 4:
                     print('BALL_4')
-                    hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
+                    hitter.state_machine.handle_event(('FOUR_BALL', 0))
+                    attack_mode.ball.delete_self()
+                    game_world.update_handle_event(('FOUR_BALL', 0))
                 else:
                     hitter.state_machine.handle_event(('HIT_FAIL', 0))
 
@@ -235,7 +241,7 @@ class StateMachineHit:
         self.cur_state = Idle
         self.transitions = {
             Idle: {hit_start: Hit},
-            Hit: {hit_success: Run, hit_fail: Idle, hit_done: Idle},
+            Hit: {hit_success: Run, hit_fail: Idle, four_ball: Run},
             Run: {run_done: Idle}
         }
 
@@ -260,13 +266,12 @@ class StateMachineHit:
         self.hitter.font.draw(self.hitter.pos[0] - 10, self.hitter.pos[1] + 50, f'{self.hitter.name}', (255, 255, 0))
 
 
-
 class StateMachineRun:
     def __init__(self, hitter):
         self.hitter = hitter
         self.cur_state = Idle
         self.transitions = {
-            Idle: {hit_success: Run},
+            Idle: {hit_success: Run, four_ball: Run},
             Run: {run_done: Idle}
         }
 

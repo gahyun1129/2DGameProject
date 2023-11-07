@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time
+from pico2d import load_image, get_time, load_font
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE
 from define import *
 import random
@@ -31,6 +31,14 @@ def hit_success(e):
 
 def hit_done(e):
     return e[0] == 'HIT_DONE'
+
+
+def hit_start(e):
+    return e[0] == 'HIT_START'
+
+
+def four_ball(e):
+    return e[0] == 'FOUR_BALL'
 
 
 ## 상태 ##
@@ -75,7 +83,9 @@ class Hit:
         if get_time() - hitter.wait_time > 2:
             hit = 0.3 + float(hitter.BA) * random.randint(0, 3)
             if hit > 1:
+                attack_mode.ball.hit_success()
                 hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
+                game_world.update_handle_event(('HIT_SUCCESS', 0))
             else:
                 hitter.wait_time = get_time()
                 if hit < 0.4:
@@ -84,10 +94,14 @@ class Hit:
                     hitter.ball += 1
                 if hitter.strike == 3:
                     print('STRIKE_3')
-                    hitter.state_machine.handle_event(('HIT_DONE', 0))
+                    make_team.set_next_hitter(hitter)
+                    game_world.remove_object(hitter)
+                    attack_mode.ball.delete_self()
                 elif hitter.ball == 4:
                     print('BALL_4')
-                    hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
+                    hitter.state_machine.handle_event(('FOUR_BALL', 0))
+                    attack_mode.ball.delete_self()
+                    game_world.update_handle_event(('FOUR_BALL', 0))
                 else:
                     hitter.state_machine.handle_event(('HIT_FAIL', 0))
 
@@ -119,6 +133,7 @@ class Run:
     def exit(hitter, e):
         # 위치를 확실히 하기 위해 한 번 더 정의
         hitter.pos = hitter.goal_position
+
 
     @staticmethod
     def do(hitter):
@@ -226,8 +241,8 @@ class StateMachineHit:
         self.hitter = hitter
         self.cur_state = Idle
         self.transitions = {
-            Hit: {hit_success: Run, hit_fail: Idle, hit_done: Idle},
-            Idle: {space_down: Hit},
+            Idle: {hit_start: Hit},
+            Hit: {hit_success: Run, hit_fail: Idle, four_ball: Run},
             Run: {run_done: Idle}
         }
 
@@ -249,6 +264,7 @@ class StateMachineHit:
 
     def draw(self):
         self.cur_state.draw(self.hitter)
+        self.hitter.font.draw(self.hitter.pos[0] - 10, self.hitter.pos[1] + 50, f'{self.hitter.name}', (255, 255, 0))
 
 
 class StateMachineRun:
@@ -256,7 +272,7 @@ class StateMachineRun:
         self.hitter = hitter
         self.cur_state = Idle
         self.transitions = {
-            Idle: {hit_success: Run},
+            Idle: {hit_success: Run, four_ball: Run},
             Run: {run_done: Idle}
         }
 
@@ -278,6 +294,7 @@ class StateMachineRun:
 
     def draw(self):
         self.cur_state.draw(self.hitter)
+        self.hitter.font.draw(self.hitter.pos[0] - 10, self.hitter.pos[1] + 50, f'{self.hitter.name}', (255, 255, 0))
 
 
 class StateMachineDefence:
@@ -319,7 +336,7 @@ class Hitter:
         self.pos = pos
         self.frame, self.frame_number, self.action = 0, 1, 4
         self.team_color = 0
-
+        self.font = load_font('resource/txt/NanumGothic.TTF', 16)
         # 파일: 이름, 안타, 홈런, 도루, 타율, 출루율 + 장타율
         self.name, self.hit, self.home_run, self.stolen_base, self.BA, self.OPS = name, hit, home_run, stolen_base, BA, OPS
 

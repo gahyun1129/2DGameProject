@@ -11,7 +11,7 @@ current_event = ('None', 0)
 # goal_runner가 삭제될 때 점수 +1
 goal_runner = None
 ball = None
-
+bases = []
 
 def handle_events():
     events = get_events()
@@ -25,12 +25,16 @@ def handle_events():
 
 
 def init():
+    global bases
+
     # 데이터 읽어 오기
     make_team.set_player_from_data_file()
     # com 팀과 user 팀 선수 랜덤 으로 정하기
     make_team.make_team()
     # com 팀이 수비, user 팀이 공격인 위치로 배치 하기
     make_team.attack_position()
+    # base 세팅
+    bases = set_base()
 
 
 def update():

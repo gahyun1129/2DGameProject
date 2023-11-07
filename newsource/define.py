@@ -1,3 +1,5 @@
+from base import Base
+
 mound = (400, 240)
 one_base = (600, 270)
 two_base = (400, 350)
@@ -17,3 +19,7 @@ positions = {
     three_base: home,
     home: (0, 0)
 }
+
+
+def set_base():
+    return [Base(base, next_base) for base, next_base in positions.items()]

@@ -57,10 +57,10 @@ def update():
             goal_runner = None
 
     # 현재 타자가 hit을 성공한 경우, 주루 플레이어들은 달림
-    if current_event[0] == 'HIT_SUCCESS':
-        ball.hit_success()
-        game_world.update_handle_event()
-        current_event = ('None', 0)
+    # if current_event[0] == 'HIT_SUCCESS':
+    #     ball.hit_success()
+    #     game_world.update_handle_event()
+    #     current_event = ('None', 0)
 
     # 현재 타자가 hit을 실패한 경우, 현재 타자 삭제 및 다음 타자 불러옴
     if current_event[0] == 'HIT_DONE':

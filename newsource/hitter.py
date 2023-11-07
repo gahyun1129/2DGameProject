@@ -79,7 +79,9 @@ class Hit:
         if get_time() - hitter.wait_time > 2:
             hit = 0.3 + float(hitter.BA) * random.randint(0, 3)
             if hit > 1:
+                attack_mode.ball.hit_success()
                 hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
+                game_world.update_handle_event(('HIT_SUCCESS', 0))
             else:
                 hitter.wait_time = get_time()
                 if hit < 0.4:
@@ -230,8 +232,8 @@ class StateMachineHit:
         self.hitter = hitter
         self.cur_state = Idle
         self.transitions = {
-            Hit: {hit_success: Run, hit_fail: Idle, hit_done: Idle},
             Idle: {hit_start: Hit},
+            Hit: {hit_success: Run, hit_fail: Idle, hit_done: Idle},
             Run: {run_done: Idle}
         }
 

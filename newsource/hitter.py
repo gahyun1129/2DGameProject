@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time
+from pico2d import load_image, get_time, load_font
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE
 from define import *
 import random
@@ -257,6 +257,8 @@ class StateMachineHit:
 
     def draw(self):
         self.cur_state.draw(self.hitter)
+        self.hitter.font.draw(self.hitter.pos[0] - 10, self.hitter.pos[1] + 50, f'{self.hitter.name}', (255, 255, 0))
+
 
 
 class StateMachineRun:
@@ -286,6 +288,7 @@ class StateMachineRun:
 
     def draw(self):
         self.cur_state.draw(self.hitter)
+        self.hitter.font.draw(self.hitter.pos[0] - 10, self.hitter.pos[1] + 50, f'{self.hitter.name}', (255, 255, 0))
 
 
 class StateMachineDefence:
@@ -327,7 +330,7 @@ class Hitter:
         self.pos = pos
         self.frame, self.frame_number, self.action = 0, 1, 4
         self.team_color = 0
-
+        self.font = load_font('resource/txt/NanumGothic.TTF', 16)
         # 파일: 이름, 안타, 홈런, 도루, 타율, 출루율 + 장타율
         self.name, self.hit, self.home_run, self.stolen_base, self.BA, self.OPS = name, hit, home_run, stolen_base, BA, OPS
 

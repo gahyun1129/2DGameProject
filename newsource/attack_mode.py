@@ -48,17 +48,17 @@ def update():
     # 타자가 hit을 성공한 후 1루수로 달리고 난 경우
     # 다음 순서로 타자 변경, 현재 타자는 주루 플레이어로 상태 머신 업데이트
     # 목표로 하는 position이 home인 경우, home으로 도착 후 타자 객체 game_world에서 삭제
-    if current_event[0] == 'RUN_DONE':
-        next_hitter = make_team.user_players[(make_team.user_players.index(cur_hitter) + 1) % 9]
-        cur_hitter.init_state_machine('주자')
-        cur_hitter = next_hitter
-        cur_hitter.pos = attack_zone
-        cur_hitter.init_state_machine('타자')
-        game_world.add_object(cur_hitter, 2)
-        current_event = ('None', 0)
-        if goal_runner is not None:
-            game_world.remove_object(goal_runner)
-            goal_runner = None
+    # if current_event[0] == 'RUN_DONE':
+    #     next_hitter = make_team.user_players[(make_team.user_players.index(cur_hitter) + 1) % 9]
+    #     cur_hitter.init_state_machine('주자')
+    #     cur_hitter = next_hitter
+    #     cur_hitter.pos = attack_zone
+    #     cur_hitter.init_state_machine('타자')
+    #     game_world.add_object(cur_hitter, 2)
+    #     current_event = ('None', 0)
+    #     if goal_runner is not None:
+    #         game_world.remove_object(goal_runner)
+    #         goal_runner = None
 
     # 현재 타자가 hit을 성공한 경우, 주루 플레이어들은 달림
     # if current_event[0] == 'HIT_SUCCESS':

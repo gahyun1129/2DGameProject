@@ -82,6 +82,9 @@ class Hit:
         hitter.frame = (hitter.frame + 1) % hitter.frame_number
         if get_time() - hitter.wait_time > 2:
             hit = 0.3 + float(hitter.BA) * random.randint(0, 3)
+            # hit = 0.6 # 항상 볼
+            # hit = 0.3 # 항상 스트라이크
+            # hit = 1.1 # 항상 hit
             if hit > 1:
                 attack_mode.ball.hit_success()
                 hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
@@ -122,8 +125,14 @@ class Run:
 
         # 현재 위치, 목표 위치, 매개 변수 t 정의
         hitter.current_position = hitter.pos
-        hitter.goal_position = positions[hitter.pos]
+        hitter.goal_position = positions[hitter.pos][0]
         hitter.t = 0.0
+
+        if hitter.pos is attack_zone:
+            print('attack_zone:', hitter.name)
+        if hitter.pos is not attack_zone and positions[positions[hitter.pos][2]][1] is False:
+            print(hitter.name)
+            hitter.state_machine.handle_event(('RUN_DONE', 0))
 
         # home에 도착한 경우,,,
         if hitter.goal_position == home:
@@ -133,7 +142,9 @@ class Run:
     def exit(hitter, e):
         # 위치를 확실히 하기 위해 한 번 더 정의
         hitter.pos = hitter.goal_position
-
+        if hitter.current_position is not attack_zone:
+            positions[hitter.current_position][1] = False
+        positions[hitter.pos][1] = True
 
     @staticmethod
     def do(hitter):
@@ -149,6 +160,8 @@ class Run:
         # 직선 이동이 끝날 때 run_success 이벤트 발생
         if hitter.t > 1:
             hitter.state_machine.handle_event(('RUN_DONE', 0))
+            # hitter.init_state_machine('주자')
+            # make_team.set_next_hitter(hitter)
         # print('Run Do')
 
     @staticmethod

@@ -134,6 +134,7 @@ class Run:
         # 위치를 확실히 하기 위해 한 번 더 정의
         hitter.pos = hitter.goal_position
 
+
     @staticmethod
     def do(hitter):
         # 프레임 넘기기

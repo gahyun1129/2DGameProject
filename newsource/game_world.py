@@ -28,8 +28,11 @@ def render():
 
 
 def update_handle_event(event):
+    # 주자
     for o in objects[2]:
         o.state_machine.handle_event(event)
+
+    # 수비수 (투수 제외)
     for o in objects[1][1:9]:
         if o.run_to_ball(attack_mode.ball.goal_pos):
             o.state_machine.handle_event(event)

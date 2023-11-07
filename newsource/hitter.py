@@ -90,7 +90,9 @@ class Hit:
                     hitter.ball += 1
                 if hitter.strike == 3:
                     print('STRIKE_3')
-                    hitter.state_machine.handle_event(('HIT_DONE', 0))
+                    make_team.set_next_hitter(hitter)
+                    game_world.remove_object(hitter)
+                    attack_mode.ball.delete_self()
                 elif hitter.ball == 4:
                     print('BALL_4')
                     hitter.state_machine.handle_event(('HIT_SUCCESS', 0))

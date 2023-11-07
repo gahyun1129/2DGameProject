@@ -95,3 +95,16 @@ def attack_position():
 
     for o in game_world.objects[2]:
         o.init_state_machine('타자')
+
+
+def set_next_hitter(hitter):
+    # 다음 타자의 index 찾기
+    # 만약 index 가 list 의 최대 값인 9를 넘거나, 투수의 번호인 0이 아니게 1로 변경함.
+    next_hitter_index = user_players.index(hitter) + 1
+    if next_hitter_index > 10:
+        next_hitter_index = 1
+    cur_hitter = user_players[next_hitter_index]
+    cur_hitter.pos = attack_zone
+    cur_hitter.init_state_machine('타자')
+    game_world.add_object(cur_hitter, 2)
+    attack_mode.cur_hitter = cur_hitter

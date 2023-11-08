@@ -1,5 +1,9 @@
+import random
+
 from pico2d import load_image, get_time, load_font
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE
+
+import game_framework
 from define import *
 
 import attack_mode
@@ -8,6 +12,11 @@ import game_world
 from hitter_defence import StateMachineDefence
 from hitter_run import StateMachineRun
 
+
+PIXEL_PER_METER = (10.0 / 0.3)
+
+# RUN_SPEED_MPS = ((RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0)
+# RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 ## 이벤트 체크 함수 ##
 def space_down(e):
@@ -84,8 +93,8 @@ class Hit:
         if get_time() - hitter.wait_time > 0:
             # hit = 0.3 + float(hitter.BA) * random.randint(0, 3)
             # hit = 0.6 # 항상 볼
-            hit = 0.3  # 항상 스트라이크
-            # hit = 1.1 # 항상 hit
+            # hit = 0.3  # 항상 스트라이크
+            hit = 1.1 # 항상 hit
             if hit > 1:
                 print(attack_mode.ball.goal_position)
                 hitter.strike, hitter.ball = 0, 0
@@ -108,7 +117,6 @@ class Hit:
                     print('BALL_4')
                     hitter.strike, hitter.ball = 0, 0
                     hitter.state_machine.handle_event(('FOUR_BALL', 0))
-                    attack_mode.ball.delete_self()
                     game_world.update_handle_event(('FOUR_BALL', 0))
                 else:
                     hitter.state_machine.handle_event(('HIT_FAIL', 0))
@@ -152,7 +160,7 @@ class Run:
         x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
         y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
         hitter.pos = (x, y)
-        hitter.t += 0.1
+        hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 run_success 이벤트 발생
         if hitter.t > 1:
@@ -214,6 +222,9 @@ class Hitter:
 
         # 타자의 스트라이크, 볼 개수 저장 변수
         self.strike, self.ball = 2, 3
+
+        # 타자의 달리기 속도
+        self.RUN_SPEED_KMPH = random.randint(1, 10) / 10
 
         # 이미지 로드
         if Hitter.image is None:

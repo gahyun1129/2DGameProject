@@ -1,6 +1,7 @@
 import attack_mode
 import game_world
-from hitter import Idle, hit_success, run_done, four_ball
+import hitter
+import game_world
 from define import positions, home
 
 
@@ -51,12 +52,12 @@ class Run:
 
 
 class StateMachineRun:
-    def __init__(self, hitter):
-        self.hitter = hitter
-        self.cur_state = Idle
+    def __init__(self, hitterObj):
+        self.hitter = hitterObj
+        self.cur_state = hitter.Idle
         self.transitions = {
-            Idle: {hit_success: Run, four_ball: Run},
-            Run: {run_done: Idle}
+            hitter.Idle: {hitter.hit_success: Run, hitter.four_ball: Run},
+            Run: {hitter.run_done: hitter.Idle}
         }
 
     def handle_event(self, e):

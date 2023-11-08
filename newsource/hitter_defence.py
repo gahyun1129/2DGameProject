@@ -1,5 +1,6 @@
-from hitter import Idle, hit_success, run_done
-from attack_mode import ball
+import game_framework
+import hitter
+import attack_mode
 
 
 class RunDefence:
@@ -11,7 +12,7 @@ class RunDefence:
 
         # 현재 위치, 목표 위치, 매개 변수 t 정의
         hitter.current_position = hitter.pos
-        hitter.goal_position = ball.goal_position
+        hitter.goal_position = attack_mode.ball.goal_position
         hitter.t = 0.0
 
     @staticmethod
@@ -20,19 +21,19 @@ class RunDefence:
         hitter.pos = hitter.goal_position
 
     @staticmethod
-    def do(hitter):
+    def do(hitter_run):
         # 프레임 넘기기
-        hitter.frame = (hitter.frame + 1) % hitter.frame_number
+        hitter_run.frame = (hitter_run.frame + 1) % hitter_run.frame_number
 
         # 직선 이동 방정식
-        x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
-        y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
-        hitter.pos = (x, y)
-        hitter.t += 0.1
+        x = (1 - hitter_run.t) * hitter_run.current_position[0] + hitter_run.t * hitter_run.goal_position[0]
+        y = (1 - hitter_run.t) * hitter_run.current_position[1] + hitter_run.t * hitter_run.goal_position[1]
+        hitter_run.pos = (x, y)
+        hitter_run.t += 0.1 * ((hitter_run.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * hitter.PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
-        if hitter.t > 1:
-            hitter.state_machine.handle_event(('RUN_DONE', 0))
+        if hitter_run.t > 1:
+            hitter_run.state_machine.handle_event(('RUN_DONE', 0))
         # print('Run Do')
 
     @staticmethod
@@ -59,19 +60,19 @@ class RunPosition:
         hitter.pos = hitter.defence_pos
 
     @staticmethod
-    def do(hitter):
+    def do(hitter_run):
         # 프레임 넘기기
-        hitter.frame = (hitter.frame + 1) % hitter.frame_number
+        hitter_run.frame = (hitter_run.frame + 1) % hitter_run.frame_number
 
         # 직선 이동 방정식
-        x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
-        y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
-        hitter.pos = (x, y)
-        hitter.t += 0.1
+        x = (1 - hitter_run.t) * hitter_run.current_position[0] + hitter_run.t * hitter_run.goal_position[0]
+        y = (1 - hitter_run.t) * hitter_run.current_position[1] + hitter_run.t * hitter_run.goal_position[1]
+        hitter_run.pos = (x, y)
+        hitter_run.t += 0.1 * ((hitter_run.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * hitter.PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
-        if hitter.t > 1:
-            hitter.state_machine.handle_event(('RUN_DONE', 0))
+        if hitter_run.t > 1:
+            hitter_run.state_machine.handle_event(('RUN_DONE', 0))
         # print('Run Do')
 
     @staticmethod
@@ -81,14 +82,14 @@ class RunPosition:
 
 
 class StateMachineDefence:
-    def __init__(self, hitter):
-        self.hitter = hitter
+    def __init__(self, hitterObj):
+        self.hitter = hitterObj
 
-        self.cur_state = Idle
+        self.cur_state = hitter.Idle
         self.transitions = {
-            Idle: {hit_success: RunDefence},
-            RunDefence: {run_done: RunPosition},
-            RunPosition: {run_done: Idle},
+            hitter.Idle: {hitter.hit_success: RunDefence},
+            RunDefence: {hitter.run_done: RunPosition},
+            RunPosition: {hitter.run_done: hitter.Idle},
         }
 
     def handle_event(self, e):

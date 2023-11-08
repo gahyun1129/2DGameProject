@@ -3,15 +3,12 @@ from pico2d import *
 
 import make_team
 import game_world
-from define import *
-from ball import Ball
 
 cur_hitter = None
 current_event = ('None', 0)
 # goal_runner가 삭제될 때 점수 +1
 goal_runner = None
 ball = None
-bases = []
 
 
 def handle_events():
@@ -26,8 +23,6 @@ def handle_events():
 
 
 def init():
-    global bases
-
     # 데이터 읽어 오기
     make_team.set_player_from_data_file()
     # com 팀과 user 팀 선수 랜덤 으로 정하기
@@ -35,55 +30,10 @@ def init():
     # com 팀이 수비, user 팀이 공격인 위치로 배치 하기
     make_team.attack_position(make_team.user_players)
     make_team.defence_position(make_team.computer_players)
-    # base 세팅
-    bases = set_base()
 
 
 def update():
-    global cur_hitter
-    global current_event
-    global goal_runner
-    global ball
-
     game_world.update()
-
-    # 타자가 hit을 성공한 후 1루수로 달리고 난 경우
-    # 다음 순서로 타자 변경, 현재 타자는 주루 플레이어로 상태 머신 업데이트
-    # 목표로 하는 position이 home인 경우, home으로 도착 후 타자 객체 game_world에서 삭제
-    # if current_event[0] == 'RUN_DONE':
-    #     next_hitter = make_team.user_players[(make_team.user_players.index(cur_hitter) + 1) % 9]
-    #     cur_hitter.init_state_machine('주자')
-    #     cur_hitter = next_hitter
-    #     cur_hitter.pos = attack_zone
-    #     cur_hitter.init_state_machine('타자')
-    #     game_world.add_object(cur_hitter, 2)
-    #     current_event = ('None', 0)
-    #     if goal_runner is not None:
-    #         game_world.remove_object(goal_runner)
-    #         goal_runner = None
-
-    # 현재 타자가 hit을 성공한 경우, 주루 플레이어들은 달림
-    # if current_event[0] == 'HIT_SUCCESS':
-    #     ball.hit_success()
-    #     game_world.update_handle_event()
-    #     current_event = ('None', 0)
-
-    # 현재 타자가 hit을 실패한 경우, 현재 타자 삭제 및 다음 타자 불러옴
-    # if current_event[0] == 'HIT_DONE':
-    #     next_hitter = make_team.user_players[make_team.user_players.index(cur_hitter) + 1 % 9]
-    #     print(next_hitter.name, cur_hitter.name)
-    #     game_world.remove_object(cur_hitter)
-    #     cur_hitter = next_hitter
-    #     cua_hitter.pos = attack_zone
-    #     cur_hitter.init_state_machine('타자')
-    #     game_world.add_object(cur_hitter, 2)
-    #     ball.delete_self()
-    #     current_event = ('None', 0)
-
-    # if current_event[0] == 'INPUT' and current_event[1].type == SDL_KEYDOWN and current_event[1].key == SDLK_SPACE:
-    #     ball = Ball()
-    #     game_world.add_layer([ball])
-    #     current_event = ('None', 0)
 
 
 def draw():

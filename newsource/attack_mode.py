@@ -36,6 +36,9 @@ def init():
 
 def update():
     game_world.update()
+    for defender in game_world.objects[1][2:9]:
+        if game_world.collide(defender, ball):
+            print('COLLISION defender, ball')
 
 
 def draw():

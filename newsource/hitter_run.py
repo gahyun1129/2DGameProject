@@ -1,4 +1,5 @@
 import attack_mode
+import game_framework
 import game_world
 import hitter
 import game_world
@@ -31,19 +32,19 @@ class Run:
         positions[hitter.pos][1] = True
 
     @staticmethod
-    def do(hitter):
+    def do(hitterObj):
         # 프레임 넘기기
-        hitter.frame = (hitter.frame + 1) % hitter.frame_number
+        hitterObj.frame = (hitterObj.frame + 1) % hitterObj.frame_number
 
         # 직선 이동 방정식
-        x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
-        y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
-        hitter.pos = (x, y)
-        hitter.t += 0.1
+        x = (1 - hitterObj.t) * hitterObj.current_position[0] + hitterObj.t * hitterObj.goal_position[0]
+        y = (1 - hitterObj.t) * hitterObj.current_position[1] + hitterObj.t * hitterObj.goal_position[1]
+        hitterObj.pos = (x, y)
+        hitterObj.t += 0.1 * ((hitterObj.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * hitter.PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 run_success 이벤트 발생
-        if hitter.t > 1:
-            hitter.state_machine.handle_event(('RUN_DONE', 0))
+        if hitterObj.t > 1:
+            hitterObj.state_machine.handle_event(('RUN_DONE', 0))
 
     @staticmethod
     def draw(hitter):

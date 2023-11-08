@@ -1,6 +1,6 @@
 import random
 
-from pico2d import load_image, get_time, load_font
+from pico2d import load_image, get_time, load_font, draw_rectangle
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE
 
 import game_framework
@@ -224,7 +224,7 @@ class Hitter:
         self.strike, self.ball = 2, 3
 
         # 타자의 달리기 속도
-        self.RUN_SPEED_KMPH = random.randint(1, 10) / 10
+        self.RUN_SPEED_KMPH = random.randint(4, 8) / 10
 
         # 이미지 로드
         if Hitter.image is None:
@@ -261,6 +261,7 @@ class Hitter:
 
     def draw(self):
         self.state_machine.draw()
+        draw_rectangle(*self.get_bb())
         # Hitter.image.clip_draw(self.frame * 50, self.action * 50, 50, 50, self.x, self.y)
 
     def run_to_ball(self, goal_pos):
@@ -273,3 +274,6 @@ class Hitter:
         # x: 400 이하, y: 300 이하 > 유격수, 3루수
         if goal_pos[0] <= 400 and self.pos[0] <= 400 and goal_pos[1] <= 350 and self.pos[1] <= 350: return True
         return False
+
+    def get_bb(self):
+        return self.pos[0] - 20, self.pos[1] - 50, self.pos[0] + 20, self.pos[1] + 50

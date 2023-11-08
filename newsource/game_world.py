@@ -50,3 +50,15 @@ def remove_object(o):
 def clear():
     for layer in objects:
         layer.clear()  # layer type은 list이므로
+
+
+def collide(a, b):
+    la, ba, ra, ta = a.get_bb()
+    lb, bb, rb, tb = b.get_bb()
+
+    if la > rb: return False
+    if ra < lb: return False
+    if ta < bb: return False
+    if ba > tb: return False
+
+    return True

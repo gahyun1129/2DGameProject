@@ -1,7 +1,7 @@
 import attack_mode
 import game_world
 from define import *
-from pico2d import load_image
+from pico2d import load_image, draw_rectangle
 import random
 
 
@@ -164,6 +164,7 @@ class Ball:
     def draw(self):
         if self.isDraw:
             self.state_machine.draw()
+        draw_rectangle(*self.get_bb())
 
-    def delete_self(self):
-        game_world.remove_object(self)
+    def get_bb(self):
+        return self.pos[0] - 10, self.pos[1] - 10, self.pos[0] + 10, self.pos[1] + 10

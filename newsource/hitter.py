@@ -80,13 +80,14 @@ class Hit:
     @staticmethod
     def do(hitter):
         hitter.frame = (hitter.frame + 1) % hitter.frame_number
-        if get_time() - hitter.wait_time > 2:
+        if get_time() - hitter.wait_time > 0:
             # hit = 0.3 + float(hitter.BA) * random.randint(0, 3)
             # hit = 0.6 # 항상 볼
-            # hit = 0.3 # 항상 스트라이크
-            hit = 1.1 # 항상 hit
+            hit = 0.3 # 항상 스트라이크
+            # hit = 1.1 # 항상 hit
             if hit > 1:
                 print(attack_mode.ball.goal_position)
+                hitter.strike, hitter.ball = 0, 0
                 attack_mode.ball.state_machine.handle_event(('HIT_SUCCESS', 0))
                 hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
                 game_world.update_handle_event(('HIT_SUCCESS', 0))
@@ -99,11 +100,12 @@ class Hit:
                     hitter.ball += 1
                 if hitter.strike == 3:
                     print('STRIKE_3')
+                    hitter.strike, hitter.ball = 0, 0
                     make_team.set_next_hitter(hitter)
                     game_world.remove_object(hitter)
-                    print(len(make_team.user_players))
                 elif hitter.ball == 4:
                     print('BALL_4')
+                    hitter.strike, hitter.ball = 0, 0
                     hitter.state_machine.handle_event(('FOUR_BALL', 0))
                     attack_mode.ball.delete_self()
                     game_world.update_handle_event(('FOUR_BALL', 0))

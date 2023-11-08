@@ -59,7 +59,7 @@ class Throw:
         pitcher.frame = (pitcher.frame + 1) % pitcher.frame_number
 
         # 나중엔 프레임 한 번 다 돌았을 때로 체크 할 것!
-        if get_time() - pitcher.wait_time > 2:
+        if get_time() - pitcher.wait_time > 0:
             pitcher.state_machine.handle_event(('THROW_DONE', 0))
 
 

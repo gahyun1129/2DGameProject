@@ -48,7 +48,7 @@ class Throw:
         x = (1 - ballObj.t) * ballObj.current_position[0] + ballObj.t * ballObj.goal_position[0]
         y = (1 - ballObj.t) * ballObj.current_position[1] + ballObj.t * ballObj.goal_position[1]
         ballObj.pos = (x, y)
-        ballObj.t += 0.1
+        ballObj.t += 0.5
 
         if ballObj.t > 1:
             ballObj.state_machine.handle_event(('THROW_DONE', 0))

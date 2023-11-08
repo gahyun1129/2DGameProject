@@ -108,8 +108,7 @@ def set_next_hitter(hitter):
     # 다음 타자의 index 찾기
     # 만약 index 가 list 의 최대 값인 9를 넘거나, 투수의 번호인 0이 아니게 1로 변경함.
     next_hitter_index = user_players.index(hitter) + 1
-    if next_hitter_index > 9:
-        next_hitter_index = 1
+    next_hitter_index = 1 if next_hitter_index > 9 else next_hitter_index
     cur_hitter = user_players[next_hitter_index]
     cur_hitter.pos = attack_zone
     cur_hitter.init_state_machine('타자')

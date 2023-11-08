@@ -1,6 +1,6 @@
 import attack_mode
 
-objects = [[], [], []]
+objects = [[], [], [], []]
 
 
 def add_object(o, depth=0):
@@ -34,7 +34,7 @@ def update_handle_event(event):
 
     # 수비수 (투수 제외)
     for o in objects[1][1:9]:
-        if o.run_to_ball(attack_mode.ball.goal_pos):
+        if o.run_to_ball(attack_mode.ball.goal_position):
             o.state_machine.handle_event(event)
 
 

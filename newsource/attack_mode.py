@@ -3,6 +3,7 @@ from pico2d import *
 
 import make_team
 import game_world
+from ball import Ball
 
 cur_hitter = None
 current_event = ('None', 0)
@@ -30,6 +31,7 @@ def init():
     # com 팀이 수비, user 팀이 공격인 위치로 배치 하기
     make_team.attack_position(make_team.user_players)
     make_team.defence_position(make_team.computer_players)
+    game_world.add_object(ball, 3)
 
 
 def update():

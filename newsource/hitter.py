@@ -81,14 +81,16 @@ class Hit:
     def do(hitter):
         hitter.frame = (hitter.frame + 1) % hitter.frame_number
         if get_time() - hitter.wait_time > 2:
-            hit = 0.3 + float(hitter.BA) * random.randint(0, 3)
+            # hit = 0.3 + float(hitter.BA) * random.randint(0, 3)
             # hit = 0.6 # 항상 볼
             # hit = 0.3 # 항상 스트라이크
-            # hit = 1.1 # 항상 hit
+            hit = 1.1 # 항상 hit
             if hit > 1:
-                attack_mode.ball.hit_success()
+                print(attack_mode.ball.goal_position)
+                attack_mode.ball.state_machine.handle_event(('HIT_SUCCESS', 0))
                 hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
                 game_world.update_handle_event(('HIT_SUCCESS', 0))
+                print(attack_mode.ball.goal_position)
             else:
                 hitter.wait_time = get_time()
                 if hit < 0.4:
@@ -99,7 +101,7 @@ class Hit:
                     print('STRIKE_3')
                     make_team.set_next_hitter(hitter)
                     game_world.remove_object(hitter)
-                    attack_mode.ball.delete_self()
+                    print(len(make_team.user_players))
                 elif hitter.ball == 4:
                     print('BALL_4')
                     hitter.state_machine.handle_event(('FOUR_BALL', 0))
@@ -218,7 +220,7 @@ class RunDefence:
 
         # 현재 위치, 목표 위치, 매개 변수 t 정의
         hitter.current_position = hitter.pos
-        hitter.goal_position = attack_mode.ball.goal_pos
+        hitter.goal_position = attack_mode.ball.goal_position
         hitter.t = 0.0
 
     @staticmethod

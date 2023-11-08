@@ -6,6 +6,7 @@ from hitter import Hitter
 from pitcher import Pitcher
 from define import *
 import random
+from ball import Ball
 
 hitters = []
 pitchers = []
@@ -100,11 +101,14 @@ def attack_position(players):
         o.init_state_machine('타자')
 
 
+    attack_mode.ball = Ball()
+
+
 def set_next_hitter(hitter):
     # 다음 타자의 index 찾기
     # 만약 index 가 list 의 최대 값인 9를 넘거나, 투수의 번호인 0이 아니게 1로 변경함.
     next_hitter_index = user_players.index(hitter) + 1
-    if next_hitter_index > 10:
+    if next_hitter_index > 9:
         next_hitter_index = 1
     cur_hitter = user_players[next_hitter_index]
     cur_hitter.pos = attack_zone

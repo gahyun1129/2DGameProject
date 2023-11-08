@@ -38,6 +38,7 @@ class Throw:
         if e[0] == 'THROW_START':
             my_ball.pos = mound
             my_ball.goal_position = home
+            # 공이 날아오면서 타자는 공을 치는 애니메이션 시작!
             attack_mode.cur_hitter.state_machine.handle_event(('HIT_START', 0))
         # 타자가 공을 친 경우
         elif e[0] == 'HIT_SUCCESS':
@@ -54,8 +55,6 @@ class Throw:
             pass
         my_ball.current_position = my_ball.pos
         my_ball.t = 0.0
-
-        # 공이 날아오면서 타자는 공을 치는 애니메이션 시작!
 
     @staticmethod
     def exit(my_ball, e):
@@ -175,4 +174,3 @@ class Ball:
             else:
                 self.state_machine.handle_event(('THROW_TO_BASE', 0))
             self.is_collision = True
-

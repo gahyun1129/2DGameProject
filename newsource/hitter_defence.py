@@ -109,3 +109,4 @@ class StateMachineDefence:
 
     def draw(self):
         self.cur_state.draw(self.hitter)
+        self.hitter.font.draw(self.hitter.pos[0] - 10, self.hitter.pos[1] + 50, f'{self.hitter.name}', (255, 255, 0))

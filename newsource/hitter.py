@@ -204,7 +204,7 @@ class StateMachineHit:
 
     def draw(self):
         self.cur_state.draw(self.hitter)
-        self.hitter.font.draw(self.hitter.pos[0] - 10, self.hitter.pos[1] + 50, f'{self.hitter.name}', (255, 255, 0))
+        self.hitter.font.draw(self.hitter.pos[0] - 10, self.hitter.pos[1] + 50, f'{self.hitter.name}', (0, 255, 0))
 
 
 ## 클래스 ##
@@ -276,7 +276,7 @@ class Hitter:
         return False
 
     def get_bb(self):
-        return self.pos[0] - 20, self.pos[1] - 50, self.pos[0] + 20, self.pos[1] + 50
+        return self.pos[0] - 20, self.pos[1] - 30, self.pos[0] + 20, self.pos[1] + 30
 
     def handle_collision(self, group, other):
         pass

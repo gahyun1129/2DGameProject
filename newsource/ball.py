@@ -170,5 +170,5 @@ class Ball:
         return self.pos[0] - 10, self.pos[1] - 10, self.pos[0] + 10, self.pos[1] + 10
 
     def handle_collision(self, group, other):
-        print('collision')
-        self.state_machine.handle_event(('THROW', 0))
+        print('collision', self.state_machine.cur_state)
+        self.state_machine.handle_event(('THROW_START', 0))

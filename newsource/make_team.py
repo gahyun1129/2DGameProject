@@ -61,37 +61,40 @@ def set_player_from_data_file():
             pitchers.append(Pitcher(pos, name, strike_out, four_balls, ERA, pitching))
 
 
-def attack_position():
+def defence_position(players):
     # com 팀 투수의 위치 잡기
-    computer_players[0].pos = mound
+    players[0].pos = mound
 
     # com 팀 타자 중 8명의 수비 위치 잡기
-    computer_players[1].pos = one_base
-    computer_players[2].pos = (two_base[0] + 70, two_base[1] - 20)
-    computer_players[3].pos = three_base
-    computer_players[4].pos = home
-    computer_players[5].pos = short
-    computer_players[6].pos = left
-    computer_players[7].pos = right
-    computer_players[8].pos = center
-
-    # user 팀 1번 타자의 공격 위치 잡기
-    attack_mode.cur_hitter = user_players[1]
-    attack_mode.cur_hitter.pos = attack_zone
+    players[1].pos = one_base
+    players[2].pos = (two_base[0] + 70, two_base[1] - 20)
+    players[3].pos = three_base
+    players[4].pos = home
+    players[5].pos = short
+    players[6].pos = left
+    players[7].pos = right
+    players[8].pos = center
 
     # com 팀 투수 1명과 타자 8명 game_world list 에 넣어 렌더링 하기
     # game_world.objects[1]
-    game_world.add_layer(computer_players[0:9])
+    game_world.add_objects(players[0:9], 1)
+
+    for o in game_world.objects[1]:
+        o.init_state_machine('수비수')
+
+
+def attack_position(players):
+    # user 팀 1번 타자의 공격 위치 잡기
+    attack_mode.cur_hitter = players[1]
+    attack_mode.cur_hitter.pos = attack_zone
 
     # user 팀 1번 타자 game_world list 에 넣어 렌더링 하기
     # game_world.objects[2]
-    game_world.add_layer([attack_mode.cur_hitter])
+    game_world.add_object(attack_mode.cur_hitter, 2)
 
     # state_machine 구동 하기
     # 일단은 pitcher 상태 머신 구현 하기 전이니, hitter 만 구동함.
     # '인자' 의 값에 따라서 다른 타입의 상태 머신 작동.
-    for o in game_world.objects[1]:
-        o.init_state_machine('수비수')
 
     for o in game_world.objects[2]:
         o.init_state_machine('타자')

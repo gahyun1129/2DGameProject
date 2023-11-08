@@ -13,6 +13,7 @@ goal_runner = None
 ball = None
 bases = []
 
+
 def handle_events():
     events = get_events()
     for event in events:
@@ -32,7 +33,8 @@ def init():
     # com 팀과 user 팀 선수 랜덤 으로 정하기
     make_team.make_team()
     # com 팀이 수비, user 팀이 공격인 위치로 배치 하기
-    make_team.attack_position()
+    make_team.attack_position(make_team.user_players)
+    make_team.defence_position(make_team.computer_players)
     # base 세팅
     bases = set_base()
 

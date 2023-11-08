@@ -1,6 +1,6 @@
 import attack_mode
 
-objects = [[]]
+objects = [[], [], []]
 
 
 def add_object(o, depth=0):

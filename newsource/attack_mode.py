@@ -33,12 +33,14 @@ def init():
     make_team.defence_position(make_team.computer_players)
     game_world.add_object(ball, 3)
 
+    game_world.add_collision_pair('ball:defender', ball, None)
+    for defender in game_world.objects[1][2:9]:
+        game_world.add_collision_pair('ball:defender', None, defender)
+
 
 def update():
     game_world.update()
-    for defender in game_world.objects[1][2:9]:
-        if game_world.collide(defender, ball):
-            print('COLLISION defender, ball')
+    game_world.handle_collisions()
 
 
 def draw():

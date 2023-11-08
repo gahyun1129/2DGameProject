@@ -30,7 +30,7 @@ class Throw:
     def enter(ballObj, e):
         ballObj.isDraw = True
 
-        ballObj.pos, ballObj.frame, ballObj.frame_number = mound, 0, 1
+        ballObj.frame, ballObj.frame_number =0, 1
         ballObj.current_position = ballObj.pos
         ballObj.goal_position = home
         ballObj.t = 0.0
@@ -65,7 +65,7 @@ class Idle:
 
     @staticmethod
     def exit(ballObj, e):
-        pass
+        ballObj.pos = mound
 
     @staticmethod
     def do(ballObj):
@@ -115,7 +115,7 @@ class StateMachine:
         self.transitions = {
             Idle: {throw_start: Throw, hit_success: Fly},
             Throw: {throw_done: Idle, hit_success: Fly},
-            Fly : {defence_done: Idle, fly_done: Idle}
+            Fly: {defence_done: Idle, fly_done: Idle, throw_start:Throw}
         }
 
     def handle_event(self, e):
@@ -168,3 +168,7 @@ class Ball:
 
     def get_bb(self):
         return self.pos[0] - 10, self.pos[1] - 10, self.pos[0] + 10, self.pos[1] + 10
+
+    def handle_collision(self, group, other):
+        print('collision')
+        self.state_machine.handle_event(('THROW', 0))

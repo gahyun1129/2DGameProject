@@ -12,8 +12,8 @@ import game_world
 from hitter_defence import StateMachineDefence
 from hitter_run import StateMachineRun
 
-
 PIXEL_PER_METER = (10.0 / 0.3)
+
 
 # RUN_SPEED_MPS = ((RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0)
 # RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -94,7 +94,7 @@ class Hit:
             # hit = 0.3 + float(hitter.BA) * random.randint(0, 3)
             # hit = 0.6 # 항상 볼
             # hit = 0.3  # 항상 스트라이크
-            hit = 1.1 # 항상 hit
+            hit = 1.1  # 항상 hit
             if hit > 1:
                 print(attack_mode.ball.goal_position)
                 hitter.strike, hitter.ball = 0, 0
@@ -277,3 +277,6 @@ class Hitter:
 
     def get_bb(self):
         return self.pos[0] - 20, self.pos[1] - 50, self.pos[0] + 20, self.pos[1] + 50
+
+    def handle_collision(self, group, other):
+        pass

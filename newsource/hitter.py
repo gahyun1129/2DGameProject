@@ -96,12 +96,12 @@ class Hit:
             # hit = 0.3  # 항상 스트라이크
             hit = 1.1  # 항상 hit
             if hit > 1:
-                print(attack_mode.ball.goal_position)
+                # print(attack_mode.ball.goal_position)
                 hitter.strike, hitter.ball = 0, 0
                 attack_mode.ball.state_machine.handle_event(('HIT_SUCCESS', 0))
                 hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
                 game_world.update_handle_event(('HIT_SUCCESS', 0))
-                print(attack_mode.ball.goal_position)
+                print(attack_mode.ball.goal_position, hitter.name)
             else:
                 hitter.wait_time = get_time()
                 if hit < 0.4:
@@ -219,7 +219,7 @@ class Hitter:
         self.font = load_font('resource/txt/NanumGothic.TTF', 16)
         # 파일: 이름, 안타, 홈런, 도루, 타율, 출루율 + 장타율
         self.name, self.hit, self.home_run, self.stolen_base, self.BA, self.OPS = name, hit, home_run, stolen_base, BA, OPS
-
+        self.goal_position = None
         # 타자의 스트라이크, 볼 개수 저장 변수
         self.strike, self.ball = 2, 3
 
@@ -280,3 +280,11 @@ class Hitter:
 
     def handle_collision(self, group, other):
         pass
+
+    def throw_to_base(self):
+        for base in next_base[self.defence_pos]:
+            if positions[base][1]:
+                return base
+            return attack_mode.cur_hitter.goal_position
+
+

@@ -51,7 +51,9 @@ class Throw:
             my_ball.goal_position = mound
         # 가장 가까운 주자가 있는 base로 공을 던지는 경우 (수비)
         elif e[0] == 'THROW_TO_BASE':
-            print(' 가까운 베이스로 던지기')
+            print(e[1].throw_to_base())
+            my_ball.goal_position = e[1].throw_to_base()
+            print('가까운 베이스로 던지기')
             pass
         my_ball.current_position = my_ball.pos
         my_ball.t = 0.0
@@ -69,7 +71,7 @@ class Throw:
         x = (1 - my_ball.t) * my_ball.current_position[0] + my_ball.t * my_ball.goal_position[0]
         y = (1 - my_ball.t) * my_ball.current_position[1] + my_ball.t * my_ball.goal_position[1]
         my_ball.pos = (x, y)
-        my_ball.t += 0.1
+        my_ball.t += 0.5
 
         # 목표 위치에 도착한 경우!!
         if my_ball.t > 1:
@@ -89,6 +91,7 @@ class Idle:
             hitter.strike, hitter.ball = 0, 0
             make_team.set_next_hitter(hitter)
             game_world.remove_object(hitter)
+            # hitter.state_machine.handle_event(('RUN_DONE', 0))
             print('한 번에 잡음')
 
     @staticmethod
@@ -172,5 +175,5 @@ class Ball:
             if self.state_machine.cur_state == Throw:
                 self.state_machine.handle_event(('DEFENDER_CATCH', 0))
             else:
-                self.state_machine.handle_event(('THROW_TO_BASE', 0))
+                self.state_machine.handle_event(('THROW_TO_BASE', other))
             self.is_collision = True

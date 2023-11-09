@@ -88,7 +88,7 @@ class Idle:
         if e[0] == 'DEFENDER_CATCH':
             my_ball.is_collision = True
             hitter = attack_mode.cur_hitter
-            hitter.strike, hitter.ball = 0, 0
+            hitter.strike, hitter.my_ball = 0, 0
             make_team.set_next_hitter(hitter)
             game_world.remove_object(hitter)
             # hitter.state_machine.handle_event(('RUN_DONE', 0))

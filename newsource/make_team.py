@@ -1,12 +1,12 @@
-import copy
-
 import attack_mode
 import game_world
+
 from hitter import Hitter
 from pitcher import Pitcher
 from define import *
+
 import random
-from ball import Ball
+import copy
 
 hitters = []
 pitchers = []
@@ -83,6 +83,10 @@ def defence_position(players):
     for o in game_world.objects[1]:
         o.init_state_machine('수비수')
 
+    print('\n수비 팀')
+    for o in players:
+        print(o.name)
+
 
 def attack_position(players):
     # user 팀 1번 타자의 공격 위치 잡기
@@ -100,16 +104,17 @@ def attack_position(players):
     for o in game_world.objects[2]:
         o.init_state_machine('타자')
 
-
-    attack_mode.ball = Ball()
+    print('공격 팀')
+    for o in players:
+        print(o.name)
 
 
 def set_next_hitter(hitter):
     # 다음 타자의 index 찾기
     # 만약 index 가 list 의 최대 값인 9를 넘거나, 투수의 번호인 0이 아니게 1로 변경함.
-    next_hitter_index = user_players.index(hitter) + 1
+    next_hitter_index = game_world.attack_team.index(hitter) + 1
     next_hitter_index = 1 if next_hitter_index > 9 else next_hitter_index
-    cur_hitter = user_players[next_hitter_index]
+    cur_hitter = game_world.attack_team[next_hitter_index]
     cur_hitter.pos = attack_zone
     cur_hitter.init_state_machine('타자')
     game_world.add_object(cur_hitter, 2)

@@ -1,6 +1,6 @@
 import game_framework
 from pico2d import *
-
+from ball import Ball
 import make_team
 import game_world
 
@@ -8,7 +8,7 @@ cur_hitter = None
 out_count = 0
 # goal_runner가 삭제될 때 점수 +1
 goal_runner = None
-ball = None
+my_ball = None
 
 
 def handle_events():
@@ -19,21 +19,27 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         else:
-            make_team.computer_players[0].handle_event(event)
+            make_team.user_players[0].handle_event(event)
 
 
 def init():
-    # 데이터 읽어 오기
-    make_team.set_player_from_data_file()
-    # com 팀과 user 팀 선수 랜덤 으로 정하기
-    make_team.make_team()
-    # com 팀이 수비, user 팀이 공격인 위치로 배치 하기
-    make_team.attack_position(make_team.user_players)
-    make_team.defence_position(make_team.computer_players)
-    game_world.add_object(ball, 3)
+    global my_ball
+    # 현재 모드에서의 공격 팀과 수비 팀 명시
+    game_world.defence_team = make_team.user_players
+    game_world.attack_team = make_team.computer_players
 
-    game_world.add_collision_pair('ball:defender', ball, None)
-    for defender in game_world.objects[1][2:9]:
+    # 공격 팀, 수비 팀 초기 위치 배치
+    make_team.attack_position(game_world.attack_team)
+    make_team.defence_position(game_world.defence_team)
+
+    # 공격에 사용될 공 생성
+    my_ball = Ball()
+    game_world.add_object(my_ball, 0)
+
+    # 수비수와 공의 충돌 설정
+    game_world.add_collision_pair('ball:defender', my_ball, None)
+
+    for defender in game_world.defence_team[2:9]:
         game_world.add_collision_pair('ball:defender', None, defender)
 
 

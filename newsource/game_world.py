@@ -1,19 +1,26 @@
 import attack_mode
 
+# 바뀌는 모드 사이에서, 공격과 수비 팀을 쉽게 나누기 위해 구분해 작성
+attack_team = None
+defence_team = None
+
+# objects[0] : ball
+# objects[1] : 수비수
+# objects[2] : 주자 및 타자
+# objects[3] : UI
+
 objects = [[], [], [], []]
+
 collision_pairs = {}
 
 
+## 렌더링 오브젝트(objects) 관리 ##
 def add_object(o, depth=0):
     objects[depth].append(o)
 
 
 def add_objects(ol, depth=0):
     objects[depth] += ol
-
-
-def add_layer(ol):
-    objects.append(ol)
 
 
 def update():
@@ -40,20 +47,10 @@ def remove_object(o):
 
 def clear():
     for layer in objects:
-        layer.clear()  # layer type은 list이므로
+        layer.clear()
 
 
-def update_handle_event(event):
-    # 주자
-    for o in objects[2]:
-        o.state_machine.handle_event(event)
-
-    # 수비수 (투수 제외)
-    for o in objects[1][1:9]:
-        if o.run_to_ball(attack_mode.ball.goal_position):
-            o.state_machine.handle_event(event)
-
-
+## 충돌 오브젝트(collision_pairs) 관리 ##
 def collide(a, b):
     la, ba, ra, ta = a.get_bb()
     lb, bb, rb, tb = b.get_bb()
@@ -83,6 +80,10 @@ def remove_collision_object(o):
             pairs[1].remove(o)
 
 
+def clear_collision_pairs():
+    collision_pairs.clear()
+
+
 def handle_collisions():
     for group, pairs in collision_pairs.items():
         for a in pairs[0]:
@@ -90,3 +91,15 @@ def handle_collisions():
                 if collide(a, b):
                     a.handle_collision(group, b)
                     b.handle_collision(group, a)
+
+
+## 그 외의 오브젝트 관리 ##
+def update_handle_event(event):
+    # 주자
+    for o in objects[2]:
+        o.state_machine.handle_event(event)
+
+    # 수비수 (투수 제외)
+    for o in objects[1][1:9]:
+        if o.run_to_ball(attack_mode.my_ball.goal_position):
+            o.state_machine.handle_event(event)

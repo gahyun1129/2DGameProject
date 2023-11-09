@@ -12,7 +12,7 @@ class RunDefence:
 
         # 현재 위치, 목표 위치, 매개 변수 t 정의
         hitter.current_position = hitter.pos
-        hitter.goal_position = attack_mode.ball.goal_position
+        hitter.goal_position = attack_mode.my_ball.goal_position
         hitter.t = 0.0
 
     @staticmethod
@@ -51,13 +51,13 @@ class RunPosition:
 
         # 현재 위치, 목표 위치, 매개 변수 t 정의
         hitter.current_position = hitter.pos
-        hitter.goal_position = hitter.defence_pos
+        hitter.goal_position = hitter.defence_position
         hitter.t = 0.0
 
     @staticmethod
     def exit(hitter, e):
         # 위치를 확실히 하기 위해 한 번 더 정의
-        hitter.pos = hitter.defence_pos
+        hitter.pos = hitter.defence_position
 
     @staticmethod
     def do(hitter_run):

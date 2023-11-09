@@ -1,14 +1,16 @@
-import random
-
 from pico2d import load_image, get_time, load_font, draw_rectangle
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE
 
 import game_framework
-from define import *
-
+import defence_mode
 import attack_mode
 import make_team
 import game_world
+
+from define import *
+
+import random
+
 from hitter_defence import StateMachineDefence
 from hitter_run import StateMachineRun
 
@@ -93,29 +95,32 @@ class Hit:
         if get_time() - hitter.wait_time > 0:
             # hit = 0.3 + float(hitter.BA) * random.randint(0, 3)
             # hit = 0.6 # 항상 볼
-            # hit = 0.3  # 항상 스트라이크
-            hit = 1.1  # 항상 hit
+            hit = 0.3  # 항상 스트라이크
+            # hit = 1.1  # 항상 hit
             if hit > 1:
                 # print(attack_mode.ball.goal_position)
-                hitter.strike, hitter.ball = 0, 0
-                attack_mode.ball.state_machine.handle_event(('HIT_SUCCESS', 0))
+                hitter.strike, hitter.my_ball = 0, 0
+                attack_mode.my_ball.state_machine.handle_event(('HIT_SUCCESS', 0))
                 hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
                 game_world.update_handle_event(('HIT_SUCCESS', 0))
-                print(attack_mode.ball.goal_position, hitter.name)
+                print(attack_mode.my_ball.goal_position, hitter.name)
             else:
                 hitter.wait_time = get_time()
                 if hit < 0.4:
                     hitter.strike += 1
                 else:
-                    hitter.ball += 1
+                    hitter.my_ball += 1
                 if hitter.strike == 3:
                     print('STRIKE_3')
-                    hitter.strike, hitter.ball = 0, 0
+                    hitter.strike, hitter.my_ball = 0, 0
                     make_team.set_next_hitter(hitter)
                     game_world.remove_object(hitter)
-                elif hitter.ball == 4:
+                    attack_mode.out_count += 1
+                    if attack_mode.out_count == 3:
+                        game_framework.change_mode(defence_mode)
+                elif hitter.my_ball == 4:
                     print('BALL_4')
-                    hitter.strike, hitter.ball = 0, 0
+                    hitter.strike, hitter.my_ball = 0, 0
                     hitter.state_machine.handle_event(('FOUR_BALL', 0))
                     game_world.update_handle_event(('FOUR_BALL', 0))
                 else:
@@ -207,6 +212,13 @@ class StateMachineHit:
         self.hitter.font.draw(self.hitter.pos[0] - 10, self.hitter.pos[1] + 50, f'{self.hitter.name}', (0, 255, 0))
 
 
+state_machines = {
+    '주자': StateMachineRun,
+    '타자': StateMachineHit,
+    '수비수': StateMachineDefence
+}
+
+
 ## 클래스 ##
 class Hitter:
     image = None
@@ -218,8 +230,10 @@ class Hitter:
         self.team_color = 0
         self.font = load_font('resource/txt/NanumGothic.TTF', 16)
         # 파일: 이름, 안타, 홈런, 도루, 타율, 출루율 + 장타율
-        self.name, self.hit, self.home_run, self.stolen_base, self.BA, self.OPS = name, hit, home_run, stolen_base, BA, OPS
-        self.goal_position = None
+        self.name, self.hit, self.home_run, self.stolen_base, self.BA, self.OPS = \
+            name, hit, home_run, stolen_base, BA, OPS
+        # 목표 위치, 수비 위치 (수비 시 사용)
+        self.goal_position, self.defence_position = None, None
         # 타자의 스트라이크, 볼 개수 저장 변수
         self.strike, self.ball = 2, 3
 
@@ -230,9 +244,8 @@ class Hitter:
         if Hitter.image is None:
             Hitter.image = load_image('resource/image/character_hitter.png')
 
-        # # 상태머신 추가
+        # 상태 머신 추가
         self.state_machine = None
-        # self.state_machine.start()
 
     def set_team_color(self, color):
         if color == '파랑':
@@ -242,27 +255,33 @@ class Hitter:
 
     def init_state_machine(self, type):
         # 객체를 따로 만들어 주었으므로, 상태 머신 시작을 다시 해야 함.
-        if type == '수비수':
-            self.state_machine = StateMachineDefence(self)
-        elif type == '타자':
-            self.state_machine = StateMachineHit(self)
-        elif type == '주자':
-            self.state_machine = StateMachineRun(self)
+        self.state_machine = state_machines[type](self)
         self.state_machine.start()
-        # 수비수의 수비 위치
-        self.defence_pos = self.pos
+
+        # 수비수의 수비 위치 저장해 두기
+        self.defence_position = self.pos
 
     def handle_event(self, event):
         self.state_machine.handle_event(('INPUT', event))
 
     def update(self):
         self.state_machine.update()
-        # self.frame = (self.frame + 1) % self.frame_number
 
     def draw(self):
         self.state_machine.draw()
         draw_rectangle(*self.get_bb())
-        # Hitter.image.clip_draw(self.frame * 50, self.action * 50, 50, 50, self.x, self.y)
+
+    def get_bb(self):
+        return self.pos[0] - 20, self.pos[1] - 30, self.pos[0] + 20, self.pos[1] + 30
+
+    def handle_collision(self, group, other):
+        pass
+
+    def throw_to_base(self):
+        for base in next_base[self.defence_position]:
+            if positions[base][1]:
+                return base
+            return attack_mode.cur_hitter.goal_position
 
     def run_to_ball(self, goal_pos):
         # x: 400 이상, y: 350 이상 > 중견수, 우익수
@@ -274,17 +293,3 @@ class Hitter:
         # x: 400 이하, y: 300 이하 > 유격수, 3루수
         if goal_pos[0] <= 400 and self.pos[0] <= 400 and goal_pos[1] <= 350 and self.pos[1] <= 350: return True
         return False
-
-    def get_bb(self):
-        return self.pos[0] - 20, self.pos[1] - 30, self.pos[0] + 20, self.pos[1] + 30
-
-    def handle_collision(self, group, other):
-        pass
-
-    def throw_to_base(self):
-        for base in next_base[self.defence_pos]:
-            if positions[base][1]:
-                return base
-            return attack_mode.cur_hitter.goal_position
-
-

@@ -1,9 +1,9 @@
 import game_framework
 from pico2d import *
 
-import make_team
+import game_make_team
 import game_world
-from ball import Ball
+from player_ball import Ball
 cur_hitter = None
 out_count = 0
 # goal_runner가 삭제될 때 점수 +1
@@ -19,24 +19,24 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         else:
-            make_team.computer_players[0].handle_event(event)
+            game_make_team.computer_players[0].handle_event(event)
 
 
 def init():
     global my_ball
     # 데이터 읽어 오기
-    make_team.set_player_from_data_file()
+    game_make_team.set_player_from_data_file()
 
     # com 팀과 user 팀 선수 랜덤 으로 정하기
-    make_team.make_team()
+    game_make_team.make_team()
 
     # 현재 모드에서의 공격 팀과 수비 팀 명시
-    game_world.defence_team = make_team.computer_players
-    game_world.attack_team = make_team.user_players
+    game_world.defence_team = game_make_team.computer_players
+    game_world.attack_team = game_make_team.user_players
 
     # 공격 팀, 수비 팀 초기 위치 배치
-    make_team.attack_position(game_world.attack_team)
-    make_team.defence_position(game_world.defence_team)
+    game_make_team.attack_position(game_world.attack_team)
+    game_make_team.defence_position(game_world.defence_team)
 
     # 공격에 사용될 공 생성
     my_ball = Ball()

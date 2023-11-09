@@ -1,7 +1,7 @@
 import game_framework
 from pico2d import *
-from ball import Ball
-import make_team
+from player_ball import Ball
+import game_make_team
 import game_world
 
 cur_hitter = None
@@ -19,18 +19,18 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         else:
-            make_team.user_players[0].handle_event(event)
+            game_make_team.user_players[0].handle_event(event)
 
 
 def init():
     global my_ball
     # 현재 모드에서의 공격 팀과 수비 팀 명시
-    game_world.defence_team = make_team.user_players
-    game_world.attack_team = make_team.computer_players
+    game_world.defence_team = game_make_team.user_players
+    game_world.attack_team = game_make_team.computer_players
 
     # 공격 팀, 수비 팀 초기 위치 배치
-    make_team.attack_position(game_world.attack_team)
-    make_team.defence_position(game_world.defence_team)
+    game_make_team.attack_position(game_world.attack_team)
+    game_make_team.defence_position(game_world.defence_team)
 
     # 공격에 사용될 공 생성
     my_ball = Ball()

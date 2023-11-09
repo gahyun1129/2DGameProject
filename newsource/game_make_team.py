@@ -1,8 +1,8 @@
-import attack_mode
+import mode_attack
 import game_world
 
-from hitter import Hitter
-from pitcher import Pitcher
+from player_hitter import Hitter
+from player_pitcher import Pitcher
 from define import *
 
 import random
@@ -48,9 +48,8 @@ def set_player_from_data_file():
         pos = (300, 100)
         for content in file:
             content = content.strip().split()
-            name, hit, home_run, stolen_base, BA, OPS = content[0], content[1], content[2], content[3], content[4], \
-                content[5]
-            hitters.append(Hitter(pos, name, hit, home_run, stolen_base, BA, OPS))
+            name, hit, home_run, BA, OPS = content[0], content[1], content[2], content[3], content[4]
+            hitters.append(Hitter(pos, name, hit, home_run, BA, OPS))
 
     file_path = 'resource/txt/Pitcher.txt'
     with open(file_path, 'r', encoding='utf-8') as file:
@@ -90,12 +89,12 @@ def defence_position(players):
 
 def attack_position(players):
     # user 팀 1번 타자의 공격 위치 잡기
-    attack_mode.cur_hitter = players[1]
-    attack_mode.cur_hitter.pos = attack_zone
+    mode_attack.cur_hitter = players[1]
+    mode_attack.cur_hitter.pos = attack_zone
 
     # user 팀 1번 타자 game_world list 에 넣어 렌더링 하기
     # game_world.objects[2]
-    game_world.add_object(attack_mode.cur_hitter, 2)
+    game_world.add_object(mode_attack.cur_hitter, 2)
 
     # state_machine 구동 하기
     # 일단은 pitcher 상태 머신 구현 하기 전이니, hitter 만 구동함.
@@ -118,4 +117,4 @@ def set_next_hitter(hitter):
     cur_hitter.pos = attack_zone
     cur_hitter.init_state_machine('타자')
     game_world.add_object(cur_hitter, 2)
-    attack_mode.cur_hitter = cur_hitter
+    mode_attack.cur_hitter = cur_hitter

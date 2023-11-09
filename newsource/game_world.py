@@ -1,4 +1,4 @@
-import attack_mode
+import mode_attack
 
 # 바뀌는 모드 사이에서, 공격과 수비 팀을 쉽게 나누기 위해 구분해 작성
 attack_team = None
@@ -101,5 +101,5 @@ def update_handle_event(event):
 
     # 수비수 (투수 제외)
     for o in objects[1][1:9]:
-        if o.run_to_ball(attack_mode.my_ball.goal_position):
+        if o.run_to_ball(mode_attack.my_ball.goal_position):
             o.state_machine.handle_event(event)

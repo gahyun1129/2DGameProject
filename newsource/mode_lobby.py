@@ -5,7 +5,7 @@
 import game_framework
 from pico2d import *
 
-import make_team
+import game_make_team
 import game_world
 
 cur_hitter = None
@@ -23,17 +23,17 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         else:
-            make_team.computer_players[0].handle_event(event)
+            game_make_team.computer_players[0].handle_event(event)
 
 
 def init():
     # 데이터 읽어 오기
-    make_team.set_player_from_data_file()
+    game_make_team.set_player_from_data_file()
     # com 팀과 user 팀 선수 랜덤 으로 정하기
-    make_team.make_team()
+    game_make_team.make_team()
     # com 팀이 수비, user 팀이 공격인 위치로 배치 하기
-    make_team.attack_position(make_team.user_players)
-    make_team.defence_position(make_team.computer_players)
+    game_make_team.attack_position(game_make_team.user_players)
+    game_make_team.defence_position(game_make_team.computer_players)
     game_world.add_object(ball, 3)
 
     game_world.add_collision_pair('ball:defender', ball, None)

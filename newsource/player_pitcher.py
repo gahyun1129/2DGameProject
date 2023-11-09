@@ -1,9 +1,9 @@
 from pico2d import load_image, get_time
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE
 
-import attack_mode
+import mode_attack
 import game_world
-from ball import Ball
+from player_ball import Ball
 
 
 # ## 이벤트 체크 함수 ##
@@ -49,11 +49,11 @@ class Throw:
     @staticmethod
     def exit(pitcher, e):
         # 공 생성, 이거 나중에 프레임 레이트에 맞춰서 시작하는 시간 다시 정해줘야 할 듯
-        attack_mode.my_ball.state_machine.handle_event(('THROW_START', 0))
-        attack_mode.my_ball.is_collision = False
+        mode_attack.my_ball.state_machine.handle_event(('THROW_START', 0))
+        mode_attack.my_ball.is_collision = False
 
         # 공이 날아오면서 타자는 공을 치는 애니메이션 시작!
-        attack_mode.cur_hitter.state_machine.handle_event(('HIT_START', 0))
+        mode_attack.cur_hitter.state_machine.handle_event(('HIT_START', 0))
 
     @staticmethod
     def do(pitcher):
@@ -62,7 +62,6 @@ class Throw:
         # 나중엔 프레임 한 번 다 돌았을 때로 체크 할 것!
         if get_time() - pitcher.wait_time > 0:
             pitcher.state_machine.handle_event(('THROW_DONE', 0))
-
 
     @staticmethod
     def draw(pitcher):

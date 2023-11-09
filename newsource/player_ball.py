@@ -1,6 +1,6 @@
-import attack_mode
+import mode_attack
 import game_world
-import make_team
+import game_make_team
 from define import *
 from pico2d import load_image, draw_rectangle, get_time
 import random
@@ -39,7 +39,7 @@ class Throw:
             my_ball.pos = mound
             my_ball.goal_position = home
             # 공이 날아오면서 타자는 공을 치는 애니메이션 시작!
-            attack_mode.cur_hitter.state_machine.handle_event(('HIT_START', 0))
+            mode_attack.cur_hitter.state_machine.handle_event(('HIT_START', 0))
         # 타자가 공을 친 경우
         elif e[0] == 'HIT_SUCCESS':
             my_ball.pos = home
@@ -87,9 +87,9 @@ class Idle:
     def enter(my_ball, e):
         if e[0] == 'DEFENDER_CATCH':
             my_ball.is_collision = True
-            hitter = attack_mode.cur_hitter
+            hitter = mode_attack.cur_hitter
             hitter.strike, hitter.my_ball = 0, 0
-            make_team.set_next_hitter(hitter)
+            game_make_team.set_next_hitter(hitter)
             game_world.remove_object(hitter)
             # hitter.state_machine.handle_event(('RUN_DONE', 0))
             print('한 번에 잡음')

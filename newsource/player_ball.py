@@ -38,8 +38,6 @@ class Throw:
         if e[0] == 'THROW_START':
             my_ball.pos = mound
             my_ball.goal_position = home
-            # 공이 날아오면서 타자는 공을 치는 애니메이션 시작!
-            mode_attack.cur_hitter.state_machine.handle_event(('HIT_START', 0))
         # 타자가 공을 친 경우
         elif e[0] == 'HIT_SUCCESS':
             my_ball.pos = home
@@ -49,20 +47,16 @@ class Throw:
         # 공이 다시 마운드, 투수에게로 돌아가는 상황
         elif e[0] == 'BACK_TO_MOUND':
             my_ball.goal_position = mound
-        # 가장 가까운 주자가 있는 base로 공을 던지는 경우 (수비)
+        # 가장 가까운 주자가 있는 base 공을 던지는 경우 (수비)
         elif e[0] == 'THROW_TO_BASE':
-            print(e[1].throw_to_base())
             my_ball.goal_position = e[1].throw_to_base()
-            print('가까운 베이스로 던지기')
+            print('e[1].throw_to_base(), 가까운 베이스로 던지기')
             pass
         my_ball.current_position = my_ball.pos
         my_ball.t = 0.0
 
     @staticmethod
     def exit(my_ball, e):
-        # 마지막 위치 확실히 하기
-        if e[0] != 'DEFENDER_CATCH':
-            my_ball.pos = my_ball.goal_position
         pass
 
     @staticmethod
@@ -71,10 +65,12 @@ class Throw:
         x = (1 - my_ball.t) * my_ball.current_position[0] + my_ball.t * my_ball.goal_position[0]
         y = (1 - my_ball.t) * my_ball.current_position[1] + my_ball.t * my_ball.goal_position[1]
         my_ball.pos = (x, y)
-        my_ball.t += 0.5
+        my_ball.t += 0.2
 
         # 목표 위치에 도착한 경우!!
         if my_ball.t > 1:
+            # 마지막 위치 확실히 하기
+            my_ball.pos = my_ball.goal_position
             my_ball.state_machine.handle_event(('THROW_DONE', 0))
 
     @staticmethod
@@ -86,13 +82,16 @@ class Idle:
     @staticmethod
     def enter(my_ball, e):
         if e[0] == 'DEFENDER_CATCH':
-            my_ball.is_collision = True
+            # 타자 삭제
             hitter = mode_attack.cur_hitter
             hitter.strike, hitter.my_ball = 0, 0
             game_make_team.set_next_hitter(hitter)
             game_world.remove_object(hitter)
-            # hitter.state_machine.handle_event(('RUN_DONE', 0))
+            my_ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
+            # 수비수가 공 잡으려고 달리는 것도 멈춰야 함.
             print('한 번에 잡음')
+        if my_ball.pos != mound and my_ball.is_collision:
+            my_ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
 
     @staticmethod
     def exit(my_ball, e):
@@ -101,8 +100,6 @@ class Idle:
     @staticmethod
     def do(my_ball):
         pass
-        # if get_time() - my_ball.wait_time > 2:
-        #     my_ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
 
     @staticmethod
     def draw(my_ball):
@@ -145,15 +142,18 @@ class Ball:
         # 위치, 현재 프레임, 프레임의 길이
         self.pos = mound
         self.frame, self.frame_number = 0, 1
+        # 목표 위치
         self.goal_position = home
+
         # 이미지 로드
         if Ball.image is None:
             Ball.image = load_image('resource/image/ball.png')
 
-        # 상태머신 추가
+        # 상태 머신 추가
         self.state_machine = StateMachine(self)
         self.state_machine.start()
 
+        # 충돌 enter 시에만 충돌 하기 위해서 정의
         self.is_collision = False
 
     def update(self):

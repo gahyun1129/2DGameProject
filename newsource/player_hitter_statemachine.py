@@ -85,8 +85,8 @@ class Hit:
         if get_time() - hitter.wait_time > 0:
             # hit = 0.3 + float(hitter.BA) * random.randint(0, 3)
             # hit = 0.6 # 항상 볼
-            hit = 0.3  # 항상 스트라이크
-            # hit = 1.1  # 항상 hit
+            # hit = 0.3  # 항상 스트라이크
+            hit = 1.1  # 항상 hit
             if hit > 1:
                 # print(attack_mode.ball.goal_position)
                 hitter.strike, hitter.my_ball = 0, 0
@@ -155,8 +155,7 @@ class HitAndRun:
         x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
         y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
         hitter.pos = (x, y)
-        hitter.t += 0.1 * ((
-                                       hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
+        hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 run_success 이벤트 발생
         if hitter.t > 1:
@@ -197,20 +196,19 @@ class Run:
         positions[hitter.pos][1] = True
 
     @staticmethod
-    def do(hitterObj):
+    def do(hitter):
         # 프레임 넘기기
-        hitterObj.frame = (hitterObj.frame + 1) % hitterObj.frame_number
+        hitter.frame = (hitter.frame + 1) % hitter.frame_number
 
         # 직선 이동 방정식
-        x = (1 - hitterObj.t) * hitterObj.current_position[0] + hitterObj.t * hitterObj.goal_position[0]
-        y = (1 - hitterObj.t) * hitterObj.current_position[1] + hitterObj.t * hitterObj.goal_position[1]
-        hitterObj.pos = (x, y)
-        hitterObj.t += 0.1 * ((
-                                          hitterObj.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
+        x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
+        y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
+        hitter.pos = (x, y)
+        hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 run_success 이벤트 발생
-        if hitterObj.t > 1:
-            hitterObj.state_machine.handle_event(('RUN_DONE', 0))
+        if hitter.t > 1:
+            hitter.state_machine.handle_event(('RUN_DONE', 0))
 
     @staticmethod
     def draw(hitter):
@@ -236,20 +234,19 @@ class RunDefence:
         hitter.pos = hitter.goal_position
 
     @staticmethod
-    def do(hitter_run):
+    def do(hitter):
         # 프레임 넘기기
-        hitter_run.frame = (hitter_run.frame + 1) % hitter_run.frame_number
+        hitter.frame = (hitter.frame + 1) % hitter.frame_number
 
         # 직선 이동 방정식
-        x = (1 - hitter_run.t) * hitter_run.current_position[0] + hitter_run.t * hitter_run.goal_position[0]
-        y = (1 - hitter_run.t) * hitter_run.current_position[1] + hitter_run.t * hitter_run.goal_position[1]
-        hitter_run.pos = (x, y)
-        hitter_run.t += 0.1 * ((
-                                           hitter_run.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
+        x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
+        y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
+        hitter.pos = (x, y)
+        hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
-        if hitter_run.t > 1:
-            hitter_run.state_machine.handle_event(('RUN_DONE', 0))
+        if hitter.t > 1:
+            hitter.state_machine.handle_event(('RUN_DONE', 0))
         # print('Run Do')
 
     @staticmethod
@@ -276,20 +273,19 @@ class RunPosition:
         hitter.pos = hitter.defence_position
 
     @staticmethod
-    def do(hitter_run):
+    def do(hitter):
         # 프레임 넘기기
-        hitter_run.frame = (hitter_run.frame + 1) % hitter_run.frame_number
+        hitter.frame = (hitter.frame + 1) % hitter.frame_number
 
         # 직선 이동 방정식
-        x = (1 - hitter_run.t) * hitter_run.current_position[0] + hitter_run.t * hitter_run.goal_position[0]
-        y = (1 - hitter_run.t) * hitter_run.current_position[1] + hitter_run.t * hitter_run.goal_position[1]
-        hitter_run.pos = (x, y)
-        hitter_run.t += 0.1 * ((
-                                           hitter_run.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
+        x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
+        y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
+        hitter.pos = (x, y)
+        hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
-        if hitter_run.t > 1:
-            hitter_run.state_machine.handle_event(('RUN_DONE', 0))
+        if hitter.t > 1:
+            hitter.state_machine.handle_event(('RUN_DONE', 0))
         # print('Run Do')
 
     @staticmethod
@@ -300,8 +296,8 @@ class RunPosition:
 
 ## 상태 머신 ##
 class StateMachineHit:
-    def __init__(self, my_hitter):
-        self.hitter = my_hitter
+    def __init__(self, hitter):
+        self.hitter = hitter
         self.cur_state = Idle
         self.transitions = {
             Idle: {hit_start: Hit},
@@ -330,8 +326,8 @@ class StateMachineHit:
 
 
 class StateMachineRun:
-    def __init__(self, hitterObj):
-        self.hitter = hitterObj
+    def __init__(self, hitter):
+        self.hitter = hitter
         self.cur_state = Idle
         self.transitions = {
             Idle: {hit_success: Run, four_ball: Run},
@@ -359,8 +355,8 @@ class StateMachineRun:
 
 
 class StateMachineDefence:
-    def __init__(self, hitterObj):
-        self.hitter = hitterObj
+    def __init__(self, hitter):
+        self.hitter = hitter
 
         self.cur_state = Idle
         self.transitions = {

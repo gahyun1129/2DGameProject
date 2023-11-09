@@ -2,8 +2,6 @@ from pico2d import load_image, get_time
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE
 
 import mode_attack
-import game_world
-from player_ball import Ball
 
 
 # ## 이벤트 체크 함수 ##
@@ -43,7 +41,6 @@ class Throw:
         # action 값은 파란, 빨간 팀 모두 같음
         # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
         pitcher.frame, pitcher.frame_number, pitcher.action = 0, 1, 1
-
         pitcher.wait_time = get_time()
 
     @staticmethod
@@ -115,7 +112,7 @@ class Pitcher:
         if Pitcher.image is None:
             Pitcher.image = load_image('resource/image/character_hitter.png')
 
-        # # 상태머신 추가
+        # 상태 머신 추가
         self.state_machine = None
 
     def init_state_machine(self, type):

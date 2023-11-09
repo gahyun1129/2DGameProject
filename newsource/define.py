@@ -1,6 +1,7 @@
 mound = (400, 240)
 one_base = (600, 270)
 two_base = (400, 350)
+two_base_player = (470, 330)
 three_base = (200, 270)
 home = (400, 150)
 short = (330, 330)
@@ -25,7 +26,7 @@ next_base ={
     right: [two_base, one_base, home, three_base],
     center: [two_base, three_base, one_base, home],
     one_base: [one_base, two_base, home, three_base],
-    two_base: [two_base, one_base, home, three_base],
+    two_base_player: [two_base, one_base, home, three_base],
     three_base: [three_base, two_base, home, one_base],
     home: [home]
 }

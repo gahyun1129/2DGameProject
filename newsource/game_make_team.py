@@ -95,6 +95,7 @@ def attack_position(players):
     # user 팀 1번 타자의 공격 위치 잡기
     mode_attack.cur_hitter = players[1]
     mode_attack.cur_hitter.pos = attack_zone
+    game_world.add_collision_pair('hitter:base', mode_attack.cur_hitter, None)
 
     # user 팀 1번 타자 game_world list 에 넣어 렌더링 하기
     # game_world.objects[2]
@@ -119,6 +120,7 @@ def set_next_hitter(hitter):
     next_hitter_index = 1 if next_hitter_index > 9 else next_hitter_index
     cur_hitter = game_world.attack_team[next_hitter_index]
     cur_hitter.pos = attack_zone
+    game_world.add_collision_pair('hitter:base', mode_attack.cur_hitter, None)
     cur_hitter.init_state_machine('타자')
     game_world.add_object(cur_hitter, 2)
     mode_attack.cur_hitter = cur_hitter

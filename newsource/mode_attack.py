@@ -49,14 +49,11 @@ def init():
 
     # 수비수와 공의 충돌 설정
     # 수비수와 base 충돌 설정
-    # 공과 base 충돌 설정
     # hitter와 base 충돌 설정
 
     game_world.add_collision_pair('ball:defender', my_ball, None)
-    game_world.add_collision_pair('ball:base', my_ball, None)
     for base in define.bases:
         game_world.add_collision_pair('base:defender', base, None)
-        game_world.add_collision_pair('ball:base', None, base)
         game_world.add_collision_pair('hitter:base', None, base)
 
     for defender in game_world.defence_team[2:9]:

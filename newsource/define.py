@@ -43,6 +43,15 @@ class Base:
         self.prev_base = prev_base
         self.hasRunner = False
 
+    def get_bb(self):
+        return self.pos[0] - 10, self.pos[1] - 10, self.pos[0] + 10, self.pos[1] + 10
+
+    def handle_collision(self, group, other):
+        if group == 'hitter:base':
+            pass
+        elif group == 'base:defender':
+            pass
+
 
 def set_base():
     # one_base

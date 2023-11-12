@@ -1,5 +1,6 @@
 from pico2d import load_image, load_font, draw_rectangle
 
+import game_world
 import mode_attack
 
 from define import *

@@ -10,12 +10,12 @@ one_base = (600, 270)
 two_base = (400, 350)
 two_base_player = (470, 330)
 three_base = (200, 270)
-home = (400, 150)
+home = (400, 120)
 short = (330, 330)
 left = (100, 390)
 right = (700, 390)
 center = (400, 470)
-attack_zone = (370, 160)
+attack_zone = (370, 130)
 ball = None
 
 # 현재 위치 : 다음 베이스, 현재 베이스에 player가 있는지, 전 베이스

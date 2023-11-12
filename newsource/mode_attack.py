@@ -4,6 +4,7 @@ from pico2d import *
 
 import game_make_team
 import game_world
+from object_grass import Grass
 from player_ball import Ball
 
 cur_hitter = None
@@ -26,6 +27,10 @@ def handle_events():
 
 def init():
     global my_ball
+
+    grass = Grass()
+    game_world.add_object(grass, 0)
+
     # 데이터 읽어 오기
     game_make_team.set_player_from_data_file()
 

@@ -43,6 +43,10 @@ def four_ball(e):
     return e[0] == 'FOUR_BALL'
 
 
+def stay_here(e):
+    return e[0] == 'STAY_HERE'
+
+
 ## 상태 ##
 class Idle:
     @staticmethod
@@ -145,6 +149,7 @@ class HitAndRun:
         # 위치를 확실히 하기 위해 한 번 더 정의
         hitter.pos = hitter.goal_position
         positions[hitter.pos][1] = True
+        print('hitter done')
 
     @staticmethod
     def do(hitter):
@@ -161,7 +166,7 @@ class HitAndRun:
         if hitter.t > 1:
             hitter.state_machine.handle_event(('RUN_DONE', 0))
             hitter.init_state_machine('주자')
-            game_make_team.set_next_hitter(hitter)
+            # game_make_team.set_next_hitter(hitter)
         # print('Run Do')
 
     @staticmethod
@@ -227,6 +232,11 @@ class RunDefence:
         hitter.current_position = hitter.pos
         hitter.goal_position = mode_attack.my_ball.goal_position
         hitter.t = 0.0
+
+        # 만약 공이 수비수가 움직이지 않아도 되는 위치에 온다면,
+        if hitter.goal_position[0] - 5 < hitter.pos[0] < hitter.goal_position[0] + 5 \
+            and hitter.goal_position[1] -5 < hitter.pos[1] < hitter.goal_position[1] + 5:
+            hitter.state_machine.handle_event(('STAY_HERE', 0))
 
     @staticmethod
     def exit(hitter, e):
@@ -361,7 +371,7 @@ class StateMachineDefence:
         self.cur_state = Idle
         self.transitions = {
             Idle: {hit_success: RunDefence},
-            RunDefence: {run_done: RunPosition},
+            RunDefence: {run_done: RunPosition, stay_here: Idle},
             RunPosition: {run_done: Idle},
         }
 

@@ -1,5 +1,3 @@
-bases = []
-
 mound = (400, 240)
 one_base = (600, 270)
 two_base = (400, 350)
@@ -33,28 +31,21 @@ next_base = {
     home: [home]
 }
 
-
-class Base:
-    def __init__(self, prev_base, pos, next_base):
-        self.pos = pos
-        self.hasDefender = True
-        self.isCollision = False
-        self.next_base = next_base
-        self.prev_base = prev_base
-        self.hasRunner = False
+bases = []
 
 
-def set_base():
-    # one_base
-    b = Base(attack_zone, one_base, two_base)
-    bases.append(b)
-    # two_base
-    b = Base(one_base, two_base, three_base)
-    b.hasDefender = False
-    bases.append(b)
-    # three_base
-    b = Base(two_base, three_base, home)
-    bases.append(b)
-    # home
-    b = Base(three_base, home, (0, 0))
-    bases.append(b)
+# def set_base():
+#     b = Base(attack_zone, one_base, (0, 0))
+#     bases.append(b)
+#     b = Base(one_base, two_base, attack_zone)
+#     b.hasDefender = False
+#     bases.append(b)
+#     b = Base(two_base, three_base, one_base)
+#     bases.append(b)
+#     b = Base(three_base, home, two_base)
+#     bases.append(b)
+#     b = Base(home, (0, 0), three_base)
+#     bases.append(b)
+
+
+

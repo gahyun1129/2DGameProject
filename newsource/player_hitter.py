@@ -25,18 +25,26 @@ class Hitter:
         # 위치, 현재 프레임, 현재 action, 프레임의 길이
         self.pos = pos
         self.frame, self.frame_number, self.action = 0, 1, 4
+
         self.team_color = 0
+
         self.font = load_font('resource/txt/NanumGothic.TTF', 16)
+
         # 파일: 이름, 안타, 홈런, 타율, 출루율 + 장타율
         self.name, self.hit, self.home_run, self.BA, self.OPS = \
             name, hit, home_run, BA, OPS
+
         # 목표 위치, 수비 위치 (수비 시 사용)
         self.goal_position, self.defence_position = None, None
+
         # 타자의 스트라이크, 볼 개수 저장 변수
         self.strike, self.ball = 2, 3
 
         # 타자의 달리기 속도
         self.RUN_SPEED_KMPH = random.randint(4, 8) / 10
+
+        # 수비수의 base 위치
+        self.base = None
 
         # 이미지 로드
         if Hitter.image is None:

@@ -1,9 +1,13 @@
+import game_framework
 import mode_attack
 import game_world
 import game_make_team
+import player_hitter_statemachine
 from define import *
 from pico2d import load_image, draw_rectangle, get_time
 import random
+
+PIXEL_PER_METER = (10.0 / 0.3)
 
 
 def throw_start(e):
@@ -34,6 +38,7 @@ class Throw:
     @staticmethod
     def enter(my_ball, e):
         my_ball.frame, my_ball.frame_number = 0, 1
+        my_ball.event = e[0]
         # 투수가 공을 던지는 경우
         if e[0] == 'THROW_START':
             my_ball.pos = mound
@@ -41,8 +46,10 @@ class Throw:
         # 타자가 공을 친 경우
         elif e[0] == 'HIT_SUCCESS':
             my_ball.pos = home
-            x = random.randint(50, 750)
-            y = random.randint(300, 500)
+            # x = random.randint(50, 750)
+            # y = random.randint(300, 500)
+            x = three_base[0] + 50
+            y = three_base[1] + 50
             my_ball.goal_position = (x, y)
         # 공이 다시 마운드, 투수에게로 돌아가는 상황
         elif e[0] == 'BACK_TO_MOUND':
@@ -57,6 +64,11 @@ class Throw:
 
     @staticmethod
     def exit(my_ball, e):
+        # if my_ball.event == 'BACK_TO_MOUND':
+        #     hitter = mode_attack.cur_hitter
+        #     game_make_team.set_next_hitter(hitter)
+        if my_ball.event == 'THROW_TO_BASE':
+            print('ball done')
         pass
 
     @staticmethod
@@ -65,8 +77,8 @@ class Throw:
         x = (1 - my_ball.t) * my_ball.current_position[0] + my_ball.t * my_ball.goal_position[0]
         y = (1 - my_ball.t) * my_ball.current_position[1] + my_ball.t * my_ball.goal_position[1]
         my_ball.pos = (x, y)
-        my_ball.t += 0.1
-
+        # my_ball.t += 0.1 * ((my_ball.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
+        my_ball.t += 1
         # 목표 위치에 도착한 경우!!
         if my_ball.t > 1:
             # 마지막 위치 확실히 하기
@@ -114,7 +126,7 @@ class StateMachine:
         self.my_ball = my_ball
         self.cur_state = Idle
         self.transitions = {
-            Idle: {throw_start: Throw, back_to_mound: Throw, throw_to_base: Throw},
+            Idle: {throw_start: Throw, back_to_mound: Throw, throw_to_base: Throw, defender_catch: Idle},
             Throw: {throw_done: Idle, hit_success: Throw, defender_catch: Idle}
         }
 
@@ -151,6 +163,9 @@ class Ball:
         if Ball.image is None:
             Ball.image = load_image('resource/image/ball.png')
 
+        # 타자의 달리기 속도
+        self.RUN_SPEED_KMPH = random.randint(10, 14) / 10
+
         # 상태 머신 추가
         self.state_machine = StateMachine(self)
         self.state_machine.start()
@@ -173,8 +188,9 @@ class Ball:
 
     def handle_collision(self, group, other):
         if self.is_collision is False:
-            print('collision', self.state_machine.cur_state, other.name)
-            if self.state_machine.cur_state == Throw:
+            print('collision', other.state_machine.cur_state, other.name)
+            print('collision', self.state_machine.cur_state)
+            if other.state_machine.cur_state == player_hitter_statemachine.Idle:
                 self.state_machine.handle_event(('DEFENDER_CATCH', 0))
             else:
                 self.state_machine.handle_event(('THROW_TO_BASE', other))

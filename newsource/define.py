@@ -1,4 +1,9 @@
+from pico2d import draw_rectangle
+
+import game_world
+
 bases = []
+number_to_bases = {}
 
 mound = (400, 240)
 one_base = (600, 270)
@@ -38,22 +43,29 @@ class Base:
     def __init__(self, prev_base, pos, next_base):
         self.pos = pos
         self.hasDefender = True
-        self.isCollision = False
+        self.isFilled = False
         self.next_base = next_base
         self.prev_base = prev_base
         self.hasRunner = False
+
+    def update(self):
+        pass
+
+    def draw(self):
+        draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         return self.pos[0] - 10, self.pos[1] - 10, self.pos[0] + 10, self.pos[1] + 10
 
     def handle_collision(self, group, other):
         if group == 'hitter:base':
-            pass
+            self.hasRunner = True
         elif group == 'base:defender':
-            pass
+            self.hasDefender = True
 
 
 def set_base():
+    global number_to_bases
     # one_base
     b = Base(attack_zone, one_base, two_base)
     bases.append(b)
@@ -67,3 +79,12 @@ def set_base():
     # home
     b = Base(three_base, home, (0, 0))
     bases.append(b)
+
+    game_world.add_objects(bases, 4)
+
+    number_to_bases = {
+        one_base: bases[0],
+        two_base: bases[1],
+        three_base: bases[2],
+        home: bases[3]
+    }

@@ -36,6 +36,9 @@ def init():
     game_world.defence_team = game_make_team.computer_players
     game_world.attack_team = game_make_team.user_players
 
+    # set base
+    define.set_base()
+
     # 공격 팀, 수비 팀 초기 위치 배치
     game_make_team.attack_position(game_world.attack_team)
     game_make_team.defence_position(game_world.defence_team)
@@ -44,8 +47,7 @@ def init():
     my_ball = Ball()
     game_world.add_object(my_ball, 0)
 
-    # set base
-    define.set_base()
+
 
     # 수비수와 공의 충돌 설정
     # 수비수와 base 충돌 설정

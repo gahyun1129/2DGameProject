@@ -63,6 +63,7 @@ def set_player_from_data_file():
 
 def defence_position(players):
     # com 팀 투수의 위치 잡기
+
     players[0].pos = mound
 
     # com 팀 타자 중 8명의 수비 위치 잡기
@@ -71,9 +72,9 @@ def defence_position(players):
     players[2].pos = one_base
     players[2].base = bases[0]
     players[3].pos = (two_base[0] + 70, two_base[1] - 20)
-    players[3].pos = bases[1]
+    players[3].base = bases[1]
     players[4].pos = three_base
-    players[4].pos = bases[2]
+    players[4].base = bases[2]
     players[5].pos = short
     players[6].pos = left
     players[7].pos = right

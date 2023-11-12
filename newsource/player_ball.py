@@ -1,7 +1,9 @@
+import define
 import game_framework
 import mode_attack
 import game_world
 import game_make_team
+import mode_defence
 import player_hitter_statemachine
 from define import *
 from pico2d import load_image, draw_rectangle, get_time
@@ -46,10 +48,8 @@ class Throw:
         # 타자가 공을 친 경우
         elif e[0] == 'HIT_SUCCESS':
             my_ball.pos = home
-            # x = random.randint(50, 750)
-            # y = random.randint(300, 500)
-            x = three_base[0] + 50
-            y = three_base[1] + 50
+            x = random.randint(50, 750)
+            y = random.randint(300, 500)
             my_ball.goal_position = (x, y)
         # 공이 다시 마운드, 투수에게로 돌아가는 상황
         elif e[0] == 'BACK_TO_MOUND':
@@ -68,7 +68,14 @@ class Throw:
         #     hitter = mode_attack.cur_hitter
         #     game_make_team.set_next_hitter(hitter)
         if my_ball.event == 'THROW_TO_BASE':
-            print('ball done')
+            if define.number_to_bases[my_ball.goal_position].hasDefender and not define.number_to_bases[my_ball.goal_position].hasRunner:
+                hitter = mode_attack.cur_hitter
+                hitter.strike, hitter.my_ball = 0, 0
+                game_make_team.set_next_hitter(hitter)
+                game_world.remove_object(hitter)
+                mode_attack.out_count += 1
+                if mode_attack.out_count == 3:
+                    game_framework.change_mode(mode_defence)
         pass
 
     @staticmethod

@@ -9,7 +9,7 @@ defence_team = None
 # objects[2] : 주자 및 타자
 # objects[3] : UI
 
-objects = [[], [], [], []]
+objects = [[], [], [], [], []]
 
 collision_pairs = {}
 

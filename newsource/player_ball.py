@@ -85,8 +85,8 @@ class Throw:
         x = (1 - my_ball.t) * my_ball.current_position[0] + my_ball.t * my_ball.goal_position[0]
         y = (1 - my_ball.t) * my_ball.current_position[1] + my_ball.t * my_ball.goal_position[1]
         my_ball.pos = (x, y)
-        # my_ball.t += 0.1 * ((my_ball.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
-        my_ball.t += 1
+        my_ball.t += 0.1 * ((my_ball.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
+        # my_ball.t += 1
         # 목표 위치에 도착한 경우!!
         if my_ball.t > 1:
             # 마지막 위치 확실히 하기
@@ -101,6 +101,7 @@ class Throw:
 class Idle:
     @staticmethod
     def enter(my_ball, e):
+        my_ball.event = e[0]
         if e[0] == 'DEFENDER_CATCH':
             # 타자 삭제
             hitter = mode_attack.cur_hitter
@@ -112,12 +113,23 @@ class Idle:
                 player.state_machine.handle_event(('RUN_DONE', 0))
             # 수비수가 공 잡으려고 달리는 것도 멈춰야 함.
             print('한 번에 잡음')
+        if e[0] == 'THROW_TO_BASE':
+            my_ball.goal_position = e[1].throw_to_base()
         if my_ball.pos != mound and my_ball.is_collision:
             my_ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
 
     @staticmethod
     def exit(my_ball, e):
-        pass
+        if my_ball.event == 'THROW_TO_BASE':
+            if define.number_to_bases[my_ball.goal_position].hasDefender and not define.number_to_bases[my_ball.goal_position].hasRunner:
+                print('ball done')
+                hitter = mode_attack.cur_hitter
+                hitter.strike, hitter.my_ball = 0, 0
+                game_make_team.set_next_hitter(hitter)
+                game_world.remove_object(hitter)
+                mode_attack.out_count += 1
+                if mode_attack.out_count == 3:
+                    game_framework.change_mode(mode_defence)
 
     @staticmethod
     def do(my_ball):

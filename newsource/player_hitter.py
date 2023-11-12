@@ -96,7 +96,7 @@ class Hitter:
         # x: 400 이하, y: 300 이상 > 좌익수, 중견수
         if goal_pos[0] <= 400 and self.pos[0] <= 400 and goal_pos[1] >= 350 and self.pos[1] >= 350: return True
         # x: 400 이상, y: 300 이하 > 1루수, 2루수
-        if goal_pos[0] >= 400 and self.pos[0] >= 400 and goal_pos[1] >= 350 and self.pos[1] >= 350: return True
+        if goal_pos[0] >= 400 and self.pos[0] >= 400 and goal_pos[1] <= 350 and self.pos[1] <= 350: return True
         # x: 400 이하, y: 300 이하 > 유격수, 3루수
         if goal_pos[0] <= 400 and self.pos[0] <= 400 and goal_pos[1] <= 350 and self.pos[1] <= 350: return True
         return False

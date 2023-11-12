@@ -166,7 +166,7 @@ class HitAndRun:
         if hitter.t > 1:
             hitter.state_machine.handle_event(('RUN_DONE', 0))
             hitter.init_state_machine('주자')
-            # game_make_team.set_next_hitter(hitter)
+            game_make_team.set_next_hitter(hitter)
         # print('Run Do')
 
     @staticmethod

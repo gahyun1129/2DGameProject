@@ -69,6 +69,7 @@ class Throw:
         #     game_make_team.set_next_hitter(hitter)
         if my_ball.event == 'THROW_TO_BASE':
             if define.number_to_bases[my_ball.goal_position].hasDefender and not define.number_to_bases[my_ball.goal_position].hasRunner:
+                print('ball done')
                 hitter = mode_attack.cur_hitter
                 hitter.strike, hitter.my_ball = 0, 0
                 game_make_team.set_next_hitter(hitter)

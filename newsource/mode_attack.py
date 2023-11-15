@@ -5,6 +5,7 @@ from pico2d import *
 import game_make_team
 import game_world
 from object_grass import Grass
+from object_ui import UI
 from player_ball import Ball
 
 cur_hitter = None
@@ -12,7 +13,7 @@ out_count = 0
 # goal_runner가 삭제될 때 점수 +1
 goal_runner = None
 my_ball = None
-
+make_ui = None
 
 def handle_events():
     events = get_events()
@@ -27,6 +28,7 @@ def handle_events():
 
 def init():
     global my_ball
+    global make_ui
 
     grass = Grass()
     game_world.add_object(grass, 0)
@@ -52,6 +54,8 @@ def init():
     my_ball = Ball()
     game_world.add_object(my_ball, 0)
 
+    # UI 그림
+    make_ui = UI()
 
 
     # 수비수와 공의 충돌 설정
@@ -77,6 +81,7 @@ def update():
 def draw():
     clear_canvas()
     game_world.render()
+    make_ui.draw('Hi')
     update_canvas()
 
 

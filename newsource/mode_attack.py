@@ -14,6 +14,7 @@ out_count = 0
 goal_runner = None
 my_ball = None
 make_ui = None
+make_ui2 = None
 
 def handle_events():
     events = get_events()
@@ -29,6 +30,7 @@ def handle_events():
 def init():
     global my_ball
     global make_ui
+    global make_ui2
 
     grass = Grass()
     game_world.add_object(grass, 0)
@@ -56,6 +58,7 @@ def init():
 
     # UI 그림
     make_ui = UI()
+    make_ui2 = UI()
 
 
     # 수비수와 공의 충돌 설정
@@ -81,7 +84,8 @@ def update():
 def draw():
     clear_canvas()
     game_world.render()
-    make_ui.draw('Hi')
+    make_ui.draw_with_ment('Hi')
+    make_ui2.draw()
     update_canvas()
 
 

@@ -7,17 +7,19 @@ class UI:
 
     def __init__(self):
         self.font = load_font('resource/txt/NanumGothic.TTF', 16)
+        self.frame = 0
+        self.action = 0
         if UI.image is None:
-            UI.image = load_image('resource/image/UI.png')
-        if UI.image_bar is None:
-            UI.image_bar = load_image('resource/image/UI_bar.png')
+            UI.image = load_image('resource/image/progress_bar.png')
 
     def update(self):
-        pass
+        self.frame = (self.frame + 1) % 3
+        if self.frame == 0:
+            self.action = (self.action + 1) % 3
 
     def draw(self):
         # rect = to_sdl_rect(x-w/2, y-h/2, w, h)
-        self.image_bar.draw(400 - 50, 50, 100, 50)
+        self.image.clip_draw(self.frame * 300, self.action * 50, 300, 50, 400, 50)
 
     def draw_with_ment(self, ment):
         self.image.draw(400, 50, 100, 50)

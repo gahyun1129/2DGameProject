@@ -58,8 +58,7 @@ def init():
 
     # UI 그림
     make_ui = UI()
-    make_ui2 = UI()
-
+    game_world.add_object(make_ui, 3)
 
     # 수비수와 공의 충돌 설정
     # 수비수와 base 충돌 설정
@@ -84,8 +83,6 @@ def update():
 def draw():
     clear_canvas()
     game_world.render()
-    make_ui.draw_with_ment('Hi')
-    make_ui2.draw()
     update_canvas()
 
 

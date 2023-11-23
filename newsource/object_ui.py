@@ -13,9 +13,9 @@ class UI:
             UI.image = load_image('resource/image/progress_bar.png')
 
     def update(self):
-        self.frame = (self.frame + 1) % 3
+        self.frame = (self.frame + 1) % 4
         if self.frame == 0:
-            self.action = (self.action + 1) % 3
+            self.action = (self.action + 1) % 5
 
     def draw(self):
         # rect = to_sdl_rect(x-w/2, y-h/2, w, h)

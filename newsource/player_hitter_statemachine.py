@@ -67,8 +67,8 @@ class Idle:
 
     @staticmethod
     def draw(hitter):
-        hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0],
-                               hitter.pos[1], 50*3, 50*3)
+        hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, hitter.pos[0],
+                               hitter.pos[1], 100*3, 100*3)
 
 
 class Hit:

@@ -6,6 +6,7 @@ import mode_attack
 import player_hitter
 import game_make_team
 import game_world
+import random
 
 from define import *
 
@@ -67,7 +68,7 @@ class Idle:
     @staticmethod
     def draw(hitter):
         hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0],
-                               hitter.pos[1])
+                               hitter.pos[1], 50*3, 50*3)
 
 
 class Hit:
@@ -76,9 +77,10 @@ class Hit:
         # action 값은 파란, 빨간 팀 모두 같음
         # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
         hitter.frame, hitter.frame_number, hitter.action = 0, 1, 2
-
         hitter.wait_time = get_time()
-
+        mode_attack.make_ui.is_update = False
+        hitter.user_force = (mode_attack.make_ui.action * 10 + mode_attack.make_ui.frame) / 100
+        print(hitter.user_force)
     @staticmethod
     def exit(hitter, e):
         pass
@@ -87,13 +89,13 @@ class Hit:
     def do(hitter):
         hitter.frame = (hitter.frame + 1) % hitter.frame_number
         if get_time() - hitter.wait_time > 0:
-            # hit = 0.3 + float(hitter.BA) * random.randint(0, 3)
+            # hit = hitter.user_force + float(hitter.BA) * random.randint(0, 3)
             # hit = 0.6 # 항상 볼
             # hit = 0.3  # 항상 스트라이크
             hit = 1.1  # 항상 hit
             if hit > 1:
                 # print(attack_mode.ball.goal_position)
-                hitter.strike, hitter.my_ball = 0, 0
+                hitter.strike, hitter.ball = 0, 0
                 mode_attack.my_ball.state_machine.handle_event(('HIT_SUCCESS', 0))
                 hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
                 game_world.update_handle_event(('HIT_SUCCESS', 0))
@@ -103,18 +105,18 @@ class Hit:
                 if hit < 0.4:
                     hitter.strike += 1
                 else:
-                    hitter.my_ball += 1
+                    hitter.ball += 1
                 if hitter.strike == 3:
                     print('STRIKE_3')
-                    hitter.strike, hitter.my_ball = 0, 0
+                    hitter.strike, hitter.ball = 0, 0
                     game_make_team.set_next_hitter(hitter)
                     game_world.remove_object(hitter)
                     mode_attack.out_count += 1
                     if mode_attack.out_count == 3:
                         game_framework.change_mode(mode_defence)
-                elif hitter.my_ball == 4:
+                elif hitter.ball == 4:
                     print('BALL_4')
-                    hitter.strike, hitter.my_ball = 0, 0
+                    hitter.strike, hitter.ball = 0, 0
                     hitter.state_machine.handle_event(('FOUR_BALL', 0))
                     game_world.update_handle_event(('FOUR_BALL', 0))
                 else:
@@ -160,7 +162,8 @@ class HitAndRun:
         x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
         y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
         hitter.pos = (x, y)
-        hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
+        hitter.t += 0.1 * ((
+                                       hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 run_success 이벤트 발생
         if hitter.t > 1:
@@ -209,7 +212,8 @@ class Run:
         x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
         y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
         hitter.pos = (x, y)
-        hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
+        hitter.t += 0.1 * ((
+                                       hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 run_success 이벤트 발생
         if hitter.t > 1:
@@ -235,7 +239,7 @@ class RunDefence:
 
         # 만약 공이 수비수가 움직이지 않아도 되는 위치에 온다면,
         if hitter.goal_position[0] - 5 < hitter.pos[0] < hitter.goal_position[0] + 5 \
-            and hitter.goal_position[1] -5 < hitter.pos[1] < hitter.goal_position[1] + 5:
+                and hitter.goal_position[1] - 5 < hitter.pos[1] < hitter.goal_position[1] + 5:
             hitter.state_machine.handle_event(('STAY_HERE', 0))
 
     @staticmethod
@@ -252,7 +256,8 @@ class RunDefence:
         x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
         y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
         hitter.pos = (x, y)
-        hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
+        hitter.t += 0.1 * ((
+                                       hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
         if hitter.t > 1:
@@ -291,7 +296,8 @@ class RunPosition:
         x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
         y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
         hitter.pos = (x, y)
-        hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
+        hitter.t += 0.1 * ((
+                                       hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * player_hitter.PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
         if hitter.t > 1:

@@ -9,13 +9,15 @@ class UI:
         self.font = load_font('resource/txt/NanumGothic.TTF', 16)
         self.frame = 0
         self.action = 0
+        self.is_update = True
         if UI.image is None:
             UI.image = load_image('resource/image/progress_bar.png')
 
     def update(self):
-        self.frame = (self.frame + 1) % 4
-        if self.frame == 0:
-            self.action = (self.action + 1) % 5
+        if self.is_update:
+            self.frame = (self.frame + 1) % 4
+            if self.frame == 0:
+                self.action = (self.action + 1) % 5
 
     def draw(self):
         # rect = to_sdl_rect(x-w/2, y-h/2, w, h)

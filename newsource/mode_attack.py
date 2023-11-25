@@ -4,6 +4,7 @@ from pico2d import *
 
 import game_make_team
 import game_world
+import object_background
 from object_grass import Grass
 from object_ui import UI
 from player_ball import Ball
@@ -14,7 +15,6 @@ out_count = 0
 goal_runner = None
 my_ball = None
 make_ui = None
-make_ui2 = None
 
 def handle_events():
     events = get_events()
@@ -32,8 +32,9 @@ def init():
     global make_ui
     global make_ui2
 
-    grass = Grass()
-    game_world.add_object(grass, 0)
+    background = object_background.Background()
+    # background = Grass()
+    game_world.add_object(background, 0)
 
     # 데이터 읽어 오기
     game_make_team.set_player_from_data_file()

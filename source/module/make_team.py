@@ -1,5 +1,6 @@
 import server
-from server import *
+import game_world
+from object.base import *
 
 import random
 import copy

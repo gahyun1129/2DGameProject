@@ -1,18 +1,13 @@
-import server
-import game_framework
 from pico2d import *
 
-import module.make_team as make_team
+import server
+import game_framework
 import game_world
-import object_background
-from player_ball import Ball
 
-cur_hitter = None
-out_count = 0
-# goal_runner가 삭제될 때 점수 +1
-goal_runner = None
-my_ball = None
-make_ui = None
+import module.make_team as make_team
+import object.background as background
+import object.ball as ball
+import object.base as base
 
 
 def handle_events():
@@ -27,10 +22,8 @@ def handle_events():
 
 
 def init():
-    global my_ball
-    global make_ui
 
-    server.background = object_background.Background()
+    server.background = background.Background()
     game_world.add_object(server.background, 0)
 
     # 데이터 읽어 오기
@@ -44,14 +37,14 @@ def init():
     server.attack_team = make_team.user_players
 
     # set base
-    server.set_base()
+    base.set_base()
 
     # 공격 팀, 수비 팀 초기 위치 배치
     make_team.attack_position(server.attack_team)
     make_team.defence_position(server.defence_team)
 
     # 공격에 사용될 공 생성
-    server.ball = Ball()
+    server.ball = ball.Ball()
     game_world.add_object(server.ball, 0)
 
     # 수비수와 공의 충돌 설정
@@ -59,9 +52,9 @@ def init():
     # hitter와 base 충돌 설정
 
     game_world.add_collision_pair('ball:defender', server.ball, None)
-    for base in server.bases:
-        game_world.add_collision_pair('base:defender', base, None)
-        game_world.add_collision_pair('hitter:base', None, base)
+    for b in base.bases:
+        game_world.add_collision_pair('base:defender', b, None)
+        game_world.add_collision_pair('hitter:base', None, b)
 
     for defender in server.defence_team[2:9]:
         game_world.add_collision_pair('ball:defender', None, defender)

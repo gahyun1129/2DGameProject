@@ -2,6 +2,8 @@ import server
 import game_world
 from object.base import *
 
+from object.hitter import Hitter
+from object.pitcher import Pitcher
 import random
 import copy
 

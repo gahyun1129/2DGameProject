@@ -5,7 +5,7 @@
 import game_framework
 from pico2d import *
 
-import mode.attack_mode
+import mode.attack_mode as attack_mode
 
 
 def init():

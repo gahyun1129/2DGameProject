@@ -111,7 +111,7 @@ class Idle:
             make_team.set_next_hitter(hitter)
             game_world.remove_object(hitter)
             my_ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
-            for player in game_world.defence_team[1:9]:
+            for player in server.defence_team[1:9]:
                 player.state_machine.handle_event(('RUN_DONE', 0))
             # 수비수가 공 잡으려고 달리는 것도 멈춰야 함.
             print('한 번에 잡음')

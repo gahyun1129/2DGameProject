@@ -106,9 +106,8 @@ class Pitcher:
         self.frame, self.frame_number, self.action = 0, 1, 0
         self.team_color = 0
 
-        # 파일: 이름, 탈삼진, 볼넷, ERA, 투구법 2개
-        self.name, self.strike_out, self.four_balls, self.ERA, self.pitching = \
-            name, strike_out, four_balls, ERA, pitching
+        # 파일: 이름, 탈삼진, 볼넷, ERA
+        self.name, self.strike_out, self.four_balls, self.ERA = name, strike_out, four_balls, ERA
 
         # 이미지 로드
         if Pitcher.image is None:

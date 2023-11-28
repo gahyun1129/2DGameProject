@@ -4,17 +4,17 @@ import game_world
 bases = []
 number_to_bases = {}
 
-mound = (400, 240)
-one_base = (600, 270)
-two_base = (400, 350)
-two_base_player = (470, 330)
-three_base = (200, 270)
-home = (400, 120)
-short = (330, 330)
-left = (100, 390)
-right = (700, 390)
-center = (400, 470)
-attack_zone = (370, 130)
+mound = (500, 240)
+one_base = (650, 300)
+two_base = (500, 380)
+two_base_player = (500 - 30, 380)
+three_base = (350, 300)
+home = (500, 120)
+short = (430, 380)
+left = (250, 580)
+right = (750, 580)
+center = (500, 700)
+attack_zone = (470, 150)
 ball = None
 
 # 현재 위치 : 다음 베이스, 현재 베이스에 player가 있는지, 전 베이스

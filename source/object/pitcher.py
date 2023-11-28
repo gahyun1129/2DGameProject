@@ -31,8 +31,9 @@ class Idle:
 
     @staticmethod
     def draw(pitcher):
-        pitcher.image.clip_draw(pitcher.frame * 50, (pitcher.action + pitcher.team_color) * 50, 50, 50, pitcher.pos[0],
-                                pitcher.pos[1])
+        sx, sy = pitcher.pos[0] - server.background.window_left, pitcher.pos[1] - server.background.window_bottom
+        pitcher.image.clip_draw(pitcher.frame * 100, (pitcher.action + pitcher.team_color) * 100, 100, 100, sx,
+                                sy)
 
 
 class Throw:
@@ -62,8 +63,9 @@ class Throw:
 
     @staticmethod
     def draw(pitcher):
-        pitcher.image.clip_draw(pitcher.frame * 50, (pitcher.action + pitcher.team_color) * 50, 50, 50, pitcher.pos[0],
-                                pitcher.pos[1])
+        sx, sy = pitcher.pos[0] - server.background.window_left, pitcher.pos[1] - server.background.window_bottom
+        pitcher.image.clip_draw(pitcher.frame * 100, (pitcher.action + pitcher.team_color) * 100, 100, 100, sx,
+                                sy)
 
 
 ## 상태 머신 ##

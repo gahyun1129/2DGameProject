@@ -6,6 +6,7 @@ import game_world
 
 import module.make_team as make_team
 import object.background as background
+import object.ui as ui
 import object.ball as ball
 import object.base as base
 
@@ -60,6 +61,9 @@ def init():
         game_world.add_collision_pair('ball:defender', None, defender)
         game_world.add_collision_pair('base:defender', None, defender)
     game_world.add_collision_pair('base:defender', None, server.defence_team[1])
+
+    progress_bar = ui.UI()
+    game_world.add_object(progress_bar, 3)
 
 
 def update():

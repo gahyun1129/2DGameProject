@@ -97,7 +97,8 @@ class Throw:
 
     @staticmethod
     def draw(my_ball):
-        my_ball.image.clip_draw(my_ball.frame * 50, 0, 50, 50, my_ball.pos[0], my_ball.pos[1], 20, 20)
+        sx, sy = my_ball.pos[0] - server.background.window_left, my_ball.pos[1] - server.background.window_bottom
+        my_ball.image.clip_draw(my_ball.frame * 50, 0, 50, 50, sx, sy, 20, 20)
 
 
 class Idle:
@@ -131,7 +132,7 @@ class Idle:
                 game_world.remove_object(hitter)
                 server.out_count += 1
                 if server.out_count == 3:
-                    game_framework.change_mode(mode_defence)
+                    game_framework.change_mode(defence_mode)
 
     @staticmethod
     def do(my_ball):
@@ -139,7 +140,8 @@ class Idle:
 
     @staticmethod
     def draw(my_ball):
-        my_ball.image.clip_draw(my_ball.frame * 50, 0, 50, 50, my_ball.pos[0], my_ball.pos[1], 20, 20)
+        sx, sy = my_ball.pos[0] - server.background.window_left, my_ball.pos[1] - server.background.window_bottom
+        my_ball.image.clip_draw(my_ball.frame * 50, 0, 50, 50, sx, sy, 20, 20)
 
 
 ## 상태 머신 ##
@@ -206,7 +208,8 @@ class Ball:
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return self.pos[0] - 10, self.pos[1] - 10, self.pos[0] + 10, self.pos[1] + 10
+        sx, sy = self.pos[0] - server.background.window_left, self.pos[1] - server.background.window_bottom
+        return sx - 10, sy - 10, sx + 10, sy + 10
 
     def handle_collision(self, group, other):
         if self.is_collision is False:

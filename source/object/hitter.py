@@ -68,8 +68,9 @@ class Idle:
 
     @staticmethod
     def draw(hitter):
-        hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, hitter.pos[0],
-                               hitter.pos[1], 100 * 3, 100 * 3)
+        sx, sy = hitter.pos[0] - server.background.window_left, hitter.pos[1] - server.background.window_bottom
+        hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx,
+                               sy)
 
 
 class Hit:
@@ -128,8 +129,9 @@ class Hit:
 
     @staticmethod
     def draw(hitter):
-        hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0],
-                               hitter.pos[1])
+        sx, sy = hitter.pos[0] - server.background.window_left, hitter.pos[1] - server.background.window_bottom
+        hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx,
+                               sy)
 
 
 class HitAndRun:
@@ -176,8 +178,9 @@ class HitAndRun:
 
     @staticmethod
     def draw(hitter):
-        hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0],
-                               hitter.pos[1])
+        sx, sy = hitter.pos[0] - server.background.window_left, hitter.pos[1] - server.background.window_bottom
+        hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx,
+                               sy)
 
 
 class Run:
@@ -223,8 +226,9 @@ class Run:
 
     @staticmethod
     def draw(hitter):
-        hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0],
-                               hitter.pos[1])
+        sx, sy = hitter.pos[0] - server.background.window_left, hitter.pos[1] - server.background.window_bottom
+        hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx,
+                               sy)
 
 
 class RunDefence:
@@ -268,8 +272,9 @@ class RunDefence:
 
     @staticmethod
     def draw(hitter):
-        hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0],
-                               hitter.pos[1])
+        sx, sy = hitter.pos[0] - server.background.window_left, hitter.pos[1] - server.background.window_bottom
+        hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx,
+                               sy)
 
 
 class RunPosition:
@@ -308,8 +313,9 @@ class RunPosition:
 
     @staticmethod
     def draw(hitter):
-        hitter.image.clip_draw(hitter.frame * 50, (hitter.action + hitter.team_color) * 50, 50, 50, hitter.pos[0],
-                               hitter.pos[1])
+        sx, sy = hitter.pos[0] - server.background.window_left, hitter.pos[1] - server.background.window_bottom
+        hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx,
+                               sy)
 
 
 ## 상태 머신 ##
@@ -471,7 +477,8 @@ class Hitter:
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return self.pos[0] - 20, self.pos[1] - 30, self.pos[0] + 20, self.pos[1] + 30
+        sx, sy = self.pos[0] - server.background.window_left, self.pos[1] - server.background.window_bottom
+        return sx - 20, sy - 30, sx + 20, sy + 30
 
     def handle_collision(self, group, other):
         pass

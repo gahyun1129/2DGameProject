@@ -1,5 +1,4 @@
 import server
-import define
 import game_framework
 from pico2d import *
 
@@ -45,7 +44,7 @@ def init():
     server.attack_team = make_team.user_players
 
     # set base
-    define.set_base()
+    server.set_base()
 
     # 공격 팀, 수비 팀 초기 위치 배치
     make_team.attack_position(server.attack_team)
@@ -60,7 +59,7 @@ def init():
     # hitter와 base 충돌 설정
 
     game_world.add_collision_pair('ball:defender', server.ball, None)
-    for base in define.bases:
+    for base in server.bases:
         game_world.add_collision_pair('base:defender', base, None)
         game_world.add_collision_pair('hitter:base', None, base)
 

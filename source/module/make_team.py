@@ -1,9 +1,5 @@
 import server
-import game_world
-
-from player_hitter import Hitter
-from player_pitcher import Pitcher
-from define import *
+from server import *
 
 import random
 import copy

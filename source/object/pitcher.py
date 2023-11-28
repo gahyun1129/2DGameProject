@@ -27,13 +27,11 @@ class Idle:
     @staticmethod
     def do(pitcher):
         pitcher.frame = (pitcher.frame + 1) % pitcher.frame_number
-        # print('Idle Do')
 
     @staticmethod
     def draw(pitcher):
         sx, sy = pitcher.pos[0] - server.background.window_left, pitcher.pos[1] - server.background.window_bottom
-        pitcher.image.clip_draw(pitcher.frame * 100, (pitcher.action + pitcher.team_color) * 100, 100, 100, sx,
-                                sy)
+        pitcher.image.clip_draw(pitcher.frame * 100, (pitcher.action + pitcher.team_color) * 100, 100, 100, sx, sy)
 
 
 class Throw:
@@ -43,6 +41,7 @@ class Throw:
         # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
         pitcher.frame, pitcher.frame_number, pitcher.action = 0, 1, 1
         pitcher.wait_time = get_time()
+        server.progress_bar.is_hit = True
 
     @staticmethod
     def exit(pitcher, e):
@@ -108,7 +107,8 @@ class Pitcher:
         self.team_color = 0
 
         # 파일: 이름, 탈삼진, 볼넷, ERA, 투구법 2개
-        self.name, self.strike_out, self.four_balls, self.ERA, self.pitching = name, strike_out, four_balls, ERA, pitching
+        self.name, self.strike_out, self.four_balls, self.ERA, self.pitching = \
+            name, strike_out, four_balls, ERA, pitching
 
         # 이미지 로드
         if Pitcher.image is None:
@@ -131,3 +131,6 @@ class Pitcher:
 
     def draw(self):
         self.state_machine.draw()
+
+    def build_behavior_tree(self):
+        pass

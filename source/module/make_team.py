@@ -62,7 +62,7 @@ def set_player_from_data_file():
 
 def defence_position(players):
     # com 팀 투수의 위치 잡기
-
+    server.cur_pitcher = players[0]
     players[0].pos = mound
 
     # com 팀 타자 중 8명의 수비 위치 잡기

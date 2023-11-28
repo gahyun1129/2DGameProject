@@ -19,11 +19,10 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         else:
-            server.defence_team[0].handle_event(event)
+            server.cur_pitcher.handle_event(event)
 
 
 def init():
-
     server.background = background.Background()
     game_world.add_object(server.background, 0)
 
@@ -48,6 +47,10 @@ def init():
     server.ball = ball.Ball()
     game_world.add_object(server.ball, 0)
 
+    # ui 생성
+    server.progress_bar = ui.UI()
+    game_world.add_object(server.progress_bar, 3)
+
     # 수비수와 공의 충돌 설정
     # 수비수와 base 충돌 설정
     # hitter와 base 충돌 설정
@@ -61,9 +64,6 @@ def init():
         game_world.add_collision_pair('ball:defender', None, defender)
         game_world.add_collision_pair('base:defender', None, defender)
     game_world.add_collision_pair('base:defender', None, server.defence_team[1])
-
-    progress_bar = ui.UI()
-    game_world.add_object(progress_bar, 3)
 
 
 def update():

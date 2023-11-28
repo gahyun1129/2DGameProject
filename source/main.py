@@ -5,6 +5,6 @@ from pico2d import open_canvas, close_canvas
 import game_framework
 import mode.logo_mode as start_mode
 
-open_canvas(800, 600, sync=True)
+open_canvas(1000, 1000, sync=True)
 game_framework.run(start_mode)
 close_canvas()

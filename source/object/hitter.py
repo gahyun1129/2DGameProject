@@ -6,6 +6,7 @@ import random
 
 import mode.defence_mode as defence_mode
 import module.make_team as make_team
+import object.ball as obj_ball
 from object.base import *
 
 PIXEL_PER_METER = (10.0 / 0.3)
@@ -49,30 +50,21 @@ def draw_hitter(hitter):
     hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx, sy)
 
 
+def set_next_hitter(hitter):
+    hitter.strike, hitter.ball = 0, 0
+    make_team.search_next_hitter(hitter)
+    game_world.remove_object(hitter)
+    server.out_count += 1
+    if server.out_count == 3:
+        game_framework.change_mode(defence_mode)
+
+
 ## 상태 ##
 class HitterIdle:
     @staticmethod
     def enter(hitter, e):
         hitter.frame, hitter.frame_number, hitter.action = 0, 6, 10
         # hitter.frame, hitter.frame_number, hitter.action = 0, 7, 4
-
-    @staticmethod
-    def exit(hitter, e):
-        pass
-
-    @staticmethod
-    def do(hitter):
-        hitter.frame = (hitter.frame + 1) % hitter.frame_number
-
-    @staticmethod
-    def draw(hitter):
-        draw_hitter(hitter)
-
-
-class DefenderIdle:
-    @staticmethod
-    def enter(hitter, e):
-        hitter.frame, hitter.frame_number, hitter.action = 0, 7, 4
 
     @staticmethod
     def exit(hitter, e):
@@ -140,12 +132,7 @@ class Hit:
                     hitter.ball += 1
                 if hitter.strike == 3:
                     print('STRIKE_3')
-                    hitter.strike, hitter.ball = 0, 0
-                    make_team.set_next_hitter(hitter)
-                    game_world.remove_object(hitter)
-                    server.out_count += 1
-                    if server.out_count == 3:
-                        game_framework.change_mode(defence_mode)
+                    set_next_hitter(hitter)
                 elif hitter.ball == 4:
                     print('BALL_4')
                     hitter.strike, hitter.ball = 0, 0
@@ -191,7 +178,7 @@ class HitterRun:
 
         if hitter.t > 1:
             hitter.init_state_machine('주자')
-            make_team.set_next_hitter(hitter)
+            make_team.search_next_hitter(hitter)
 
     @staticmethod
     def draw(hitter):
@@ -247,6 +234,30 @@ class RunnerRun:
         draw_hitter(hitter)
 
 
+class DefenderIdle:
+    @staticmethod
+    def enter(hitter, e):
+        hitter.frame, hitter.frame_number, hitter.action = 0, 7, 4
+
+    @staticmethod
+    def exit(hitter, e):
+        if e[0] == 'SUPER_CATCH':
+            print('한 번에 잡음')
+            set_next_hitter(server.cur_hitter)
+            server.ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
+        elif e[0] == 'THROW_TO_NEAR_BASE':
+            print('가까운 베이스로 던지기')
+            server.ball.state_machine.handle_event(('THROW_TO_BASE', hitter))
+
+    @staticmethod
+    def do(hitter):
+        hitter.frame = (hitter.frame + 1) % hitter.frame_number
+
+    @staticmethod
+    def draw(hitter):
+        draw_hitter(hitter)
+
+
 class RunToBall:
     @staticmethod
     def enter(hitter, e):
@@ -257,15 +268,15 @@ class RunToBall:
         hitter.goal_position = server.ball.goal_position
         hitter.t = 0.0
 
+    @staticmethod
+    def exit(hitter, e):
         if e[0] == 'SUPER_CATCH':
-            pass
+            print('한 번에 잡음')
+            set_next_hitter(server.cur_hitter)
+            server.ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
         # 타자 아웃
         # 마운드로 볼 다시 보냄
         # 수비수들 전부 제자리로
-
-    @staticmethod
-    def exit(hitter, e):
-        pass
 
     @staticmethod
     def do(hitter):
@@ -388,8 +399,8 @@ class StateMachineDefender:
 
         self.cur_state = DefenderIdle
         self.transitions = {
-            DefenderIdle: {hit_success: RunToBall},
-            RunToBall: {run_done: RunToDefencePos},
+            DefenderIdle: {hit_success: RunToBall, throw_to_near_base: RunToDefencePos, super_catch: RunToDefencePos},
+            RunToBall: {run_done: DefenderIdle, super_catch: RunToDefencePos},
             RunToDefencePos: {run_done: DefenderIdle},
         }
 
@@ -486,7 +497,8 @@ class Hitter:
 
     def handle_collision(self, group, other):
         if group == 'ball:defender':
-            if self.state_machine.cur_state == DefenderIdle:
+            if other.state_machine.cur_state == obj_ball.Throw:
+                print('한 번에 잡음')
                 self.state_machine.handle_event(('SUPER_CATCH', 0))
             else:
                 self.state_machine.handle_event(('THROW_TO_NEAR_BASE', 0))

@@ -113,7 +113,7 @@ def attack_position(players):
         print(o.name)
 
 
-def set_next_hitter(hitter):
+def search_next_hitter(hitter):
     # 다음 타자의 index 찾기
     # 만약 index 가 list 의 최대 값인 9를 넘거나, 투수의 번호인 0이 아니게 1로 변경함.
     next_hitter_index = server.attack_team.index(hitter) + 1

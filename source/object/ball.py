@@ -76,7 +76,7 @@ class Throw:
                 print('ball done')
                 hitter = server.cur_hitter
                 hitter.strike, hitter.my_ball = 0, 0
-                make_team.set_next_hitter(hitter)
+                make_team.search_next_hitter(hitter)
                 game_world.remove_object(hitter)
                 server.out_count += 1
                 if server.out_count == 3:
@@ -113,7 +113,7 @@ class Idle:
             # 타자 삭제
             hitter = server.cur_hitter
             hitter.strike, hitter.my_ball = 0, 0
-            make_team.set_next_hitter(hitter)
+            make_team.search_next_hitter(hitter)
             game_world.remove_object(hitter)
             ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
             for player in server.defence_team[1:9]:
@@ -132,7 +132,7 @@ class Idle:
                 print('ball done')
                 hitter = server.cur_hitter
                 hitter.strike, hitter.my_ball = 0, 0
-                make_team.set_next_hitter(hitter)
+                make_team.search_next_hitter(hitter)
                 game_world.remove_object(hitter)
                 server.out_count += 1
                 if server.out_count == 3:

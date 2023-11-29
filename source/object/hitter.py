@@ -36,8 +36,12 @@ def four_ball(e):
     return e[0] == 'FOUR_BALL'
 
 
-def stay_here(e):
-    return e[0] == 'STAY_HERE'
+def super_catch(e):
+    return e[0] == 'SUPER_CATCH'
+
+
+def throw_to_near_base(e):
+    return e[0] == 'THROW_TO_NEAR_BASE'
 
 
 def draw_hitter(hitter):
@@ -253,6 +257,12 @@ class RunToBall:
         hitter.goal_position = server.ball.goal_position
         hitter.t = 0.0
 
+        if e[0] == 'SUPER_CATCH':
+            pass
+        # 타자 아웃
+        # 마운드로 볼 다시 보냄
+        # 수비수들 전부 제자리로
+
     @staticmethod
     def exit(hitter, e):
         pass
@@ -379,7 +389,7 @@ class StateMachineDefender:
         self.cur_state = DefenderIdle
         self.transitions = {
             DefenderIdle: {hit_success: RunToBall},
-            RunToBall: {run_done: RunToDefencePos, stay_here: DefenderIdle},
+            RunToBall: {run_done: RunToDefencePos},
             RunToDefencePos: {run_done: DefenderIdle},
         }
 
@@ -475,7 +485,11 @@ class Hitter:
         return sx - 20, sy - 30, sx + 20, sy + 30
 
     def handle_collision(self, group, other):
-        pass
+        if group == 'ball:defender':
+            if self.state_machine.cur_state == DefenderIdle:
+                self.state_machine.handle_event(('SUPER_CATCH', 0))
+            else:
+                self.state_machine.handle_event(('THROW_TO_NEAR_BASE', 0))
 
     def throw_to_base(self):
         for base in next_base[self.defence_position]:

@@ -52,8 +52,8 @@ class Throw:
         # 타자가 공을 친 경우
         elif e[0] == 'HIT_SUCCESS':
             ball.pos = home
-            x = random.randint(50, 750)
-            y = random.randint(300, 500)
+            x = random.randint(100, 900)
+            y = random.randint(300, 800)
             ball.goal_position = (x, y)
         # 공이 다시 마운드, 투수에게로 돌아가는 상황
         elif e[0] == 'BACK_TO_MOUND':
@@ -217,10 +217,8 @@ class Ball:
 
     def handle_collision(self, group, other):
         if self.is_collision is False:
-            print('collision', other.state_machine.cur_state, other.name)
-            print('collision', self.state_machine.cur_state)
-            if other.state_machine.cur_state == hitter.HitterIdle:
-                self.state_machine.handle_event(('DEFENDER_CATCH', 0))
-            else:
-                self.state_machine.handle_event(('THROW_TO_BASE', other))
+            # if other.state_machine.cur_state == hitter.HitterIdle:
+            #     self.state_machine.handle_event(('DEFENDER_CATCH', 0))
+            # else:
+            #     self.state_machine.handle_event(('THROW_TO_BASE', other))
             self.is_collision = True

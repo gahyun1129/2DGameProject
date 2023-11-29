@@ -1,5 +1,4 @@
-from pico2d import load_image, load_font, draw_rectangle, get_time
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE
+from pico2d import load_image, load_font, draw_rectangle
 
 import game_framework
 import server

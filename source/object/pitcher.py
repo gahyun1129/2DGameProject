@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time
+from pico2d import load_image
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE
 
 import server
@@ -16,8 +16,6 @@ def throw_done(e):
 class Idle:
     @staticmethod
     def enter(pitcher, e):
-        # action 값은 파란, 빨간 팀 모두 같음
-        # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
         pitcher.frame, pitcher.frame_number, pitcher.action = 0, 5, 12
 
     @staticmethod
@@ -37,10 +35,7 @@ class Idle:
 class Throw:
     @staticmethod
     def enter(pitcher, e):
-        # action 값은 파란, 빨간 팀 모두 같음
-        # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
         pitcher.frame, pitcher.frame_number, pitcher.action = 0, 10, 11
-        pitcher.wait_time = get_time()
         server.progress_bar.is_hit = True
 
     @staticmethod
@@ -56,7 +51,6 @@ class Throw:
     def do(pitcher):
         pitcher.frame = pitcher.frame + 1
 
-        # 나중엔 프레임 한 번 다 돌았을 때로 체크 할 것!
         if pitcher.frame == pitcher.frame_number:
             pitcher.state_machine.handle_event(('THROW_DONE', 0))
 

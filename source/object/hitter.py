@@ -13,14 +13,6 @@ PIXEL_PER_METER = (10.0 / 0.3)
 
 
 ## 이벤트 체크 함수 ##
-def space_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
-
-
-def time_out(e):
-    return e[0] == 'TIME_OUT'
-
-
 def run_done(e):
     return e[0] == 'RUN_DONE'
 
@@ -49,13 +41,17 @@ def stay_here(e):
     return e[0] == 'STAY_HERE'
 
 
+def draw_hitter(hitter):
+    sx, sy = hitter.pos[0] - server.background.window_left, hitter.pos[1] - server.background.window_bottom
+    hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx, sy)
+
+
 ## 상태 ##
-class Idle:
+class HitterIdle:
     @staticmethod
     def enter(hitter, e):
-        # action 값은 파란, 빨간 팀 모두 같음
-        # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
-        hitter.frame, hitter.frame_number, hitter.action = 0, 1, 4
+        hitter.frame, hitter.frame_number, hitter.action = 0, 6, 10
+        # hitter.frame, hitter.frame_number, hitter.action = 0, 7, 4
 
     @staticmethod
     def exit(hitter, e):
@@ -64,25 +60,53 @@ class Idle:
     @staticmethod
     def do(hitter):
         hitter.frame = (hitter.frame + 1) % hitter.frame_number
-        # print('Idle Do')
 
     @staticmethod
     def draw(hitter):
-        sx, sy = hitter.pos[0] - server.background.window_left, hitter.pos[1] - server.background.window_bottom
-        hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx,
-                               sy)
+        draw_hitter(hitter)
+
+
+class DefenderIdle:
+    @staticmethod
+    def enter(hitter, e):
+        hitter.frame, hitter.frame_number, hitter.action = 0, 7, 4
+
+    @staticmethod
+    def exit(hitter, e):
+        pass
+
+    @staticmethod
+    def do(hitter):
+        hitter.frame = (hitter.frame + 1) % hitter.frame_number
+
+    @staticmethod
+    def draw(hitter):
+        draw_hitter(hitter)
+
+
+class RunnerIdle:
+    @staticmethod
+    def enter(hitter, e):
+        hitter.frame, hitter.frame_number, hitter.action = 0, 6, 8
+
+    @staticmethod
+    def exit(hitter, e):
+        pass
+
+    @staticmethod
+    def do(hitter):
+        hitter.frame = (hitter.frame + 1) % hitter.frame_number
+
+    @staticmethod
+    def draw(hitter):
+        draw_hitter(hitter)
 
 
 class Hit:
     @staticmethod
     def enter(hitter, e):
-        # action 값은 파란, 빨간 팀 모두 같음
-        # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
-        hitter.frame, hitter.frame_number, hitter.action = 0, 1, 2
-        hitter.wait_time = get_time()
-        # server.make_ui.is_update = False
+        hitter.frame, hitter.frame_number, hitter.action = 0, 8, 9
         # hitter.user_force = (server.make_ui.action * 10 + server.make_ui.frame) / 100
-        # print(hitter.user_force)
 
     @staticmethod
     def exit(hitter, e):
@@ -90,22 +114,24 @@ class Hit:
 
     @staticmethod
     def do(hitter):
-        hitter.frame = (hitter.frame + 1) % hitter.frame_number
-        if get_time() - hitter.wait_time > 0:
+        hitter.frame = hitter.frame + 1
+        if hitter.frame == 4:
             # hit = hitter.user_force + float(hitter.BA) * random.randint(0, 3)
             # hit = 0.6 # 항상 볼
             # hit = 0.3  # 항상 스트라이크
-            hit = 1.1  # 항상 hit
-            if hit > 1:
-                # print(attack_mode.ball.goal_position)
+            hitter.hit = 1.1  # 항상 hit
+            if hitter.hit > 1:
                 hitter.strike, hitter.ball = 0, 0
-                server.ball.state_machine.handle_event(('HIT_SUCCESS', 0))
-                hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
+                hitter.base = number_to_bases[attack_zone]
                 game_world.update_handle_event(('HIT_SUCCESS', 0))
-                print(server.ball.goal_position, hitter.name)
+        if hitter.frame == hitter.frame_number:
+            if hitter.hit > 1:
+                # 원래 여기에 있는 게 맞긴 함
+                # hitter.strike, hitter.ball = 0, 0
+                # hitter.base = number_to_bases[attack_zone]
+                hitter.state_machine.handle_event(('HIT_SUCCESS', 0))
             else:
-                hitter.wait_time = get_time()
-                if hit < 0.4:
+                if hitter.hit < 0.4:
                     hitter.strike += 1
                 else:
                     hitter.ball += 1
@@ -125,37 +151,29 @@ class Hit:
                 else:
                     hitter.state_machine.handle_event(('HIT_FAIL', 0))
 
-        # print('Hit Do')
-
     @staticmethod
     def draw(hitter):
-        sx, sy = hitter.pos[0] - server.background.window_left, hitter.pos[1] - server.background.window_bottom
-        hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx,
-                               sy)
+        draw_hitter(hitter)
 
 
-class HitAndRun:
+class HitterRun:
     @staticmethod
     def enter(hitter, e):
-        # action 값은 파란, 빨간 팀 모두 같음
-        # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
-        hitter.frame, hitter.frame_number, hitter.action = 0, 1, 0
+        hitter.frame, hitter.frame_number, hitter.action = 0, 8, 5
 
         # 현재 위치, 목표 위치, 매개 변수 t 정의
-        hitter.current_position = hitter.pos
-        hitter.goal_position = positions[hitter.pos][0]
+        hitter.current_position = hitter.base.pos  # base class
+        hitter.goal_position = hitter.base.next_base  # 튜플 (x, y)
         hitter.t = 0.0
-
-        # home에 도착한 경우,,,
-        if hitter.goal_position == home:
-            server.goal_runner = hitter
 
     @staticmethod
     def exit(hitter, e):
         # 위치를 확실히 하기 위해 한 번 더 정의
         hitter.pos = hitter.goal_position
-        positions[hitter.pos][1] = True
-        print('hitter done')
+
+        # hitter의 base 업데이트 하기
+        hitter.base = number_to_bases[hitter.base.next_base]
+        hitter.base.hasRunner = True
 
     @staticmethod
     def do(hitter):
@@ -166,47 +184,44 @@ class HitAndRun:
         x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
         y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
         hitter.pos = (x, y)
-        hitter.t += 0.1 * ((
-                                   hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
+        hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
 
-        # 직선 이동이 끝날 때 run_success 이벤트 발생
         if hitter.t > 1:
-            hitter.state_machine.handle_event(('RUN_DONE', 0))
             hitter.init_state_machine('주자')
             make_team.set_next_hitter(hitter)
-        # print('Run Do')
 
     @staticmethod
     def draw(hitter):
-        sx, sy = hitter.pos[0] - server.background.window_left, hitter.pos[1] - server.background.window_bottom
-        hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx,
-                               sy)
+        draw_hitter(hitter)
 
 
-class Run:
+class RunnerRun:
     @staticmethod
     def enter(hitter, e):
-        # action 값은 파란, 빨간 팀 모두 같음
-        # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
-        hitter.frame, hitter.frame_number, hitter.action = 0, 1, 0
+        hitter.frame, hitter.frame_number, hitter.action = 0, 8, 5
 
         # 현재 위치, 목표 위치, 매개 변수 t 정의
-        hitter.current_position = hitter.pos
-        hitter.goal_position = positions[hitter.pos][0]
+        hitter.current_position = hitter.base.pos
+        hitter.goal_position = hitter.base.next_base
         hitter.t = 0.0
 
-        if positions[positions[hitter.pos][2]][1] is False:
-            hitter.state_machine.handle_event(('RUN_DONE', 0))
+        hitter.base.hasRunner = False
+        # if positions[positions[hitter.pos][2]][1] is False:
+        #     hitter.state_machine.handle_event(('RUN_DONE', 0))
 
     @staticmethod
     def exit(hitter, e):
         # 위치를 확실히 하기 위해 한 번 더 정의
         hitter.pos = hitter.goal_position
+
+        # hitter의 base 업데이트 하기
+        hitter.base = number_to_bases[hitter.base.next_base]
+        hitter.base.hasRunner = True
+
         # home 에 도착한 경우,,,
-        if hitter.pos == home:
+        if hitter.base.pos == home:
             server.goal_runner = hitter
             game_world.remove_object(hitter)
-        positions[hitter.pos][1] = True
 
     @staticmethod
     def do(hitter):
@@ -220,38 +235,28 @@ class Run:
         hitter.t += 0.1 * ((
                                    hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
 
-        # 직선 이동이 끝날 때 run_success 이벤트 발생
+        # 직선 이동이 끝날 때 run_done 이벤트 발생
         if hitter.t > 1:
             hitter.state_machine.handle_event(('RUN_DONE', 0))
 
     @staticmethod
     def draw(hitter):
-        sx, sy = hitter.pos[0] - server.background.window_left, hitter.pos[1] - server.background.window_bottom
-        hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx,
-                               sy)
+        draw_hitter(hitter)
 
 
-class RunDefence:
+class RunToBall:
     @staticmethod
     def enter(hitter, e):
-        # action 값은 파란, 빨간 팀 모두 같음
-        # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
-        hitter.frame, hitter.frame_number, hitter.action = 0, 1, 0
+        hitter.frame, hitter.frame_number, hitter.action = 0, 7, 2
 
         # 현재 위치, 목표 위치, 매개 변수 t 정의
         hitter.current_position = hitter.pos
         hitter.goal_position = server.ball.goal_position
         hitter.t = 0.0
 
-        # 만약 공이 수비수가 움직이지 않아도 되는 위치에 온다면,
-        if hitter.goal_position[0] - 5 < hitter.pos[0] < hitter.goal_position[0] + 5 \
-                and hitter.goal_position[1] - 5 < hitter.pos[1] < hitter.goal_position[1] + 5:
-            hitter.state_machine.handle_event(('STAY_HERE', 0))
-
     @staticmethod
     def exit(hitter, e):
-        # 위치를 확실히 하기 위해 한 번 더 정의
-        hitter.pos = hitter.goal_position
+        pass
 
     @staticmethod
     def do(hitter):
@@ -262,27 +267,21 @@ class RunDefence:
         x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
         y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
         hitter.pos = (x, y)
-        hitter.t += 0.1 * ((
-                                   hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
+        hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
         if hitter.t > 1:
             hitter.state_machine.handle_event(('RUN_DONE', 0))
-        # print('Run Do')
 
     @staticmethod
     def draw(hitter):
-        sx, sy = hitter.pos[0] - server.background.window_left, hitter.pos[1] - server.background.window_bottom
-        hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx,
-                               sy)
+        draw_hitter(hitter)
 
 
-class RunPosition:
+class RunToDefencePos:
     @staticmethod
     def enter(hitter, e):
-        # action 값은 파란, 빨간 팀 모두 같음
-        # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
-        hitter.frame, hitter.frame_number, hitter.action = 0, 1, 0
+        hitter.frame, hitter.frame_number, hitter.action = 0, 7, 3
 
         # 현재 위치, 목표 위치, 매개 변수 t 정의
         hitter.current_position = hitter.pos
@@ -303,30 +302,26 @@ class RunPosition:
         x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
         y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
         hitter.pos = (x, y)
-        hitter.t += 0.1 * ((
-                                   hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
+        hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
         if hitter.t > 1:
             hitter.state_machine.handle_event(('RUN_DONE', 0))
-        # print('Run Do')
 
     @staticmethod
     def draw(hitter):
-        sx, sy = hitter.pos[0] - server.background.window_left, hitter.pos[1] - server.background.window_bottom
-        hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx,
-                               sy)
+        draw_hitter(hitter)
 
 
 ## 상태 머신 ##
-class StateMachineHit:
+class StateMachineHitter:
     def __init__(self, hitter):
         self.hitter = hitter
-        self.cur_state = Idle
+        self.cur_state = HitterIdle
         self.transitions = {
-            Idle: {hit_start: Hit},
-            Hit: {hit_success: HitAndRun, hit_fail: Idle, four_ball: HitAndRun},
-            HitAndRun: {run_done: Idle}
+            HitterIdle: {hit_start: Hit},
+            Hit: {hit_success: HitterRun, hit_fail: HitterIdle, four_ball: HitterRun},
+            HitterRun: {run_done: HitterIdle}
         }
 
     def handle_event(self, e):
@@ -349,13 +344,13 @@ class StateMachineHit:
         self.hitter.font.draw(self.hitter.pos[0] - 10, self.hitter.pos[1] + 50, f'{self.hitter.name}', (0, 255, 0))
 
 
-class StateMachineRun:
+class StateMachineRunner:
     def __init__(self, hitter):
         self.hitter = hitter
-        self.cur_state = Idle
+        self.cur_state = RunnerIdle
         self.transitions = {
-            Idle: {hit_success: Run, four_ball: Run},
-            Run: {run_done: Idle}
+            RunnerIdle: {hit_success: RunnerRun, four_ball: RunnerRun},
+            RunnerRun: {run_done: RunnerIdle}
         }
 
     def handle_event(self, e):
@@ -378,15 +373,15 @@ class StateMachineRun:
         self.hitter.font.draw(self.hitter.pos[0] - 10, self.hitter.pos[1] + 50, f'{self.hitter.name}', (0, 0, 255))
 
 
-class StateMachineDefence:
+class StateMachineDefender:
     def __init__(self, hitter):
         self.hitter = hitter
 
-        self.cur_state = Idle
+        self.cur_state = DefenderIdle
         self.transitions = {
-            Idle: {hit_success: RunDefence},
-            RunDefence: {run_done: RunPosition, stay_here: Idle},
-            RunPosition: {run_done: Idle},
+            DefenderIdle: {hit_success: RunToBall},
+            RunToBall: {run_done: RunToDefencePos, stay_here: DefenderIdle},
+            RunToDefencePos: {run_done: DefenderIdle},
         }
 
     def handle_event(self, e):
@@ -410,9 +405,9 @@ class StateMachineDefence:
 
 
 state_machines = {
-    '주자': StateMachineRun,
-    '타자': StateMachineHit,
-    '수비수': StateMachineDefence
+    '주자': StateMachineRunner,
+    '타자': StateMachineHitter,
+    '수비수': StateMachineDefender
 }
 
 
@@ -447,14 +442,14 @@ class Hitter:
 
         # 이미지 로드
         if Hitter.image is None:
-            Hitter.image = load_image('resource/image/character_hitter.png')
+            Hitter.image = load_image('resource/image/animation.png')
 
         # 상태 머신 추가
         self.state_machine = None
 
     def set_team_color(self, color):
         if color == '파랑':
-            self.team_color = 1
+            self.team_color = 13
         elif color == '빨강':
             self.team_color = 0
 
@@ -490,12 +485,12 @@ class Hitter:
             return server.cur_hitter.goal_position
 
     def run_to_ball(self, goal_pos):
-        # x: 400 이상, y: 350 이상 > 중견수, 우익수
-        if goal_pos[0] >= 400 and self.pos[0] >= 400 and goal_pos[1] >= 350 and self.pos[1] >= 350: return True
-        # x: 400 이하, y: 300 이상 > 좌익수, 중견수
-        if goal_pos[0] <= 400 and self.pos[0] <= 400 and goal_pos[1] >= 350 and self.pos[1] >= 350: return True
-        # x: 400 이상, y: 300 이하 > 1루수, 2루수
-        if goal_pos[0] >= 400 and self.pos[0] >= 400 and goal_pos[1] <= 350 and self.pos[1] <= 350: return True
-        # x: 400 이하, y: 300 이하 > 유격수, 3루수
-        if goal_pos[0] <= 400 and self.pos[0] <= 400 and goal_pos[1] <= 350 and self.pos[1] <= 350: return True
+        # x: 500 이상, y: 350 이상 > 중견수, 우익수
+        if goal_pos[0] >= 500 and self.pos[0] >= 500 and goal_pos[1] >= 350 and self.pos[1] >= 350: return True
+        # x: 500 이하, y: 350 이상 > 좌익수, 중견수
+        if goal_pos[0] <= 500 and self.pos[0] <= 500 and goal_pos[1] >= 350 and self.pos[1] >= 350: return True
+        # x: 500 이상, y: 350 이하 > 1루수, 2루수
+        if goal_pos[0] >= 500 and self.pos[0] >= 500 and goal_pos[1] <= 350 and self.pos[1] <= 350: return True
+        # x: 500 이하, y: 350 이하 > 유격수, 3루수
+        if goal_pos[0] <= 500 and self.pos[0] <= 500 and goal_pos[1] <= 350 and self.pos[1] <= 350: return True
         return False

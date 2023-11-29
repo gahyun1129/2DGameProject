@@ -91,6 +91,9 @@ def handle_collisions():
 
 ## 그 외의 오브젝트 관리 ##
 def update_handle_event(event):
+    # 공
+    server.ball.state_machine.handle_event(event)
+
     # 주자
     for o in objects[2]:
         o.state_machine.handle_event(event)
@@ -99,3 +102,5 @@ def update_handle_event(event):
     for o in objects[1][1:9]:
         if o.run_to_ball(server.ball.goal_position):
             o.state_machine.handle_event(event)
+
+

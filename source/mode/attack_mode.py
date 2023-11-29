@@ -36,8 +36,8 @@ def init():
     server.defence_team = make_team.computer_players
     server.attack_team = make_team.user_players
 
-    # set base
-    base.set_base()
+    # # set base
+    # base.set_base()
 
     # 공격 팀, 수비 팀 초기 위치 배치
     make_team.attack_position(server.attack_team)

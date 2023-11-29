@@ -2,20 +2,19 @@ from pico2d import draw_rectangle
 import game_world
 
 bases = []
-number_to_bases = {}
 
 mound = (500, 240)
-one_base = (650, 300)
+one_base = (650, 320)
 two_base = (500, 380)
-two_base_player = (500 - 30, 380)
-three_base = (350, 300)
+two_base_player = (500 + 60, 370)
+three_base = (350, 320)
 home = (500, 120)
-short = (430, 380)
+short = (500 - 60, 370)
 left = (250, 580)
 right = (750, 580)
 center = (500, 700)
 attack_zone = (470, 150)
-ball = None
+
 
 # 현재 위치 : 다음 베이스, 현재 베이스에 player가 있는지, 전 베이스
 positions = {
@@ -26,6 +25,8 @@ positions = {
     home: [(0, 0), False, three_base]
 }
 
+
+# 가까운 base 판단하기 위해 필요한 딕셔너리
 next_base = {
     short: [two_base, three_base, home, one_base],
     left: [two_base, three_base, home, one_base],
@@ -63,27 +64,30 @@ class Base:
             self.hasDefender = True
 
 
-def set_base():
-    global number_to_bases
-    # one_base
-    b = Base(attack_zone, one_base, two_base)
-    bases.append(b)
-    # two_base
-    b = Base(one_base, two_base, three_base)
-    b.hasDefender = False
-    bases.append(b)
-    # three_base
-    b = Base(two_base, three_base, home)
-    bases.append(b)
-    # home
-    b = Base(three_base, home, (0, 0))
-    bases.append(b)
+# attack_zone
+b = Base((0, 0), attack_zone, one_base)
+bases.append(b)
+# one_base
+b = Base(attack_zone, one_base, two_base)
+bases.append(b)
+# two_base
+b = Base(one_base, two_base, three_base)
+b.hasDefender = False
+bases.append(b)
+# three_base
+b = Base(two_base, three_base, home)
+bases.append(b)
+# home
+b = Base(three_base, home, (0, 0))
+bases.append(b)
 
-    game_world.add_objects(bases, 4)
+game_world.add_objects(bases, 4)
 
-    number_to_bases = {
-        one_base: bases[0],
-        two_base: bases[1],
-        three_base: bases[2],
-        home: bases[3]
-    }
+
+number_to_bases = {
+    attack_zone: bases[0],
+    one_base: bases[1],
+    two_base: bases[2],
+    three_base: bases[3],
+    home: bases[4]
+}

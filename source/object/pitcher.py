@@ -18,7 +18,7 @@ class Idle:
     def enter(pitcher, e):
         # action 값은 파란, 빨간 팀 모두 같음
         # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
-        pitcher.frame, pitcher.frame_number, pitcher.action = 0, 1, 0
+        pitcher.frame, pitcher.frame_number, pitcher.action = 0, 5, 12
 
     @staticmethod
     def exit(pitcher, e):
@@ -39,7 +39,7 @@ class Throw:
     def enter(pitcher, e):
         # action 값은 파란, 빨간 팀 모두 같음
         # 나중에 draw 할 때 team_color 값을 더해서 색 구분 하자!
-        pitcher.frame, pitcher.frame_number, pitcher.action = 0, 1, 1
+        pitcher.frame, pitcher.frame_number, pitcher.action = 0, 10, 11
         pitcher.wait_time = get_time()
         server.progress_bar.is_hit = True
 
@@ -54,10 +54,10 @@ class Throw:
 
     @staticmethod
     def do(pitcher):
-        pitcher.frame = (pitcher.frame + 1) % pitcher.frame_number
+        pitcher.frame = pitcher.frame + 1
 
         # 나중엔 프레임 한 번 다 돌았을 때로 체크 할 것!
-        if get_time() - pitcher.wait_time > 0:
+        if pitcher.frame == pitcher.frame_number:
             pitcher.state_machine.handle_event(('THROW_DONE', 0))
 
     @staticmethod
@@ -111,7 +111,7 @@ class Pitcher:
 
         # 이미지 로드
         if Pitcher.image is None:
-            Pitcher.image = load_image('resource/image/character_hitter.png')
+            Pitcher.image = load_image('resource/image/animation.png')
 
         # 상태 머신 추가
         self.state_machine = None

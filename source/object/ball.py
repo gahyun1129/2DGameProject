@@ -215,7 +215,7 @@ class Ball:
         if self.is_collision is False:
             print('collision', other.state_machine.cur_state, other.name)
             print('collision', self.state_machine.cur_state)
-            if other.state_machine.cur_state == hitter.Idle:
+            if other.state_machine.cur_state == hitter.HitterIdle:
                 self.state_machine.handle_event(('DEFENDER_CATCH', 0))
             else:
                 self.state_machine.handle_event(('THROW_TO_BASE', other))

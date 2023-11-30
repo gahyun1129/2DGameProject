@@ -47,6 +47,7 @@ class Base:
         self.next_base = next_base
         self.prev_base = prev_base
         self.hasRunner = False
+        self.runners_goal_base = False
 
     def update(self):
         pass

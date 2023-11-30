@@ -98,8 +98,8 @@ def update_handle_event(event):
     for o in objects[2]:
         o.state_machine.handle_event(event)
 
-    # 수비수 (투수 제외)
-    for o in objects[1][1:9]:
+    # 수비수 (투수, 포수 제외)
+    for o in objects[1][2:9]:
         if o.run_to_ball(server.ball.goal_position):
             o.state_machine.handle_event(event)
 

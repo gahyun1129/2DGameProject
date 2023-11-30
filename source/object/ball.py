@@ -53,8 +53,9 @@ class Throw:
         # 타자가 공을 친 경우
         elif e[0] == 'HIT_SUCCESS':
             ball.pos = home
-            x = random.randint(100, 900)
-            y = random.randint(300, 800)
+            # x = random.randint(100, 900)
+            # y = random.randint(300, 800)
+            x, y = 700, 100
             ball.goal_position = (x, y)
 
         # 공이 다시 마운드, 투수에게로 돌아가는 상황
@@ -63,8 +64,7 @@ class Throw:
 
         # 가장 가까운 주자가 있는 base 공을 던지는 경우 (수비)
         elif e[0] == 'THROW_TO_NEAR_BASE':
-            # 가야 할 베이스 결정
-            pass
+            ball.goal_position = e[1].throw_to_base()
 
         ball.current_position = ball.pos
         ball.t = 0.0
@@ -72,6 +72,8 @@ class Throw:
     @staticmethod
     def exit(ball, e):
         pass
+        # if ball.event[0] == 'THROW_TO_NEAR_BASE':
+        #     ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
 
     @staticmethod
     def do(ball):
@@ -99,6 +101,8 @@ class Idle:
     @staticmethod
     def enter(ball, e):
         pass
+        # if ball.pos is not mound:
+        #     ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
 
     @staticmethod
     def exit(ball, e):

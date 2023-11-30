@@ -60,7 +60,8 @@ def set_next_hitter(hitter):
     game_world.remove_object(hitter)
     server.out_count += 1
     if server.out_count == 3:
-        game_framework.change_mode(defence_mode)
+        pass
+        # game_framework.change_mode(defence_mode)
 
 
 ## 상태 ##
@@ -160,14 +161,11 @@ class HitterRun:
         hitter.goal_position = hitter.base.next_base  # 튜플 (x, y)
         hitter.t = 0.0
 
+        number_to_bases[hitter.base.next_base].runners_goal_base = True
+
     @staticmethod
     def exit(hitter, e):
-        # 위치를 확실히 하기 위해 한 번 더 정의
-        hitter.pos = hitter.goal_position
-
-        # hitter의 base 업데이트 하기
-        hitter.base = number_to_bases[hitter.base.next_base]
-        hitter.base.hasRunner = True
+        pass
 
     @staticmethod
     def do(hitter):
@@ -181,8 +179,15 @@ class HitterRun:
         hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
 
         if hitter.t > 1:
-            hitter.init_state_machine('주자')
             make_team.search_next_hitter(hitter)
+            # 위치를 확실히 하기 위해 한 번 더 정의
+            hitter.pos = hitter.goal_position
+
+            # hitter의 base 업데이트 하기
+            hitter.base = number_to_bases[hitter.base.next_base]
+            hitter.base.hasRunner = True
+            hitter.base.runners_goal_base = False
+            hitter.init_state_machine('주자')
 
     @staticmethod
     def draw(hitter):
@@ -200,6 +205,8 @@ class RunnerRun:
         hitter.t = 0.0
 
         hitter.base.hasRunner = False
+
+        number_to_bases[hitter.base.next_base].runners_goal_base = True
         # if positions[positions[hitter.pos][2]][1] is False:
         #     hitter.state_machine.handle_event(('RUN_DONE', 0))
 
@@ -211,6 +218,7 @@ class RunnerRun:
         # hitter의 base 업데이트 하기
         hitter.base = number_to_bases[hitter.base.next_base]
         hitter.base.hasRunner = True
+        hitter.base.runners_goal_base = False
 
         # home 에 도착한 경우,,,
         if hitter.base.pos == home:
@@ -287,7 +295,7 @@ class RunToBall:
                     o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
         elif e[0] == 'THROW_TO_NEAR_BASE':
             print('가까운 베이스로 보내기', hitter.name)
-            server.ball.state_machine.handle_event(('THROW_TO_NEAR_BASE', 0))
+            server.ball.state_machine.handle_event(('THROW_TO_NEAR_BASE', hitter))
             # 수비수 (투수 제외)
             for o in game_world.objects[1][1:9]:
                 if o.pos is not o.defence_position:
@@ -513,17 +521,21 @@ class Hitter:
 
     def handle_collision(self, group, other):
         if group == 'ball:defender' and other.is_collision is False:
+            print('h', group, self.name)
             if other.state_machine.cur_state == obj_ball.Throw:
+                print('한 번에 잡음')
                 self.state_machine.handle_event(('SUPER_CATCH', 0))
+                other.is_collision = True
             else:
+                print('가까운 곳 보낼 거')
                 self.state_machine.handle_event(('THROW_TO_NEAR_BASE', 0))
-            other.is_collision = True
+                other.is_collision = True
 
     def throw_to_base(self):
         for base in next_base[self.defence_position]:
-            if positions[base][1]:
+            if number_to_bases[base].runners_goal_base:
                 return base
-            return server.cur_hitter.goal_position
+        return home
 
     def run_to_ball(self, goal_pos):
         # x: 500 이상, y: 350 이상 > 중견수, 우익수

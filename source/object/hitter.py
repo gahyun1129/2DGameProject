@@ -163,6 +163,7 @@ class HitterRun:
         hitter.t = 0.0
 
         number_to_bases[hitter.base.next_base].runners_goal_base = True
+        number_to_bases[hitter.base.next_base].cur_runner = hitter
 
     @staticmethod
     def exit(hitter, e):
@@ -185,6 +186,8 @@ class HitterRun:
             hitter.pos = hitter.goal_position
 
             # hitter의 base 업데이트 하기
+            if hitter.base.cur_runner == hitter:
+                hitter.base.cur_runner = None
             hitter.base = number_to_bases[hitter.base.next_base]
             hitter.base.hasRunner = True
             hitter.base.runners_goal_base = False
@@ -208,6 +211,7 @@ class RunnerRun:
         hitter.base.hasRunner = False
 
         number_to_bases[hitter.base.next_base].runners_goal_base = True
+        number_to_bases[hitter.base.next_base].cur_runner = hitter
         # if positions[positions[hitter.pos][2]][1] is False:
         #     hitter.state_machine.handle_event(('RUN_DONE', 0))
 
@@ -217,6 +221,9 @@ class RunnerRun:
         hitter.pos = hitter.goal_position
 
         # hitter의 base 업데이트 하기
+        # hitter의 base 업데이트 하기
+        if hitter.base.cur_runner == hitter:
+            hitter.base.cur_runner = None
         hitter.base = number_to_bases[hitter.base.next_base]
         hitter.base.hasRunner = True
         hitter.base.runners_goal_base = False

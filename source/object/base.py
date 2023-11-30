@@ -31,12 +31,14 @@ next_base = {
 class Base:
     def __init__(self, prev_base, pos, next_base):
         self.pos = pos
-        self.hasDefender = True
+        self.hasRunner = False
+        self.collisionObj = None
         self.isFilled = False
         self.next_base = next_base
         self.prev_base = prev_base
-        self.hasRunner = False
         self.runners_goal_base = False
+        self.check_collision = False
+        self.cur_runner = None
 
     def update(self):
         pass
@@ -48,10 +50,14 @@ class Base:
         return self.pos[0] - 10, self.pos[1] - 10, self.pos[0] + 10, self.pos[1] + 10
 
     def handle_collision(self, group, other):
-        if group == 'hitter:base':
-            self.hasRunner = True
-        elif group == 'base:defender':
-            self.hasDefender = True
+        if self.check_collision and self.collisionObj is None:
+            if group == 'base:defender':
+                print(other.name)
+                self.collisionObj = 'defender'
+            elif group == 'hitter:base':
+                print(other.name)
+                self.collisionObj = 'hitter'
+
 
 
 # attack_zone

@@ -65,6 +65,7 @@ class Throw:
         # 가장 가까운 주자가 있는 base 공을 던지는 경우 (수비)
         elif e[0] == 'THROW_TO_NEAR_BASE':
             ball.goal_position = e[1].throw_to_base()
+            number_to_bases[ball.goal_position].check_collision = True
 
         ball.current_position = ball.pos
         ball.t = 0.0
@@ -72,6 +73,22 @@ class Throw:
     @staticmethod
     def exit(ball, e):
         if ball.event[0] == 'THROW_TO_NEAR_BASE' or ball.event[0] == 'BACK_TO_MOUND':
+            if ball.event[0] == 'THROW_TO_NEAR_BASE':
+                if number_to_bases[ball.goal_position].collisionObj == 'defender':
+                    print('out')
+                    if ball.goal_position == one_base:
+                        runner = number_to_bases[ball.goal_position].cur_runner
+                        runner.strike, runner.ball = 0, 0
+                        game_world.remove_object(runner)
+                        server.out_count += 1
+                        if server.out_count == 3:
+                            # pass
+                            server.out_count = 0
+                            game_framework.change_mode(defence_mode)
+                else:
+                    print('safe')
+                number_to_bases[ball.goal_position].collisionObj = None
+                number_to_bases[ball.goal_position].check_collision = False
             server.progress_bar.frame = 0
             server.progress_bar.action = 0
             server.progress_bar.is_hit = False

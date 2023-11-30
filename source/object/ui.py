@@ -21,4 +21,4 @@ class UI:
                 self.frame = 0
 
     def draw(self):
-        self.image.clip_draw(self.frame * 600, self.action * 50, 600, 50, 400, 50)
+        self.image.clip_draw(self.frame * 600, self.action * 50, 600, 50, 500, 50)

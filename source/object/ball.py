@@ -42,7 +42,7 @@ class Throw:
     @staticmethod
     def enter(ball, e):
         ball.frame, ball.frame_number = 0, 1
-        ball.event = e[0]
+        ball.event = e
 
         # 투수가 공을 던지는 경우
         if e[0] == 'THROW_START':
@@ -53,9 +53,9 @@ class Throw:
         # 타자가 공을 친 경우
         elif e[0] == 'HIT_SUCCESS':
             ball.pos = home
-            # x = random.randint(100, 900)
-            # y = random.randint(300, 800)
-            x, y = 700, 100
+            x = random.randint(100, 900)
+            y = random.randint(300, 800)
+            # x, y = 700, 100
             ball.goal_position = (x, y)
 
         # 공이 다시 마운드, 투수에게로 돌아가는 상황
@@ -71,9 +71,10 @@ class Throw:
 
     @staticmethod
     def exit(ball, e):
-        pass
-        # if ball.event[0] == 'THROW_TO_NEAR_BASE':
-        #     ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
+        if ball.event[0] == 'THROW_TO_NEAR_BASE' or ball.event[0] == 'BACK_TO_MOUND':
+            server.progress_bar.frame = 0
+            server.progress_bar.action = 0
+            server.progress_bar.is_hit = False
 
     @staticmethod
     def do(ball):

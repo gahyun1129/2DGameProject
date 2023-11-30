@@ -5,26 +5,15 @@ bases = []
 
 mound = (500, 240)
 one_base = (650, 320)
-two_base = (500, 380)
-two_base_player = (500 + 60, 370)
+two_base = (500, 410)
+two_base_player = (500 + 60, 400)
 three_base = (350, 320)
 home = (500, 120)
-short = (500 - 60, 370)
+short = (500 - 60, 400)
 left = (250, 580)
 right = (750, 580)
 center = (500, 700)
 attack_zone = (470, 150)
-
-
-# 현재 위치 : 다음 베이스, 현재 베이스에 player가 있는지, 전 베이스
-positions = {
-    attack_zone: [one_base, True, (0, 0)],
-    one_base: [two_base, False, attack_zone],
-    two_base: [three_base, False, one_base],
-    three_base: [home, False, two_base],
-    home: [(0, 0), False, three_base]
-}
-
 
 # 가까운 base 판단하기 위해 필요한 딕셔너리
 next_base = {

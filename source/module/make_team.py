@@ -70,7 +70,7 @@ def defence_position(players):
     players[1].base = bases[3]
     players[2].pos = one_base
     players[2].base = bases[0]
-    players[3].pos = (two_base[0] + 70, two_base[1] - 20)
+    players[3].pos = two_base_player
     players[3].base = bases[1]
     players[4].pos = three_base
     players[4].base = bases[2]

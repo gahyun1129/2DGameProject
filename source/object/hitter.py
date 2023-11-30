@@ -60,8 +60,9 @@ def set_next_hitter(hitter):
     game_world.remove_object(hitter)
     server.out_count += 1
     if server.out_count == 3:
-        pass
-        # game_framework.change_mode(defence_mode)
+        # pass
+        server.out_count = 0
+        game_framework.change_mode(defence_mode)
 
 
 ## 상태 ##
@@ -262,6 +263,14 @@ class DefenderIdle:
                 if o.pos is not o.defence_position:
                     print('돌아감', o.name)
                     o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
+        elif e[0] == 'THROW_TO_NEAR_BASE':
+            print('가까운 베이스로 보내기', hitter.name)
+            server.ball.state_machine.handle_event(('THROW_TO_NEAR_BASE', hitter))
+            # 수비수 (투수 제외)
+            for o in game_world.objects[1][1:9]:
+                if o.pos is not o.defence_position:
+                    print('돌아감', o.name)
+                    o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
 
     @staticmethod
     def do(hitter):
@@ -423,7 +432,7 @@ class StateMachineDefender:
 
         self.cur_state = DefenderIdle
         self.transitions = {
-            DefenderIdle: {hit_success: RunToBall, super_catch: RunToDefencePos, back_to_defence: RunToDefencePos},
+            DefenderIdle: {hit_success: RunToBall, super_catch: RunToDefencePos, back_to_defence: RunToDefencePos, throw_to_near_base: RunToDefencePos},
             RunToBall: {run_done: DefenderIdle, super_catch: RunToDefencePos, throw_to_near_base: RunToDefencePos, back_to_defence: RunToDefencePos},
             RunToDefencePos: {run_done: DefenderIdle},
         }
@@ -521,7 +530,6 @@ class Hitter:
 
     def handle_collision(self, group, other):
         if group == 'ball:defender' and other.is_collision is False:
-            print('h', group, self.name)
             if other.state_machine.cur_state == obj_ball.Throw:
                 print('한 번에 잡음')
                 self.state_machine.handle_event(('SUPER_CATCH', 0))

@@ -1,5 +1,6 @@
 from pico2d import draw_rectangle
 import game_world
+import server
 
 bases = []
 
@@ -47,7 +48,8 @@ class Base:
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return self.pos[0] - 10, self.pos[1] - 10, self.pos[0] + 10, self.pos[1] + 10
+        sx, sy = self.pos[0] - server.background.window_left, self.pos[1] - server.background.window_bottom
+        return sx - 10, sy - 10, sx + 10, sy + 10
 
     def handle_collision(self, group, other):
         if self.check_collision and self.collisionObj is None:
@@ -57,7 +59,6 @@ class Base:
             elif group == 'hitter:base':
                 print(other.name)
                 self.collisionObj = 'hitter'
-
 
 
 # attack_zone
@@ -78,7 +79,6 @@ b = Base(three_base, home, (0, 0))
 bases.append(b)
 
 game_world.add_objects(bases, 4)
-
 
 number_to_bases = {
     attack_zone: bases[0],

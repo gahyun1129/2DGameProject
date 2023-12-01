@@ -9,8 +9,8 @@ class InningUI:
         self.frame = 0      # 1 ~ 5
         self.action = 0     # 6 ~ 9
         self.turn = 3  # 3이면 초, 2면 말
-        self.goal_x, goal_y = 600, 500
-        self.x, self.y = 1300, 500
+        self.goal_x, goal_y = 500, 500
+        self.x, self.y = 1000, 500
         self.size = 1
         if InningUI.inning_image is None:
             InningUI.inning_image = load_image('resource/image/UI.png')
@@ -21,10 +21,10 @@ class InningUI:
             self.x -= 50
         else:
             self.size = 0.5
-            self.x, self.y = 200, 900
+            self.x, self.y = 100, 550
 
     def draw(self):
-        self.inning_image.clip_draw(0, self.turn * 100, 500, 100, self.x, self.y, 500 * self.size,
-                                    100 * self.size)
-        self.number_image.clip_draw(self.frame * 100, self.action * 100, 100, 100,
-                                    self.x - (300 * self.size), self.y - (10 * self.size), 100 * self.size, 100 * self.size)
+        self.inning_image.clip_draw(0, self.turn * 50, 250, 50, self.x, self.y, 250 * self.size,
+                                    50 * self.size)
+        self.number_image.clip_draw(self.frame * 50, self.action * 50, 50, 50,
+                                    self.x - (150 * self.size), self.y - (5 * self.size), 50 * self.size, 50 * self.size)

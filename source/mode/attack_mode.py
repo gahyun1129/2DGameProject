@@ -3,6 +3,7 @@ from pico2d import *
 import server
 import game_framework
 import game_world
+import mode.ui_mode as ui_mode
 
 import module.make_team as make_team
 import object.background as background
@@ -21,6 +22,8 @@ def handle_events():
 
 
 def init():
+    game_framework.push_mode(ui_mode)
+
     server.background = background.Background()
     game_world.add_object(server.background, 0)
 
@@ -35,8 +38,7 @@ def init():
     # game_world에 객체 넣기
     game_world.add_object(server.ball, 0)
     game_world.add_object(server.ui_ment, 3)
-    game_world.add_object(server.progress_bar, 3)
-    game_world.add_object(server.ui_inning, 3)
+    # game_world.add_object(server.progress_bar, 3)
     game_world.add_object(server.ui_judge, 3)
 
     # 수비수와 공의 충돌 설정
@@ -77,4 +79,4 @@ def pause():
 
 
 def resume():
-    pass
+    game_world.add_object(server.progress_bar, 3)

@@ -9,13 +9,12 @@ class MentUI:
 
     def __init__(self):
         self.frame = 0      # 1 ~ 5
-
         self.ment = 6       # 6: ball, 7: strike, 8: hit
-
-        self.x, self.y = 800, 200
+        self.x, self.y = 600, 200
 
         self.is_draw_number = False
         self.is_draw = False
+
         if MentUI.ment_image is None:
             MentUI.ment_image = load_image('resource/image/UI.png')
             MentUI.number_image = load_image('resource/image/UI.png')
@@ -25,9 +24,9 @@ class MentUI:
 
     def draw(self):
         if self.is_draw:
-            self.ment_image.clip_draw(0, self.ment * 100, 500, 100, self.x, self.y)
+            self.ment_image.clip_draw(0, self.ment * 50, 250, 50, self.x, self.y)
             if self.is_draw_number:
-                self.number_image.clip_draw(self.frame * 100, 0, 100, 100, self.x - 200, self.y - 5)
+                self.number_image.clip_draw(self.frame * 50, 0, 50, 50, self.x - 80, self.y - 2)
 
     def draw_ment_ui(self, status, number=0):
         if status == 'strike':

@@ -3,15 +3,15 @@ from pico2d import load_image
 import server
 
 
-class UI:
+class ProgressBar:
     image = None
 
     def __init__(self):
         self.frame = 0
         self.action = 0
         self.is_hit = False
-        if UI.image is None:
-            UI.image = load_image('resource/image/progress_bar.png')
+        if ProgressBar.image is None:
+            ProgressBar.image = load_image('resource/image/progress_bar.png')
 
     def update(self):
         if not self.is_hit:

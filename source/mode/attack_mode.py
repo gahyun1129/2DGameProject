@@ -6,7 +6,7 @@ import game_world
 
 import module.make_team as make_team
 import object.background as background
-import object.ui as ui
+import ui.progress_bar as progress_bar
 import object.ball as ball
 import object.base as base
 
@@ -45,7 +45,7 @@ def init():
     game_world.add_object(server.ball, 0)
 
     # ui 생성
-    server.progress_bar = ui.UI()
+    server.progress_bar = progress_bar.ProgressBar()
     game_world.add_object(server.progress_bar, 3)
 
     # 수비수와 공의 충돌 설정

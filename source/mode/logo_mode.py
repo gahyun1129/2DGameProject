@@ -5,7 +5,7 @@
 import game_framework
 from pico2d import *
 
-import mode.attack_mode as attack_mode
+import mode.lobby_mode as lobby_mode
 
 
 def init():
@@ -36,7 +36,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-            game_framework.change_mode(attack_mode)
+            game_framework.change_mode(lobby_mode)
 
 
 def pause():

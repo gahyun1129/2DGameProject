@@ -1,9 +1,7 @@
 from pico2d import load_image
 
-import server
 
-
-class INNINGUI:
+class InningUI:
     inning_image = None
     number_image = None
 
@@ -14,9 +12,9 @@ class INNINGUI:
         self.goal_x, goal_y = 600, 500
         self.x, self.y = 1300, 500
         self.size = 1
-        if INNINGUI.inning_image is None:
-            INNINGUI.inning_image = load_image('resource/image/UI.png')
-            INNINGUI.number_image = load_image('resource/image/UI.png')
+        if InningUI.inning_image is None:
+            InningUI.inning_image = load_image('resource/image/UI.png')
+            InningUI.number_image = load_image('resource/image/UI.png')
 
     def update(self):
         if self.x > self.goal_x:

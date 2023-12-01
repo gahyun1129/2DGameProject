@@ -6,11 +6,7 @@ import game_world
 
 import module.make_team as make_team
 import object.background as background
-import ui.progress_bar as progress_bar
-import object.ball as ball
 import object.base as base
-import ui.inning_ui as inning_ui
-import ui.game_ment_ui as game_ment_ui
 
 
 def handle_events():
@@ -28,12 +24,6 @@ def init():
     server.background = background.Background()
     game_world.add_object(server.background, 0)
 
-    # 데이터 읽어 오기
-    make_team.set_player_from_data_file()
-
-    # com 팀과 user 팀 선수 랜덤 으로 정하기
-    make_team.make_team()
-
     # 현재 모드에서의 공격 팀과 수비 팀 명시
     server.defence_team = make_team.computer_players
     server.attack_team = make_team.user_players
@@ -42,19 +32,12 @@ def init():
     make_team.attack_position(server.attack_team)
     make_team.defence_position(server.defence_team)
 
-    # 공격에 사용될 공 생성
-    server.ball = ball.Ball()
+    # game_world에 객체 넣기
     game_world.add_object(server.ball, 0)
-
-    # ui 생성
-    server.progress_bar = progress_bar.ProgressBar()
-    game_world.add_object(server.progress_bar, 3)
-
-    server.ui_ment = game_ment_ui.MentUI()
     game_world.add_object(server.ui_ment, 3)
-
-    server.ui_inning = inning_ui.INNINGUI()
+    game_world.add_object(server.progress_bar, 3)
     game_world.add_object(server.ui_inning, 3)
+    game_world.add_object(server.ui_judge, 3)
 
     # 수비수와 공의 충돌 설정
     # 수비수와 base 충돌 설정

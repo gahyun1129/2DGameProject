@@ -62,6 +62,7 @@ def set_next_hitter(hitter):
     hitter.strike, hitter.ball = 0, 0
     make_team.search_next_hitter(hitter)
     game_world.remove_object(hitter)
+    server.ui_judge.draw_judge_ui('out', server.out_count)
     server.out_count += 1
     if server.out_count == 3:
         # pass

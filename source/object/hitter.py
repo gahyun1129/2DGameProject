@@ -49,6 +49,10 @@ def back_to_defence(e):
     return e[0] == 'BACK_TO_DEFENCE'
 
 
+def to_catch_ball(e):
+    return e[0] == 'TO_CATCH_BALL'
+
+
 def draw_hitter(hitter):
     sx, sy = hitter.pos[0] - server.background.window_left, hitter.pos[1] - server.background.window_bottom
     hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx, sy)
@@ -163,6 +167,7 @@ class HitterRun:
         hitter.t = 0.0
 
         number_to_bases[hitter.base.next_base].runners_goal_base = True
+        number_to_bases[hitter.base.next_base].cur_runner = hitter
 
     @staticmethod
     def exit(hitter, e):
@@ -185,6 +190,8 @@ class HitterRun:
             hitter.pos = hitter.goal_position
 
             # hitter의 base 업데이트 하기
+            if hitter.base.cur_runner == hitter:
+                hitter.base.cur_runner = None
             hitter.base = number_to_bases[hitter.base.next_base]
             hitter.base.hasRunner = True
             hitter.base.runners_goal_base = False
@@ -208,6 +215,7 @@ class RunnerRun:
         hitter.base.hasRunner = False
 
         number_to_bases[hitter.base.next_base].runners_goal_base = True
+        number_to_bases[hitter.base.next_base].cur_runner = hitter
         # if positions[positions[hitter.pos][2]][1] is False:
         #     hitter.state_machine.handle_event(('RUN_DONE', 0))
 
@@ -217,6 +225,9 @@ class RunnerRun:
         hitter.pos = hitter.goal_position
 
         # hitter의 base 업데이트 하기
+        # hitter의 base 업데이트 하기
+        if hitter.base.cur_runner == hitter:
+            hitter.base.cur_runner = None
         hitter.base = number_to_bases[hitter.base.next_base]
         hitter.base.hasRunner = True
         hitter.base.runners_goal_base = False
@@ -255,7 +266,7 @@ class DefenderIdle:
     @staticmethod
     def exit(hitter, e):
         if e[0] == 'SUPER_CATCH':
-            print('한 번에 잡음', hitter.name)
+            print('아이들 한 번에 잡음', hitter.name)
             set_next_hitter(server.cur_hitter)
             server.ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
             # 수비수 (투수 제외)
@@ -264,7 +275,7 @@ class DefenderIdle:
                     print('돌아감', o.name)
                     o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
         elif e[0] == 'THROW_TO_NEAR_BASE':
-            print('가까운 베이스로 보내기', hitter.name)
+            print('아이들 가까운 베이스로 보내기', hitter.name)
             server.ball.state_machine.handle_event(('THROW_TO_NEAR_BASE', hitter))
             # 수비수 (투수 제외)
             for o in game_world.objects[1][1:9]:
@@ -298,7 +309,7 @@ class RunToBall:
             set_next_hitter(server.cur_hitter)
             server.ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
             # 수비수 (투수 제외)
-            for o in game_world.objects[1][1:9]:
+            for o in game_world.objects[1][2:9]:
                 if o.pos is not o.defence_position:
                     print('돌아감', o.name)
                     o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
@@ -306,10 +317,14 @@ class RunToBall:
             print('가까운 베이스로 보내기', hitter.name)
             server.ball.state_machine.handle_event(('THROW_TO_NEAR_BASE', hitter))
             # 수비수 (투수 제외)
-            for o in game_world.objects[1][1:9]:
+            for o in game_world.objects[1][2:9]:
                 if o.pos is not o.defence_position:
                     print('돌아감', o.name)
-                    o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
+                    if o.run_to_catch_ball(server.ball.goal_position):
+                        print('run', server.ball.goal_position)
+                        o.state_machine.handle_event(('TO_CATCH_BALL', 0))
+                    else:
+                        o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
 
     @staticmethod
     def do(hitter):
@@ -345,6 +360,41 @@ class RunToDefencePos:
     def exit(hitter, e):
         # 위치를 확실히 하기 위해 한 번 더 정의
         hitter.pos = hitter.defence_position
+
+    @staticmethod
+    def do(hitter):
+        # 프레임 넘기기
+        hitter.frame = (hitter.frame + 1) % hitter.frame_number
+
+        # 직선 이동 방정식
+        x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
+        y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
+        hitter.pos = (x, y)
+        hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
+
+        # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
+        if hitter.t > 1:
+            hitter.state_machine.handle_event(('RUN_DONE', 0))
+
+    @staticmethod
+    def draw(hitter):
+        draw_hitter(hitter)
+
+
+class DefenderCatchBall:
+    @staticmethod
+    def enter(hitter, e):
+        hitter.frame, hitter.frame_number, hitter.action = 0, 7, 3
+
+        # 현재 위치, 목표 위치, 매개 변수 t 정의
+        hitter.current_position = hitter.pos
+        hitter.goal_position = server.ball.goal_position
+        hitter.t = 0.0
+
+    @staticmethod
+    def exit(hitter, e):
+        # 위치를 확실히 하기 위해 한 번 더 정의
+        hitter.pos = hitter.goal_position
 
     @staticmethod
     def do(hitter):
@@ -432,9 +482,12 @@ class StateMachineDefender:
 
         self.cur_state = DefenderIdle
         self.transitions = {
-            DefenderIdle: {hit_success: RunToBall, super_catch: RunToDefencePos, back_to_defence: RunToDefencePos, throw_to_near_base: RunToDefencePos},
-            RunToBall: {run_done: DefenderIdle, super_catch: RunToDefencePos, throw_to_near_base: RunToDefencePos, back_to_defence: RunToDefencePos},
+            DefenderIdle: {hit_success: RunToBall, super_catch: RunToDefencePos, back_to_defence: RunToDefencePos,
+                           throw_to_near_base: RunToDefencePos},
+            RunToBall: {run_done: DefenderIdle, super_catch: RunToDefencePos, throw_to_near_base: RunToDefencePos,
+                        back_to_defence: RunToDefencePos, to_catch_ball: DefenderCatchBall},
             RunToDefencePos: {run_done: DefenderIdle},
+            DefenderCatchBall: {run_done: DefenderIdle}
         }
 
     def handle_event(self, e):
@@ -543,7 +596,7 @@ class Hitter:
         for base in next_base[self.defence_position]:
             if number_to_bases[base].runners_goal_base:
                 return base
-        return home
+        return one_base
 
     def run_to_ball(self, goal_pos):
         # x: 500 이상, y: 350 이상 > 중견수, 우익수
@@ -554,4 +607,10 @@ class Hitter:
         if goal_pos[0] >= 500 and self.pos[0] >= 500 and goal_pos[1] <= 350 and self.pos[1] <= 350: return True
         # x: 500 이하, y: 350 이하 > 유격수, 3루수
         if goal_pos[0] <= 500 and self.pos[0] <= 500 and goal_pos[1] <= 350 and self.pos[1] <= 350: return True
+        return False
+
+    def run_to_catch_ball(self, goal_pos):
+        if goal_pos[0] - 200 <= self.pos[0] <= goal_pos[0] + 200 \
+                and goal_pos[1] - 200 <= self.pos[1] <= goal_pos[1] + 200:
+            return True
         return False

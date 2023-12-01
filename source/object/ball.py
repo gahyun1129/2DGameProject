@@ -87,6 +87,10 @@ class Throw:
                             game_framework.change_mode(defence_mode)
                 else:
                     print('safe')
+                # 수비수 (투수 제외)
+                for o in game_world.objects[1][2:9]:
+                    if o.pos is not o.defence_position:
+                        o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
                 number_to_bases[ball.goal_position].collisionObj = None
                 number_to_bases[ball.goal_position].check_collision = False
             server.progress_bar.frame = 0

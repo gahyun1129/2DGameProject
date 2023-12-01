@@ -11,6 +11,7 @@ import server
 import game_framework
 
 import module.make_team as make_team
+import object.background as background
 import object.ball as ball
 import ui.progress_bar as progress_bar
 import ui.inning_ui as inning_ui
@@ -31,6 +32,7 @@ def init():
     make_team.make_team()
 
     # 공격에 사용될 공 생성
+    server.background = background.Background()
     server.ball = ball.Ball()
 
     # ui 생성

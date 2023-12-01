@@ -3,6 +3,7 @@ from pico2d import *
 import server
 import game_framework
 import game_world
+import mode.ui_mode as ui_mode
 
 import module.make_team as make_team
 import object.base as base
@@ -20,6 +21,8 @@ def handle_events():
 
 
 def init():
+    game_framework.push_mode(ui_mode)
+
     game_world.add_object(server.background, 0)
 
     # 현재 모드에서의 공격 팀과 수비 팀 명시
@@ -30,11 +33,10 @@ def init():
     make_team.attack_position(server.attack_team)
     make_team.defence_position(server.defence_team)
 
-    # 공격에 사용될 공 생성
+    # game_world에 객체 넣기
     game_world.add_object(server.ball, 0)
-
-    # ui 생성
-    game_world.add_object(server.progress_bar, 3)
+    game_world.add_object(server.ui_ment, 3)
+    game_world.add_object(server.ui_judge, 3)
 
     # 수비수와 공의 충돌 설정
     # 수비수와 base 충돌 설정
@@ -74,4 +76,4 @@ def pause():
 
 
 def resume():
-    pass
+    game_world.add_object(server.progress_bar, 3)

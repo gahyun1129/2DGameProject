@@ -6,7 +6,6 @@ import game_world
 import mode.ui_mode as ui_mode
 
 import module.make_team as make_team
-import object.background as background
 import object.base as base
 
 
@@ -24,7 +23,6 @@ def handle_events():
 def init():
     game_framework.push_mode(ui_mode)
 
-    server.background = background.Background()
     game_world.add_object(server.background, 0)
 
     # 현재 모드에서의 공격 팀과 수비 팀 명시

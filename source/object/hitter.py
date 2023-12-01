@@ -596,7 +596,7 @@ class Hitter:
         for base in next_base[self.defence_position]:
             if number_to_bases[base].runners_goal_base:
                 return base
-        return home
+        return one_base
 
     def run_to_ball(self, goal_pos):
         # x: 500 이상, y: 350 이상 > 중견수, 우익수

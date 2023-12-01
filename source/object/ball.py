@@ -93,6 +93,8 @@ class Throw:
                         o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
                 number_to_bases[ball.goal_position].collisionObj = None
                 number_to_bases[ball.goal_position].check_collision = False
+            server.ui_ment.is_draw = False
+            server.ui_ment.is_draw_number = False
             server.progress_bar.frame = 0
             server.progress_bar.action = 0
             server.progress_bar.is_hit = False

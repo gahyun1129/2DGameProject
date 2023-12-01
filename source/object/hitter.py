@@ -129,6 +129,7 @@ class Hit:
                 hitter.strike, hitter.ball = 0, 0
                 hitter.base = number_to_bases[attack_zone]
                 game_world.update_handle_event(('HIT_SUCCESS', 0))
+                server.ui_ment.draw_ment_ui('hit')
         if hitter.frame == hitter.frame_number:
             if hitter.hit > 1:
                 # 원래 여기에 있는 게 맞긴 함
@@ -138,8 +139,10 @@ class Hit:
             else:
                 if hitter.hit < 0.4:
                     hitter.strike += 1
+                    server.ui_ment.draw_ment_ui('strike', hitter.strike)
                 else:
                     hitter.ball += 1
+                    server.ui_ment.draw_ment_ui('ball', hitter.ball)
                 if hitter.strike == 3:
                     print('STRIKE_3')
                     set_next_hitter(hitter)

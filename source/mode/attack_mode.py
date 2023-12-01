@@ -9,6 +9,8 @@ import object.background as background
 import ui.progress_bar as progress_bar
 import object.ball as ball
 import object.base as base
+import ui.inning_ui as inning_ui
+import ui.game_ment_ui as game_ment_ui
 
 
 def handle_events():
@@ -47,6 +49,12 @@ def init():
     # ui 생성
     server.progress_bar = progress_bar.ProgressBar()
     game_world.add_object(server.progress_bar, 3)
+
+    server.ui_ment = game_ment_ui.MentUI()
+    game_world.add_object(server.ui_ment, 3)
+
+    server.ui_inning = inning_ui.INNINGUI()
+    game_world.add_object(server.ui_inning, 3)
 
     # 수비수와 공의 충돌 설정
     # 수비수와 base 충돌 설정

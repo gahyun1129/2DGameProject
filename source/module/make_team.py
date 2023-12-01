@@ -117,10 +117,11 @@ def search_next_hitter(hitter):
     # 다음 타자의 index 찾기
     # 만약 index 가 list 의 최대 값인 9를 넘거나, 투수의 번호인 0이 아니게 1로 변경함.
     next_hitter_index = server.attack_team.index(hitter) + 1
-    next_hitter_index = 1 if next_hitter_index > 9 else next_hitter_index
+    next_hitter_index = 1 if next_hitter_index == 10 else next_hitter_index
     cur_hitter = server.attack_team[next_hitter_index]
     cur_hitter.pos = attack_zone
     game_world.add_collision_pair('hitter:base', server.cur_hitter, None)
     cur_hitter.init_state_machine('타자')
     game_world.add_object(cur_hitter, 2)
     server.cur_hitter = cur_hitter
+

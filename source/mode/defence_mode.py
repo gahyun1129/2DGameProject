@@ -72,7 +72,7 @@ def finish():
 
 
 def pause():
-    pass
+    server.ui_inning.x, server.ui_inning.y = 1000, 500
 
 
 def resume():

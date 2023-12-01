@@ -32,12 +32,12 @@ next_base = {
 class Base:
     def __init__(self, prev_base, pos, next_base):
         self.pos = pos
-        self.hasRunner = False
+        self.has_runner = False
         self.collisionObj = None
         self.isFilled = False
         self.next_base = next_base
         self.prev_base = prev_base
-        self.runners_goal_base = False
+        self.will_be_filled = False
         self.check_collision = False
         self.cur_runner = None
 

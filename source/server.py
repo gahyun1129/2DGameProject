@@ -12,7 +12,7 @@ ui_judge = None
 
 out_count = 0
 cur_inning = 1
-cur_inning_tern = 0 # 0이면 초, 1이면 말
+cur_inning_turn = 0 # 0이면 초, 1이면 말
 user_score = 0
 com_score = 0
 

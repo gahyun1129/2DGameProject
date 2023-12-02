@@ -23,6 +23,11 @@ def handle_events():
 def init():
     game_framework.push_mode(ui_mode)
 
+    server.ui_ment.is_draw = False
+    server.ui_ment.is_draw_number = False
+    server.ui_judge.is_draw = False
+    server.ui_judge.is_draw_number = False
+
     game_world.add_object(server.background, 0)
 
     # 현재 모드에서의 공격 팀과 수비 팀 명시

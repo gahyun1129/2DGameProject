@@ -26,16 +26,16 @@ class MentUI:
         if self.is_draw:
             self.ment_image.clip_draw(0, self.ment * 50, 250, 50, self.x, self.y)
             if self.is_draw_number:
-                self.number_image.clip_draw(self.frame * 50, 0, 50, 50, self.x - 80, self.y - 2)
+                self.number_image.clip_draw(self.frame * 50, 0, 50, 50, self.x - 130, self.y - 2)
 
     def draw_ment_ui(self, status, number=0):
         if status == 'strike':
             self.is_draw, self.is_draw_number = True, True
-            self.frame = number
+            self.frame = number - 1
             self.ment = 7
         elif status == 'ball':
             self.is_draw, self.is_draw_number = True, True
-            self.frame = number
+            self.frame = number - 1
             self.ment = 6
         elif status == 'hit':
             self.is_draw, self.is_draw_number = True, False

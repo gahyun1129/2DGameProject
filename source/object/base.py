@@ -23,7 +23,7 @@ next_base = {
     right: [two_base, one_base, home, three_base],
     center: [two_base, three_base, one_base, home],
     one_base: [one_base, two_base, home, three_base],
-    two_base_player: [two_base, one_base, home, three_base],
+    two_base: [two_base, one_base, home, three_base],
     three_base: [three_base, two_base, home, one_base],
     home: [home]
 }
@@ -52,13 +52,12 @@ class Base:
         return sx - 10, sy - 10, sx + 10, sy + 10
 
     def handle_collision(self, group, other):
-        if self.check_collision and self.collisionObj is None:
+        if self.check_collision:
             if group == 'base:defender':
-                print(other.name)
                 self.collisionObj = 'defender'
-            elif group == 'hitter:base':
-                print(other.name)
+            if group == 'hitter:base':
                 self.collisionObj = 'hitter'
+                self.check_collision = False
 
 
 # attack_zone

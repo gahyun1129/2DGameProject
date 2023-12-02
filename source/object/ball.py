@@ -5,7 +5,6 @@ import game_framework
 import server
 import game_world
 
-import module.make_team as make_team
 import mode.defence_mode as defence_mode
 import random
 
@@ -75,30 +74,19 @@ class Throw:
         if ball.event[0] == 'THROW_TO_NEAR_BASE' or ball.event[0] == 'BACK_TO_MOUND':
             if ball.event[0] == 'THROW_TO_NEAR_BASE':
                 if number_to_bases[ball.goal_position].collisionObj == 'defender':
-                    print('out')
-                    if ball.goal_position == one_base:
-                        runner = number_to_bases[ball.goal_position].cur_runner
-                        runner.strike, runner.ball = 0, 0
-                        game_world.remove_object(runner)
-                        server.ui_judge.draw_judge_ui('out', server.out_count)
-                        server.out_count += 1
-                        if server.out_count == 3:
-                            # pass
-                            server.out_count = 0
-                            game_framework.change_mode(defence_mode)
+                    print('ball - 수비수가 먼저 도착')
+                    server.out_count += 1
+                    server.ui_judge.draw_judge_ui('out', server.out_count)  # 아웃 ui 출력
+                    hitter.set_next_hitter(number_to_bases[server.ball.goal_position].cur_runner)
                 else:
                     server.ui_judge.draw_judge_ui('safe')
-                    print('safe')
                 # 수비수 (투수 제외)
                 for o in game_world.objects[1][2:9]:
                     if o.pos is not o.defence_position:
+                        print('공 잡으러 갔다가 돌아감',  o.name, o.state_machine.cur_state)
                         o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
                 number_to_bases[ball.goal_position].collisionObj = None
                 number_to_bases[ball.goal_position].check_collision = False
-            server.ui_ment.is_draw = False
-            server.ui_ment.is_draw_number = False
-            server.ui_judge.is_draw = False
-            server.ui_judge.is_draw_number = False
             server.progress_bar.frame = 0
             server.progress_bar.action = 0
             server.progress_bar.is_hit = False

@@ -70,7 +70,7 @@ def defence_position(players):
     players[1].base = bases[3]
     players[2].pos = one_base
     players[2].base = bases[0]
-    players[3].pos = two_base_player
+    players[3].pos = two_base
     players[3].base = bases[1]
     players[4].pos = three_base
     players[4].base = bases[2]
@@ -86,15 +86,12 @@ def defence_position(players):
     for o in game_world.objects[1]:
         o.init_state_machine('수비수')
 
-    print('\n수비 팀')
-    for o in players:
-        print(o.name)
-
 
 def attack_position(players):
     # user 팀 1번 타자의 공격 위치 잡기
     server.cur_hitter = players[1]
     server.cur_hitter.pos = attack_zone
+    server.cur_hitter.base = number_to_bases[attack_zone]
     game_world.add_collision_pair('hitter:base', server.cur_hitter, None)
 
     # user 팀 1번 타자 game_world list 에 넣어 렌더링 하기
@@ -108,10 +105,6 @@ def attack_position(players):
     for o in game_world.objects[2]:
         o.init_state_machine('타자')
 
-    print('공격 팀')
-    for o in players:
-        print(o.name)
-
 
 def search_next_hitter(hitter):
     # 다음 타자의 index 찾기
@@ -120,6 +113,7 @@ def search_next_hitter(hitter):
     next_hitter_index = 1 if next_hitter_index == 10 else next_hitter_index
     cur_hitter = server.attack_team[next_hitter_index]
     cur_hitter.pos = attack_zone
+    cur_hitter.base = number_to_bases[attack_zone]
     game_world.add_collision_pair('hitter:base', server.cur_hitter, None)
     cur_hitter.init_state_machine('타자')
     game_world.add_object(cur_hitter, 2)

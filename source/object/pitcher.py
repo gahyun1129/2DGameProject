@@ -37,6 +37,10 @@ class Throw:
     def enter(pitcher, e):
         pitcher.frame, pitcher.frame_number, pitcher.action = 0, 10, 11
         server.progress_bar.is_hit = True
+        server.ui_ment.is_draw = False
+        server.ui_ment.is_draw_number = False
+        server.ui_judge.is_draw = False
+        server.ui_judge.is_draw_number = False
 
     @staticmethod
     def exit(pitcher, e):

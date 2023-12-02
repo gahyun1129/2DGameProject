@@ -27,9 +27,10 @@ class JudgeUI:
                 self.number_image.clip_draw(self.frame * 50, 0, 50, 50, self.x - 80, self.y - 2)
 
     def draw_judge_ui(self, status, number=0):
+        print(status)
         if status == 'out':
             self.is_draw, self.is_draw_number = True, True
-            self.frame = number
+            self.frame = number - 1
             self.judge = 5
         elif status == 'safe':
             self.is_draw, self.is_draw_number = True, False

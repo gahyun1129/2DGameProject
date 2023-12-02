@@ -4,10 +4,9 @@ import server
 
 bases = []
 
-mound = (500, 240)
+mound = (500, 280)
 one_base = (650, 320)
 two_base = (500, 410)
-two_base_player = (500 + 60, 400)
 three_base = (350, 320)
 home = (500, 120)
 short = (500 - 60, 400)

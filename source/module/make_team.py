@@ -29,16 +29,16 @@ def make_team():
 
     # 파란 팀 - 유저
     # 투수 랜덤 으로 정하기
-    p = copy.copy(pitchers[random.randint(0, len(pitchers) - 1)])
-    p.action += 1
-    user_players.append(p)
-
-    # 타자 랜덤 으로 정하기
-    r = random.randint(0, hitters_len)
-    for i in range(0, 9):
-        h = copy.copy(hitters[(r + i) % hitters_len])
-        h.set_team_color('파랑')
-        user_players.append(h)
+    # p = copy.copy(pitchers[random.randint(0, len(pitchers) - 1)])
+    # p.action += 1
+    # user_players.append(p)
+    #
+    # # 타자 랜덤 으로 정하기
+    # r = random.randint(0, hitters_len)
+    # for i in range(0, 9):
+    #     h = copy.copy(hitters[(r + i) % hitters_len])
+    #     h.set_team_color('파랑')
+    #     user_players.append(h)
 
 
 def set_player_from_data_file():

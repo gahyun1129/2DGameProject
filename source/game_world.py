@@ -60,6 +60,15 @@ def collide(a, b):
     return True
 
 
+def collide_with_mouse(a, b):
+    la, ba, ra, ta = a.get_bb()
+    mx, my = b[0], b[1]
+
+    if la < mx < ra and ba < my < ta:
+        return True
+    return False
+
+
 def add_collision_pair(group, a, b):
     if group not in collision_pairs:
         collision_pairs[group] = [[], []]
@@ -103,5 +112,3 @@ def update_handle_event(event):
     for o in objects[1][2:9]:
         if o.run_to_ball(server.ball.goal_position):
             o.state_machine.handle_event(event)
-
-

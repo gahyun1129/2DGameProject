@@ -20,7 +20,7 @@ import ui.game_ment_ui as game_ment_ui
 import ui.judge_ui as judge_ui
 import ui.hitter_info_ui as hitter_info_ui
 import ui.game_info_ui as game_info_ui
-
+import ui.icon as icon
 import module.list_element as list_element
 
 import mode.attack_mode as attack_mode
@@ -51,15 +51,26 @@ def init():
     # lobby_mode에서 할 일
 
     # 투수 목록 읽기
-    elements = [list_element.Element('투수', p) for p in make_team.pitchers]
+    server.team_element = [list_element.Element('투수', p) for p in make_team.pitchers]
 
-    list_start = 0
-    list_end = 4
+    for x in range((server.list_page - 1) * 4, server.list_page * 4):
+        server.team_element[x].set_x_y(210, 430 - x * 100)
+        game_world.add_object(server.team_element[x], 2)
 
-    for x in range(list_start, list_end):
-        elements[x].set_x_y(210, 430 - x * 100)
-        game_world.add_object(elements[x], 2)
+    next_page_icon = icon.Icon('nextpage_icon', 'next_page', 250, 50)
+    game_world.add_object(next_page_icon, 2)
 
+    prev_page_icon = icon.Icon('prevpage_icon', 'prev_page', 150, 50)
+    game_world.add_object(prev_page_icon, 2)
+
+    team_list_ok_icon = icon.Icon('ok_icon', 'pitcher_ok', 350, 50)
+    game_world.add_object(team_list_ok_icon, 2)
+
+    next_page_icon = icon.Icon('nextpage_icon', 'user_next_page', 640, 50)
+    game_world.add_object(next_page_icon, 2)
+
+    prev_page_icon = icon.Icon('prevpage_icon', 'user_prev_page', 540, 50)
+    game_world.add_object(prev_page_icon, 2)
 
 
 def finish():
@@ -88,8 +99,10 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
-        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-            game_framework.change_mode(attack_mode)
+        elif event.type == SDL_MOUSEBUTTONDOWN:
+            for o in game_world.objects[2]:
+                if game_world.collide_with_mouse(o, (event.x, 600 - 1 - event.y)):
+                    o.handle_collide()
 
 
 def pause():
@@ -98,3 +111,37 @@ def pause():
 
 def resume():
     pass
+
+
+def draw_list(elements, x):
+    # 전 페이지 삭제
+    for o in elements[(server.prev_list_page-1)*4:server.prev_list_page * 4]:
+        game_world.remove_object(o)
+
+    # 현 페이지 draw
+    if len(elements) % 4 == 0:
+        if server.list_page == len(elements) // 4 + 1:
+            server.list_page = 1
+            server.prev_list_page = 1
+
+        if server.list_page == 0:
+            server.list_page = len(elements) // 4
+            server.prev_list_page = len(elements) // 4
+    elif len(elements) < 4:
+        print('0')
+        server.list_page = 1
+        server.prev_list_page = 1
+    else:
+        if server.list_page == len(elements) // 4 + 2:
+            server.list_page = 1
+            server.prev_list_page = 1
+
+        if server.list_page == 0:
+            server.list_page = len(elements) // 4 + 1
+            server.prev_list_page = len(elements) // 4 + 1
+
+    i = 0
+    for o in elements[(server.list_page-1)*4:server.list_page*4]:
+        o.set_x_y(x, 430 - (i % 4) * 100)
+        game_world.add_object(o, 2)
+        i += 1

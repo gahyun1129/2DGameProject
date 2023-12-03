@@ -20,7 +20,7 @@ class InningUI:
             self.x -= 50
         else:
             self.size = 0.5
-            self.x, self.y = 100, 550
+            self.x, self.y = 110, 550
 
     def draw(self):
         self.inning_image.clip_draw(0, self.turn * 50, 250, 50, self.x, self.y, 250 * self.size,

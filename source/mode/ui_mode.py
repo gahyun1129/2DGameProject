@@ -22,12 +22,12 @@ def handle_events():
 
 
 def init():
-    game_world.add_object(server.ui_inning, 3)
+    game_world.add_object(server.ui_inning, 4)
 
 
 def update():
     game_world.update()
-    if server.ui_inning.x == 100:
+    if server.ui_inning.x == 110:
         game_framework.pop_mode()
 
 

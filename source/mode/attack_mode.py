@@ -82,5 +82,6 @@ def pause():
 
 
 def resume():
-    game_world.add_object(server.ui_hitter_info)
+    game_world.add_object(server.ui_hitter_info, 3)
+    game_world.add_object(server.ui_game_info, 3)
     game_world.add_object(server.progress_bar, 3)

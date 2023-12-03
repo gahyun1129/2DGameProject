@@ -481,7 +481,6 @@ class StateMachineHitter:
     def draw(self):
         self.cur_state.draw(self.hitter)
         sx, sy = self.hitter.pos[0] - server.background.window_left, self.hitter.pos[1] - server.background.window_bottom
-        self.hitter.font.draw(sx - 10, sy + 50, f'{self.hitter.name}', (0, 255, 0))
 
 
 class StateMachineRunner:

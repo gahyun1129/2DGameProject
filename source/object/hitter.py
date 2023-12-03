@@ -265,7 +265,10 @@ class RunnerRun:
             # home 에 도착한 경우,,,
             if runner.base.pos == home:
                 # goal_runner 말고 점수 업데이트 해 줘야 할 것 같다...
-                server.goal_runner = runner
+                if server.cur_inning_turn == 0:
+                    server.user_score += 1
+                else:
+                    server.com_score += 1
                 game_world.remove_object(runner)
 
     @staticmethod

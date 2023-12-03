@@ -20,5 +20,3 @@ com_score = 0
 
 cur_hitter = None
 cur_pitcher = None
-
-goal_runner = None

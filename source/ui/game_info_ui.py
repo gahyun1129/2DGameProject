@@ -6,7 +6,7 @@ class GameInfoUI:
     image = None
 
     def __init__(self):
-        self.font = load_font('resource/txt/DungGeunMo.TTF', 18)
+        self.font = load_font('resource/txt/DungGeunMo.TTF', 24)
         self.hitter_image = load_image('resource/image/hitter_red.png')
         self.out_count_image = load_image('resource/image/out_count.png')
         self.ball_count_image = load_image('resource/image/ball_count.png')
@@ -26,3 +26,6 @@ class GameInfoUI:
         self.ball_count_image.clip_draw(server.cur_hitter.ball * 60, 0, 60, 15, 88, 515)
         self.strike_count_image.clip_draw(server.cur_hitter.strike * 40, 0, 40, 15, 95, 500)
         self.out_count_image.clip_draw(server.out_count * 40, 0, 40, 15, 148, 500)
+
+        self.font.draw(260, 560, f'{server.user_score}', (255, 255, 255))
+        self.font.draw(260, 530, f'{server.com_score}', (255, 255, 255))

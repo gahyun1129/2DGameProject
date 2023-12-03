@@ -1,6 +1,3 @@
-hit = 1.1
+b = True
 
-if hit > 1:
-    print(hit)
-elif hit > 0.4:
-    print('0.4')
+print(int(b))

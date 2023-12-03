@@ -7,6 +7,7 @@
 
 from pico2d import *
 
+import game_world
 import server
 import game_framework
 
@@ -19,6 +20,8 @@ import ui.game_ment_ui as game_ment_ui
 import ui.judge_ui as judge_ui
 import ui.hitter_info_ui as hitter_info_ui
 import ui.game_info_ui as game_info_ui
+
+import module.list_element as list_element
 
 import mode.attack_mode as attack_mode
 
@@ -45,18 +48,35 @@ def init():
     server.ui_hitter_info = hitter_info_ui.HitterInfoUI()
     server.ui_game_info = game_info_ui.GameInfoUI()
 
+    # lobby_mode에서 할 일
+
+    # 투수 목록 읽기
+    elements = [list_element.Element('투수', p) for p in make_team.pitchers]
+
+    list_start = 0
+    list_end = 4
+
+    for x in range(list_start, list_end):
+        elements[x].set_x_y(210, 430 - x * 100)
+        game_world.add_object(elements[x], 2)
+
+
 
 def finish():
-    pass
+    # 게임 오브젝트 모두 삭제
+    game_world.clear()
+    game_world.clear_collision_pairs()
 
 
 def update():
-    pass
+    game_world.update()
+    game_world.handle_collisions()
 
 
 def draw():
     clear_canvas()
     background_image.draw(400, 300)
+    game_world.render()
     update_canvas()
     pass
 

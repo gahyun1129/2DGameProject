@@ -31,14 +31,14 @@ class Icon:
                 server.prev_list_page = server.list_page
                 server.list_page += 1
                 lobby_mode.draw_list(server.team_element, 210)
-            case 'user_next_page':
-                server.prev_list_page = server.list_page
-                server.list_page += 1
-                lobby_mode.draw_list(server.user_team_element, 600)
             case 'prev_page':
                 server.prev_list_page = server.list_page
                 server.list_page -= 1
                 lobby_mode.draw_list(server.team_element, 210)
+            case 'user_next_page':
+                server.prev_list_page = server.list_page
+                server.list_page += 1
+                lobby_mode.draw_list(server.user_team_element, 600)
             case 'user_prev_page':
                 server.prev_list_page = server.list_page
                 server.list_page -= 1
@@ -62,7 +62,7 @@ class Icon:
 
                 for x in range((server.list_page - 1) * 4, server.list_page * 4):
                     server.team_element[x].set_x_y(210, 430 - x * 100)
-                    game_world.add_object(server.team_element[x], 2)
+                    game_world.add_object(server.team_element[x], 1)
 
                 self.name = 'hitter_ok'
             case 'hitter_ok':
@@ -73,11 +73,14 @@ class Icon:
                     print(o.name)
                     server.user_team_element.append(list_element.Element('타자', o))
 
-                lobby_mode.draw_list(server.user_team_element, 600)
+                server.prev_list_page = server.list_page
+                server.list_page = 1
+
+                lobby_mode.draw_list_user(server.user_team_element, 600)
 
                 if server.select_hitter_num == 9:
                     team_list_ok_icon = Icon('ok_icon', 'user_ok', 740, 50)
-                    game_world.add_object(team_list_ok_icon, 2)
+                    game_world.add_object(team_list_ok_icon, 1)
                     game_world.remove_object(self)
 
             case 'user_ok':

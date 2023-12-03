@@ -49,28 +49,32 @@ def init():
     server.ui_game_info = game_info_ui.GameInfoUI()
 
     # lobby_mode에서 할 일
+    # object[0] : pitcher
+    # object[1] : hitter
+    # object[2] : icon
+    # object[3] : user
 
     # 투수 목록 읽기
     server.team_element = [list_element.Element('투수', p) for p in make_team.pitchers]
 
     for x in range((server.list_page - 1) * 4, server.list_page * 4):
         server.team_element[x].set_x_y(210, 430 - x * 100)
-        game_world.add_object(server.team_element[x], 2)
+        game_world.add_object(server.team_element[x], 1)
 
     next_page_icon = icon.Icon('nextpage_icon', 'next_page', 250, 50)
-    game_world.add_object(next_page_icon, 2)
+    game_world.add_object(next_page_icon, 1)
 
     prev_page_icon = icon.Icon('prevpage_icon', 'prev_page', 150, 50)
-    game_world.add_object(prev_page_icon, 2)
+    game_world.add_object(prev_page_icon, 1)
 
     team_list_ok_icon = icon.Icon('ok_icon', 'pitcher_ok', 350, 50)
-    game_world.add_object(team_list_ok_icon, 2)
+    game_world.add_object(team_list_ok_icon, 1)
 
     next_page_icon = icon.Icon('nextpage_icon', 'user_next_page', 640, 50)
-    game_world.add_object(next_page_icon, 2)
+    game_world.add_object(next_page_icon, 1)
 
     prev_page_icon = icon.Icon('prevpage_icon', 'user_prev_page', 540, 50)
-    game_world.add_object(prev_page_icon, 2)
+    game_world.add_object(prev_page_icon, 1)
 
 
 def finish():
@@ -100,7 +104,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         elif event.type == SDL_MOUSEBUTTONDOWN:
-            for o in game_world.objects[2]:
+            for o in game_world.objects[1]:
                 if game_world.collide_with_mouse(o, (event.x, 600 - 1 - event.y)):
                     o.handle_collide()
 
@@ -115,33 +119,60 @@ def resume():
 
 def draw_list(elements, x):
     # 전 페이지 삭제
-    for o in elements[(server.prev_list_page-1)*4:server.prev_list_page * 4]:
+    for o in elements[(server.prev_list_page - 1) * 4:server.prev_list_page * 4]:
         game_world.remove_object(o)
 
     # 현 페이지 draw
     if len(elements) % 4 == 0:
         if server.list_page == len(elements) // 4 + 1:
             server.list_page = 1
-            server.prev_list_page = 1
-
-        if server.list_page == 0:
+        elif server.list_page == 0:
+            server.prev_list_page = len(elements) // 3
             server.list_page = len(elements) // 4
+    else:
+        if server.list_page == len(elements) // 4 + 2:
+            server.prev_list_page = 1
+            server.list_page = 1
+        if server.list_page == 0:
             server.prev_list_page = len(elements) // 4
-    elif len(elements) < 4:
+            server.list_page = len(elements) // 4 + 1
+    if len(elements) < 5:
         print('0')
         server.list_page = 1
         server.prev_list_page = 1
-    else:
-        if server.list_page == len(elements) // 4 + 2:
-            server.list_page = 1
-            server.prev_list_page = 1
-
-        if server.list_page == 0:
-            server.list_page = len(elements) // 4 + 1
-            server.prev_list_page = len(elements) // 4 + 1
 
     i = 0
-    for o in elements[(server.list_page-1)*4:server.list_page*4]:
+    for o in elements[(server.list_page - 1) * 4:server.list_page * 4]:
         o.set_x_y(x, 430 - (i % 4) * 100)
-        game_world.add_object(o, 2)
+        game_world.add_object(o, 1)
+        i += 1
+
+
+def draw_list_user(elements, x):
+    for o in game_world.objects[3]:
+        game_world.remove_object(o)
+
+    # 현 페이지 draw
+    if len(elements) % 4 == 0:
+        if server.list_page == len(elements) // 4 + 1:
+            server.list_page = 1
+        elif server.list_page == 0:
+            server.prev_list_page = len(elements) // 3
+            server.list_page = len(elements) // 4
+    else:
+        if server.list_page == len(elements) // 4 + 2:
+            server.prev_list_page = 1
+            server.list_page = 1
+        if server.list_page == 0:
+            server.prev_list_page = len(elements) // 4
+            server.list_page = len(elements) // 4 + 1
+    if len(elements) < 5:
+        print('0')
+        server.list_page = 1
+        server.prev_list_page = 1
+
+    i = 0
+    for o in elements[(server.list_page - 1) * 4:server.list_page * 4]:
+        o.set_x_y(x, 430 - (i % 4) * 100)
+        game_world.add_object(o, 3)
         i += 1

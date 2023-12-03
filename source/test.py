@@ -10,3 +10,6 @@ my_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 print_in_chunks(my_list, 4)
 
 print(my_list[13:14])
+
+for o in my_list[13:17]:
+    print(o)

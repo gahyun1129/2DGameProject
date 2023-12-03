@@ -18,8 +18,6 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.push_mode(play_esc_mode)
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_q:
-            game_framework.change_mode(result_mode)
         else:
             server.cur_pitcher.handle_event(event)
 
@@ -45,8 +43,8 @@ def init():
     # game_world에 객체 넣기
     game_world.add_object(server.ball, 0)
     game_world.add_object(server.ui_ment, 3)
-    # game_world.add_object(server.progress_bar, 3)
     game_world.add_object(server.ui_judge, 3)
+    game_world.add_object(server.ui_mini_map, 3)
 
     # 수비수와 공의 충돌 설정
     # 수비수와 base 충돌 설정

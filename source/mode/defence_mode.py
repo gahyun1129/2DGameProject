@@ -5,7 +5,9 @@ import game_framework
 import game_world
 import mode.ui_mode as ui_mode
 
+import mode.result_mode as result_mode
 import module.make_team as make_team
+import mode.play_esc_mode as play_esc_mode
 import object.base as base
 
 
@@ -15,7 +17,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.quit()
+            game_framework.push_mode(play_esc_mode)
         else:
             server.cur_pitcher.handle_event(event)
 
@@ -42,6 +44,7 @@ def init():
     game_world.add_object(server.ball, 0)
     game_world.add_object(server.ui_ment, 3)
     game_world.add_object(server.ui_judge, 3)
+    game_world.add_object(server.ui_mini_map, 3)
 
     # 수비수와 공의 충돌 설정
     # 수비수와 base 충돌 설정
@@ -59,8 +62,17 @@ def init():
 
 
 def update():
-    game_world.update()
     game_world.handle_collisions()
+    game_world.update()
+    match server.game_status:
+        case 'end':
+            server.game_status = None
+            game_framework.change_mode(result_mode)
+        case 'stop':
+            server.game_status = None
+            game_framework.change_mode(result_mode)
+        case 'quit':
+            game_framework.quit()
 
 
 def draw():

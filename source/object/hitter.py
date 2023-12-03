@@ -134,10 +134,10 @@ class Hit:
     def enter(hitter, e):
         hitter.frame, hitter.frame_number, hitter.action = 0, 8, 9
         hitter.user_force = server.progress_bar.frame * 0.01 + (server.progress_bar.action % 3) * 0.1
-        hitter.hit = hitter.user_force + float(hitter.BA) * random.randint(0, 3)
+        # hitter.hit = hitter.user_force + float(hitter.BA) * random.randint(0, 3)
         # hitter.hit = 0.6 # 항상 볼
         # hitter.hit = 0.3  # 항상 스트라이크
-        # hitter.hit = 1.1  # 항상 hit
+        hitter.hit = 1.1  # 항상 hit
 
     @staticmethod
     def exit(hitter, e):

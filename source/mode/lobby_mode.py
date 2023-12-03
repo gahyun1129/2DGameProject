@@ -22,6 +22,7 @@ import ui.judge_ui as judge_ui
 import ui.hitter_info_ui as hitter_info_ui
 import ui.game_info_ui as game_info_ui
 import ui.icon as icon
+import ui.mini_map_ui as mini_map_ui
 import module.list_element as list_element
 
 import mode.attack_mode as attack_mode
@@ -48,6 +49,7 @@ def init():
     server.ui_judge = judge_ui.JudgeUI()
     server.ui_hitter_info = hitter_info_ui.HitterInfoUI()
     server.ui_game_info = game_info_ui.GameInfoUI()
+    server.ui_mini_map = mini_map_ui.MiniMapUI()
 
     # lobby_mode에서 할 일
     # object[0] : pitcher list, hitter list, icon

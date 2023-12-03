@@ -36,18 +36,18 @@ class Icon:
                 server.list_page -= 1
                 lobby_mode.draw_list(server.team_element, 210)
             case 'user_next_page':
-                server.prev_list_page = server.list_page
-                server.list_page += 1
-                lobby_mode.draw_list(server.user_team_element, 600)
+                server.prev_user_page = server.user_page
+                server.user_page += 1
+                lobby_mode.draw_list_user(server.user_team_element, 600)
             case 'user_prev_page':
-                server.prev_list_page = server.list_page
-                server.list_page -= 1
-                lobby_mode.draw_list(server.user_team_element, 600)
+                server.prev_user_page = server.user_page
+                server.user_page -= 1
+                lobby_mode.draw_list_user(server.user_team_element, 600)
             case 'pitcher_ok':
                 # 투수 추가 하기
                 server.user_team_element.append(list_element.Element('투수', server.selected_pitcher))
                 server.user_team_element[0].set_x_y(600, 430)
-                game_world.add_object(server.user_team_element[0], 3)
+                game_world.add_object(server.user_team_element[0], 1)
 
                 # 투수 element 삭제 하기
                 for x in range((server.list_page - 1) * 4, server.list_page * 4):
@@ -62,28 +62,25 @@ class Icon:
 
                 for x in range((server.list_page - 1) * 4, server.list_page * 4):
                     server.team_element[x].set_x_y(210, 430 - x * 100)
-                    game_world.add_object(server.team_element[x], 1)
+                    game_world.add_object(server.team_element[x], 0)
 
                 self.name = 'hitter_ok'
             case 'hitter_ok':
-                print('hitter_ok')
                 server.user_team_element.clear()
                 server.user_team_element.append(list_element.Element('투수', server.selected_pitcher))
+                # hitter list에서 선택 중
                 for o in server.selected_hitter:
-                    print(o.name)
-                    server.user_team_element.append(list_element.Element('타자', o))
-
-                server.prev_list_page = server.list_page
-                server.list_page = 1
+                    server.user_team_element.append(list_element.Element('타자', copy.copy(o)))
 
                 lobby_mode.draw_list_user(server.user_team_element, 600)
 
                 if server.select_hitter_num == 9:
                     team_list_ok_icon = Icon('ok_icon', 'user_ok', 740, 50)
-                    game_world.add_object(team_list_ok_icon, 1)
+                    game_world.add_object(team_list_ok_icon, 0)
                     game_world.remove_object(self)
 
             case 'user_ok':
+                # 팀 구성 완료
                 for o in server.user_team_element:
                     make_team.user_players.append(copy.copy(o.player))
                 game_framework.change_mode(attack_mode)

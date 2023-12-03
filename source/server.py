@@ -35,3 +35,4 @@ prev_list_page = 1
 list_page = 1
 
 user_page = 1
+prev_user_page = 1

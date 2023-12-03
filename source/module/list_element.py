@@ -1,5 +1,6 @@
 from pico2d import load_image, load_font, draw_rectangle
 import server
+import copy
 
 
 class Element:
@@ -32,7 +33,7 @@ class Element:
                 if server.select_pitcher_num != 1:
                     self.is_selected = True
                     server.select_pitcher_num = 1
-                    server.selected_pitcher = self.player
+                    server.selected_pitcher = copy.copy(self.player)
         else:
             if self.is_selected:
                 self.is_selected = False
@@ -42,7 +43,7 @@ class Element:
                 if server.select_hitter_num < 9:
                     self.is_selected = True
                     server.select_hitter_num += 1
-                    server.selected_hitter.append(self.player)
+                    server.selected_hitter.append(copy.copy(self.player))
 
     def update(self):
         pass

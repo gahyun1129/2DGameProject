@@ -81,6 +81,20 @@ def finish():
     game_world.clear()
     game_world.clear_collision_pairs()
 
+    server.selected_pitcher = None
+    server.selected_hitter.clear()
+
+    server.user_page = 1
+    server.prev_user_page = 1
+    server.list_page = 1
+    server.prev_list_page = 1
+
+    server.team_element.clear()
+    server.user_team_element.clear()
+
+    server.select_pitcher_num = 0
+    server.select_hitter_num = 0
+
 
 def update():
     game_world.update()
@@ -106,6 +120,9 @@ def handle_events():
             for o in game_world.objects[0]:
                 if game_world.collide_with_mouse(o, (event.x, 600 - 1 - event.y)):
                     o.handle_collide()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_a:
+            make_team.make_auto_team()
+            game_framework.change_mode(attack_mode)
 
 
 def pause():

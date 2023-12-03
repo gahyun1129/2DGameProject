@@ -4,6 +4,7 @@ import game_framework
 import server
 import random
 
+import mode.result_mode as result_mode
 import mode.attack_mode as attack_mode
 import mode.defence_mode as defence_mode
 import module.make_team as make_team
@@ -73,18 +74,21 @@ def out_situation():
     if server.cur_inning_turn == 0:
         server.cur_inning += 1
     if server.cur_inning == 10:
-        print('게임 끝')
-        pass  # 나중에 여기서 결과 모드로 바꾸면 될 듯
-    server.ui_inning.frame = server.cur_inning - 1
-    server.ui_inning.size = 1
-    if server.cur_inning_turn == 0:
-        server.ui_inning.turn = 3
-        game_framework.change_mode(attack_mode)
-        server.ui_hitter_info.hitter_image = load_image('resource/image/hitter_red.png')
+        server.is_end = True
+        print('게임 끝!!!!!!!')
+        # game_framework.change_mode(result_mode)
+        # 나중에 여기서 결과 모드로 바꾸면 될 듯
     else:
-        server.ui_inning.turn = 2
-        game_framework.change_mode(defence_mode)
-        server.ui_hitter_info.hitter_image = load_image('resource/image/hitter_blue.png')
+        server.ui_inning.frame = server.cur_inning - 1
+        server.ui_inning.size = 1
+        if server.cur_inning_turn == 0:
+            server.ui_inning.turn = 3
+            game_framework.change_mode(attack_mode)
+            server.ui_hitter_info.hitter_image = load_image('resource/image/hitter_red.png')
+        else:
+            server.ui_inning.turn = 2
+            game_framework.change_mode(defence_mode)
+            server.ui_hitter_info.hitter_image = load_image('resource/image/hitter_blue.png')
 
 
 ## 상태 ##

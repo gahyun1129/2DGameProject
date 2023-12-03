@@ -5,6 +5,7 @@ import game_framework
 import game_world
 import mode.ui_mode as ui_mode
 
+import mode.result_mode as result_mode
 import module.make_team as make_team
 import object.base as base
 
@@ -16,6 +17,8 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_q:
+            game_framework.change_mode(result_mode)
         else:
             server.cur_pitcher.handle_event(event)
 
@@ -60,8 +63,10 @@ def init():
 
 
 def update():
-    game_world.update()
     game_world.handle_collisions()
+    game_world.update()
+    if server.is_end:
+        game_framework.change_mode(result_mode)
 
 
 def draw():

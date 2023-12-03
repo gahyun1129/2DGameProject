@@ -6,12 +6,15 @@ import game_framework
 from pico2d import *
 
 import mode.lobby_mode as lobby_mode
+import mode.esc_mode as esc_mode
 import server
 
 
 def init():
     global image
-    image = load_image('resource/image/title.png')
+    global font
+    image = load_image('resource/image/result.png')
+    font = load_font('resource/txt/DungGeunMo.TTF', 180)
 
 
 def finish():
@@ -38,6 +41,14 @@ def update():
 def draw():
     clear_canvas()
     image.draw(400, 300)
+    font.draw(200, 180, f'{server.user_score}', (0, 0, 0))
+    font.draw(520, 180, f'{server.com_score}', (0, 0, 0))
+    if server.user_score > server.com_score:
+        font.draw(400, 300, f'victory', (0, 0, 0))
+    elif server.user_score < server.com_score:
+        font.draw(400, 300, f'lose', (0, 0, 0))
+    else:
+        font.draw(220, 420, f'draw', (0, 0, 0))
     update_canvas()
     pass
 
@@ -48,7 +59,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.quit()
+            game_framework.push_mode(esc_mode)
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
             game_framework.change_mode(lobby_mode)
 

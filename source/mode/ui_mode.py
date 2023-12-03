@@ -1,15 +1,8 @@
-# init, handle_event, draw 등의 함수를 가진 모듈
-# play scene == play mode, 작은 게임 루프...
-
-
 from pico2d import *
 
 import game_world
 import server
 import game_framework
-
-
-# Game object class here
 
 
 def handle_events():

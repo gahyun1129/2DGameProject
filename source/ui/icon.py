@@ -4,25 +4,27 @@ import mode.attack_mode as attack_mode
 import game_world
 import server
 import mode.lobby_mode as lobby_mode
+import mode.result_mode as result_mode
 import module.list_element as list_element
 from module import make_team
 import copy
 
 
 class Icon:
-    def __init__(self, image_name, name, x, y):
+    def __init__(self, image_name, name, x, y, size_x=35, size_y=35):
         self.image = load_image('resource/image/' + image_name + '.png')
         self.x, self.y = x, y
         self.name = name
+        self.size_x, self.size_y = size_x, size_y
 
     def get_bb(self):
-        return self.x - 17, self.y - 17, self.x + 17, self.y + 17
+        return self.x - self.size_x // 2, self.y - self.size_y // 2, self.x + self.size_x // 2, self.y + self.size_y // 2
 
     def update(self):
         pass
 
     def draw(self):
-        self.image.draw(self.x, self.y, 35, 35)
+        self.image.draw(self.x, self.y, self.size_x, self.size_y)
         draw_rectangle(*self.get_bb())
 
     def handle_collide(self):
@@ -86,3 +88,14 @@ class Icon:
                     player.set_team_color('파랑')
                     make_team.user_players.append(player)
                 game_framework.change_mode(attack_mode)
+
+            case 'exit':
+                server.game_status = 'quit'
+                game_framework.pop_mode()
+
+            case 'retry':
+                game_framework.change_mode(lobby_mode)
+
+            case 'stop':
+                server.game_status = 'stop'
+                game_framework.pop_mode()

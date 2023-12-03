@@ -6,27 +6,26 @@ import game_framework
 from pico2d import *
 
 import game_world
-import mode.lobby_mode as lobby_mode
 import ui.icon as icon
 
 
 def init():
     global image
-    global main_ui, retry_icon, exit_ui
+    global main_ui, stop_icon, exit_ui
     image = load_image('resource/image/result.png')
     main_ui = icon.Icon('info', 'main', 400, 300, 800, 600)
     game_world.add_object(main_ui, 3)
 
     exit_ui = icon.Icon('exit_icon', 'exit', 400, 200, 380, 70)
-    game_world.add_object(exit_ui, 4)
+    game_world.add_object(exit_ui, 5)
 
-    retry_icon = icon.Icon('retry_icon', 'retry', 400, 400, 380, 70)
-    game_world.add_object(retry_icon, 4)
+    stop_icon = icon.Icon('stop_icon', 'stop', 400, 400, 380, 70)
+    game_world.add_object(stop_icon, 5)
 
 
 def finish():
     game_world.remove_object(main_ui)
-    game_world.remove_object(retry_icon)
+    game_world.remove_object(stop_icon)
     game_world.remove_object(exit_ui)
 
 
@@ -50,7 +49,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.pop_mode()
         elif event.type == SDL_MOUSEBUTTONDOWN:
-            for o in game_world.objects[4]:
+            for o in game_world.objects[5]:
                 if game_world.collide_with_mouse(o, (event.x, 600 - 1 - event.y)):
                     o.handle_collide()
 

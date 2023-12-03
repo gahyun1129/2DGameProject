@@ -37,4 +37,5 @@ list_page = 1
 user_page = 1
 prev_user_page = 1
 
+game_status = None
 is_end = False

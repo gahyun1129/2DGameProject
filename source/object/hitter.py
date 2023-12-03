@@ -74,7 +74,7 @@ def out_situation():
     if server.cur_inning_turn == 0:
         server.cur_inning += 1
     if server.cur_inning == 10:
-        server.is_end = True
+        server.game_status = 'end'
         print('게임 끝!!!!!!!')
         # game_framework.change_mode(result_mode)
         # 나중에 여기서 결과 모드로 바꾸면 될 듯

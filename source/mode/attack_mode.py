@@ -7,6 +7,7 @@ import mode.ui_mode as ui_mode
 
 import mode.result_mode as result_mode
 import module.make_team as make_team
+import mode.play_esc_mode as play_esc_mode
 import object.base as base
 
 
@@ -16,7 +17,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.quit()
+            game_framework.push_mode(play_esc_mode)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_q:
             game_framework.change_mode(result_mode)
         else:
@@ -65,8 +66,15 @@ def init():
 def update():
     game_world.handle_collisions()
     game_world.update()
-    if server.is_end:
-        game_framework.change_mode(result_mode)
+    match server.game_status:
+        case 'end':
+            server.game_status = None
+            game_framework.change_mode(result_mode)
+        case 'stop':
+            server.game_status = None
+            game_framework.change_mode(result_mode)
+        case 'quit':
+            game_framework.quit()
 
 
 def draw():

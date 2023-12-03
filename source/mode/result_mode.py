@@ -5,14 +5,20 @@
 import game_framework
 from pico2d import *
 
+import game_world
 import mode.lobby_mode as lobby_mode
 import mode.esc_mode as esc_mode
 import server
+import ui.icon as icon
 
 
 def init():
     global image
     global font
+    global main_ui
+
+    game_world.clear()
+
     image = load_image('resource/image/result.png')
     font = load_font('resource/txt/DungGeunMo.TTF', 180)
 
@@ -31,11 +37,14 @@ def finish():
     server.is_end = False
     server.cur_hitter = None
     server.cur_pitcher = None
+
+    server.game_status = None
     pass
 
 
 def update():
-    pass
+    if server.game_status == 'quit':
+        game_framework.quit()
 
 
 def draw():
@@ -60,8 +69,6 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.push_mode(esc_mode)
-        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-            game_framework.change_mode(lobby_mode)
 
 
 def pause():

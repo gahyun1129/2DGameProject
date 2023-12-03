@@ -6,7 +6,7 @@ import server
 # objects[3] : UI
 # objects[4] : UI (inning)
 
-objects = [[], [], [], [], []]
+objects = [[], [], [], [], [], []]
 
 collision_pairs = {}
 

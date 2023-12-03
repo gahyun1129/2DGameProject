@@ -78,6 +78,7 @@ class Throw:
                     server.out_count += 1
                     server.ui_judge.draw_judge_ui('out', server.out_count)  # 아웃 ui 출력
                     hitter.set_next_hitter(number_to_bases[server.ball.goal_position].cur_runner)
+                    server.ball.pos = mound
                 else:
                     server.ui_judge.draw_judge_ui('safe')
                 # 수비수 (투수 제외)
@@ -87,6 +88,7 @@ class Throw:
                         o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
                 number_to_bases[ball.goal_position].collisionObj = None
                 number_to_bases[ball.goal_position].check_collision = False
+                server.ball.pos = mound
             server.progress_bar.frame = 0
             server.progress_bar.action = 0
             server.progress_bar.is_hit = False

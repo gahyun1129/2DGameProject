@@ -4,6 +4,7 @@ import server
 # objects[1] : 수비수
 # objects[2] : 주자 및 타자
 # objects[3] : UI
+# objects[4] : UI (inning)
 
 objects = [[], [], [], [], []]
 

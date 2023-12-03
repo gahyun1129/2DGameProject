@@ -85,6 +85,7 @@ def defence_position(players):
 
     for o in game_world.objects[1]:
         o.init_state_machine('수비수')
+    game_world.objects[1][1].init_state_machine('포수')
 
 
 def attack_position(players):

@@ -69,7 +69,7 @@ def set_next_hitter(hitter):
 
 def out_situation():
     server.out_count = 0
-    server.cur_inning_turn = (server.cur_inning_turn + 1) % 2    # turn = 0: attack_mode, 초 turn = 1: defence_mode, 말
+    server.cur_inning_turn = (server.cur_inning_turn + 1) % 2  # turn = 0: attack_mode, 초 turn = 1: defence_mode, 말
     if server.cur_inning_turn == 0:
         server.cur_inning += 1
     if server.cur_inning == 10:
@@ -370,7 +370,8 @@ class RunToBall:
         x = (1 - defender.t) * defender.current_position[0] + defender.t * defender.goal_position[0]
         y = (1 - defender.t) * defender.current_position[1] + defender.t * defender.goal_position[1]
         defender.pos = (x, y)
-        defender.t += 0.1 * ((defender.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
+        defender.t += 0.1 * (
+                    (defender.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
         if defender.t > 1:
@@ -405,7 +406,8 @@ class RunToDefencePos:
         x = (1 - defender.t) * defender.current_position[0] + defender.t * defender.goal_position[0]
         y = (1 - defender.t) * defender.current_position[1] + defender.t * defender.goal_position[1]
         defender.pos = (x, y)
-        defender.t += 0.1 * ((defender.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
+        defender.t += 0.1 * (
+                    (defender.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
         if defender.t > 1:
@@ -444,7 +446,8 @@ class DefenderCatchBall:
         x = (1 - defender.t) * defender.current_position[0] + defender.t * defender.goal_position[0]
         y = (1 - defender.t) * defender.current_position[1] + defender.t * defender.goal_position[1]
         defender.pos = (x, y)
-        defender.t += 0.1 * ((defender.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
+        defender.t += 0.1 * (
+                    (defender.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
         if defender.t > 1:
@@ -483,7 +486,8 @@ class StateMachineHitter:
 
     def draw(self):
         self.cur_state.draw(self.hitter)
-        sx, sy = self.hitter.pos[0] - server.background.window_left, self.hitter.pos[1] - server.background.window_bottom
+        sx, sy = self.hitter.pos[0] - server.background.window_left, self.hitter.pos[
+            1] - server.background.window_bottom
 
 
 class StateMachineRunner:
@@ -512,7 +516,8 @@ class StateMachineRunner:
 
     def draw(self):
         self.cur_state.draw(self.hitter)
-        sx, sy = self.hitter.pos[0] - server.background.window_left, self.hitter.pos[1] - server.background.window_bottom
+        sx, sy = self.hitter.pos[0] - server.background.window_left, self.hitter.pos[
+            1] - server.background.window_bottom
         self.hitter.font.draw(sx - 10, sy + 50, f'{self.hitter.name}', (0, 0, 255))
 
 
@@ -547,14 +552,61 @@ class StateMachineDefender:
 
     def draw(self):
         self.cur_state.draw(self.hitter)
-        sx, sy = self.hitter.pos[0] - server.background.window_left, self.hitter.pos[1] - server.background.window_bottom
+        sx, sy = self.hitter.pos[0] - server.background.window_left, self.hitter.pos[
+            1] - server.background.window_bottom
         self.hitter.font.draw(sx - 10, sy + 50, f'{self.hitter.name}', (255, 255, 0))
+
+
+class CatcherIdle:
+    @staticmethod
+    def enter(runner, e):
+        runner.frame, runner.frame_number, runner.action = 0, 5, 0
+
+    @staticmethod
+    def exit(runner, e):
+        pass
+
+    @staticmethod
+    def do(runner):
+        runner.frame = (runner.frame + 1) % runner.frame_number
+
+    @staticmethod
+    def draw(runner):
+        draw_hitter(runner)
+
+
+class StateMachineCatcher:
+    def __init__(self, hitter):
+        self.hitter = hitter
+
+        self.cur_state = CatcherIdle
+        self.transitions = {
+        }
+
+    def handle_event(self, e):
+        for check_event, next_state in self.transitions[self.cur_state].items():
+            if check_event(e):
+                self.cur_state.exit(self.hitter, e)
+                self.cur_state = next_state
+                self.cur_state.enter(self.hitter, e)
+                return True
+        return False
+
+    def start(self):
+        self.cur_state.enter(self.hitter, ('START', 0))
+
+    def update(self):
+        self.cur_state.do(self.hitter)
+
+    def draw(self):
+        self.cur_state.draw(self.hitter)
 
 
 state_machines = {
     '주자': StateMachineRunner,
     '타자': StateMachineHitter,
-    '수비수': StateMachineDefender
+    '수비수': StateMachineDefender,
+    '포수': StateMachineCatcher
 }
 
 

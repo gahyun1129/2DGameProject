@@ -24,8 +24,8 @@ import mode.attack_mode as attack_mode
 
 
 def init():
-    global image
-    image = load_image('resource/image/lobby.png')
+    global background_image
+    background_image = load_image('resource/image/lobby.png')
 
     # 데이터 읽어 오기
     make_team.set_player_from_data_file()
@@ -56,7 +56,7 @@ def update():
 
 def draw():
     clear_canvas()
-    image.draw(400, 300)
+    background_image.draw(400, 300)
     update_canvas()
     pass
 

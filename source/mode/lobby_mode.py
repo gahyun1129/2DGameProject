@@ -17,6 +17,7 @@ import ui.progress_bar as progress_bar
 import ui.inning_ui as inning_ui
 import ui.game_ment_ui as game_ment_ui
 import ui.judge_ui as judge_ui
+import ui.hitter_info_ui as hitter_info_ui
 
 import mode.attack_mode as attack_mode
 
@@ -40,6 +41,7 @@ def init():
     server.ui_ment = game_ment_ui.MentUI()
     server.ui_inning = inning_ui.InningUI()
     server.ui_judge = judge_ui.JudgeUI()
+    server.ui_hitter_info = hitter_info_ui.HitterInfoUI()
 
 
 def finish():

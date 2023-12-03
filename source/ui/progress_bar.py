@@ -21,4 +21,4 @@ class ProgressBar:
                 self.frame = 0
 
     def draw(self):
-        self.image.clip_draw(self.frame * 600, self.action * 50, 600, 50, 400, 50)
+        self.image.clip_draw(self.frame * 300, self.action * 25, 300, 25, 400, 50)

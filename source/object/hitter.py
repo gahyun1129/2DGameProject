@@ -80,9 +80,11 @@ def out_situation():
     if server.cur_inning_turn == 0:
         server.ui_inning.turn = 3
         game_framework.change_mode(attack_mode)
+        server.ui_hitter_info.hitter_image = load_image('resource/image/hitter_red.png')
     else:
         server.ui_inning.turn = 2
         game_framework.change_mode(defence_mode)
+        server.ui_hitter_info.hitter_image = load_image('resource/image/hitter_blue.png')
 
 
 ## 상태 ##

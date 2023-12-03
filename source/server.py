@@ -9,6 +9,7 @@ progress_bar = None
 ui_inning = None
 ui_ment = None
 ui_judge = None
+ui_hitter_info = None
 
 out_count = 0
 cur_inning = 1

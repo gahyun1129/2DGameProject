@@ -134,10 +134,10 @@ class Hit:
     def enter(hitter, e):
         hitter.frame, hitter.frame_number, hitter.action = 0, 8, 9
         hitter.user_force = server.progress_bar.frame * 0.01 + (server.progress_bar.action % 3) * 0.1
-        # hitter.hit = hitter.user_force + float(hitter.BA) * random.randint(0, 3)
+        hitter.hit = hitter.user_force + float(hitter.BA) * random.randint(0, 3)
         # hitter.hit = 0.6 # 항상 볼
         # hitter.hit = 0.3  # 항상 스트라이크
-        hitter.hit = 1.1  # 항상 hit
+        # hitter.hit = 1.1  # 항상 hit
 
     @staticmethod
     def exit(hitter, e):
@@ -158,6 +158,7 @@ class Hit:
             if server.ball.pos == home:
                 hitter.ball += 1  # ball 개수 추가
                 server.ui_ment.draw_ment_ui('ball', hitter.ball)  # ball ui 출력
+                hitter.catch_sound.play()
                 if hitter.ball == 4:  # 4 ball인 경우
                     hitter.strike, hitter.ball = 0, 0
                     for runner in game_world.objects[2]:
@@ -170,6 +171,7 @@ class Hit:
             if server.ball.pos == home:
                 hitter.strike += 1  # strike 개수 추가
                 server.ui_ment.draw_ment_ui('strike', hitter.strike)  # strike ui 출력
+                hitter.catch_sound.play()
                 if hitter.strike == 3:  # 3 스트라이크인 경우
                     server.out_count += 1
                     server.ui_judge.draw_judge_ui('out', server.out_count)  # 아웃 ui 출력
@@ -619,7 +621,7 @@ state_machines = {
 class Hitter:
     image = None
     hit_sound = None
-    defence_sound = None
+    catch_sound = None
 
     def __init__(self, pos, name, hit, home_run, BA, OPS):
         # 위치, 현재 프레임, 현재 action, 프레임의 길이
@@ -651,6 +653,8 @@ class Hitter:
             Hitter.image = load_image('resource/image/animation.png')
             Hitter.hit_sound = load_wav('resource/sound/hitsound.wav')
             Hitter.hit_sound.set_volume(32)
+            Hitter.catch_sound = load_wav('resource/sound/catchsound.wav')
+            Hitter.catch_sound.set_volume(32)
 
         # 상태 머신 추가
         self.state_machine = None

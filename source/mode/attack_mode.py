@@ -44,7 +44,7 @@ def init():
     game_world.add_object(server.ball, 0)
     game_world.add_object(server.ui_ment, 3)
     game_world.add_object(server.ui_judge, 3)
-    game_world.add_object(server.ui_mini_map, 3)
+
 
     # 수비수와 공의 충돌 설정
     # 수비수와 base 충돌 설정
@@ -96,3 +96,4 @@ def resume():
     game_world.add_object(server.ui_hitter_info, 3)
     game_world.add_object(server.ui_game_info, 3)
     game_world.add_object(server.progress_bar, 3)
+    game_world.add_object(server.ui_mini_map, 3)

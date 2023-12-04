@@ -18,6 +18,10 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.push_mode(play_esc_mode)
+        elif event.type == SDL_MOUSEBUTTONDOWN:
+            for o in game_world.objects[5]:
+                if game_world.collide_with_mouse(o, (event.x, 600 - 1 - event.y)):
+                    o.handle_collide()
         else:
             server.cur_pitcher.handle_event(event)
 
@@ -44,7 +48,7 @@ def init():
     game_world.add_object(server.ball, 0)
     game_world.add_object(server.ui_ment, 3)
     game_world.add_object(server.ui_judge, 3)
-    game_world.add_object(server.ui_mini_map, 3)
+
 
     # 수비수와 공의 충돌 설정
     # 수비수와 base 충돌 설정
@@ -95,4 +99,7 @@ def pause():
 def resume():
     game_world.add_object(server.ui_hitter_info, 3)
     game_world.add_object(server.ui_game_info, 3)
-    game_world.add_object(server.progress_bar, 3)
+    # game_world.add_object(server.progress_bar, 3)
+    game_world.add_object(server.ui_mini_map, 3)
+    game_world.add_object(server.ui_strike_icon, 5)
+    game_world.add_object(server.ui_ball_icon, 5)

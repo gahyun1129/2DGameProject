@@ -92,6 +92,8 @@ class Throw:
             server.progress_bar.frame = 0
             server.progress_bar.action = 0
             server.progress_bar.is_hit = False
+            server.ui_ball_icon.is_draw = True
+            server.ui_strike_icon.is_draw = True
 
     @staticmethod
     def do(ball):

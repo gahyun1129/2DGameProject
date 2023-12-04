@@ -26,6 +26,7 @@ import ui.mini_map_ui as mini_map_ui
 import module.list_element as list_element
 
 import mode.attack_mode as attack_mode
+import mode.defence_mode as defence_mode
 
 
 def init():
@@ -77,6 +78,9 @@ def init():
     user_prev_page_icon = icon.Icon('prevpage_icon', 'user_prev_page', 540, 50)
     game_world.add_object(user_prev_page_icon, 0)
 
+    server.ui_ball_icon = icon.Icon('ball_icon', 'ball', 350, 50, 200, 50)
+    server.ui_strike_icon = icon.Icon('strike_icon', 'strike', 650, 50, 200, 50)
+
 
 def finish():
     # 게임 오브젝트 모두 삭제
@@ -126,7 +130,7 @@ def handle_events():
                     o.handle_collide()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_a:
             make_team.make_auto_team()
-            game_framework.change_mode(attack_mode)
+            game_framework.change_mode(defence_mode)
 
 
 def pause():

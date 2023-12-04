@@ -5,8 +5,9 @@ import server
 # objects[2] : 주자 및 타자
 # objects[3] : UI
 # objects[4] : UI (inning)
+# objects[5] : defence_mode, ball / strike ui
 
-objects = [[], [], [], [], [], []]
+objects = [[], [], [], [], [], [], []]
 
 collision_pairs = {}
 

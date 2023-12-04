@@ -15,6 +15,7 @@ class Icon:
         self.image = load_image('resource/image/' + image_name + '.png')
         self.x, self.y = x, y
         self.name = name
+        self.is_draw = True
         self.size_x, self.size_y = size_x, size_y
 
     def get_bb(self):
@@ -24,8 +25,9 @@ class Icon:
         pass
 
     def draw(self):
-        self.image.draw(self.x, self.y, self.size_x, self.size_y)
-        draw_rectangle(*self.get_bb())
+        if self.is_draw:
+            self.image.draw(self.x, self.y, self.size_x, self.size_y)
+            draw_rectangle(*self.get_bb())
 
     def handle_collide(self):
         match self.name:
@@ -99,3 +101,13 @@ class Icon:
             case 'stop':
                 server.game_status = 'stop'
                 game_framework.pop_mode()
+            case 'ball':
+                if self.is_draw:
+                    server.ui_ball_icon.is_draw = False
+                    server.ui_strike_icon.is_draw = False
+                    server.cur_pitcher.state_machine.handle_event(('PLAY_NOW', 'ball'))
+            case 'strike':
+                if self.is_draw:
+                    server.ui_ball_icon.is_draw = False
+                    server.ui_strike_icon.is_draw = False
+                    server.cur_pitcher.state_machine.handle_event(('PLAY_NOW', 'strike'))

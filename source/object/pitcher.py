@@ -13,6 +13,10 @@ def throw_done(e):
     return e[0] == 'THROW_DONE'
 
 
+def play_now(e):
+    return e[0] == 'PLAY_NOW'
+
+
 class Idle:
     @staticmethod
     def enter(pitcher, e):
@@ -71,7 +75,7 @@ class StateMachineThrow:
         self.pitcher = pitcher
         self.cur_state = Idle
         self.transitions = {
-            Idle: {space_down: Throw},
+            Idle: {space_down: Throw, play_now: Throw},
             Throw: {throw_done: Idle},
         }
 

@@ -13,6 +13,9 @@ ui_hitter_info = None
 ui_game_info = None
 ui_mini_map = None
 
+ui_ball_icon = None
+ui_strike_icon = None
+
 out_count = 0
 cur_inning = 1
 cur_inning_turn = 0 # 0이면 초, 1이면 말

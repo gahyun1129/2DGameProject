@@ -14,7 +14,7 @@ def init():
     global main_ui, stop_icon, exit_ui
     image = load_image('resource/image/result.png')
     main_ui = icon.Icon('info', 'main', 400, 300, 800, 600)
-    game_world.add_object(main_ui, 3)
+    game_world.add_object(main_ui, 5)
 
     exit_ui = icon.Icon('exit_icon', 'exit', 400, 200, 380, 70)
     game_world.add_object(exit_ui, 5)

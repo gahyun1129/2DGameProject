@@ -130,7 +130,7 @@ def handle_events():
                     o.handle_collide()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_a:
             make_team.make_auto_team()
-            game_framework.change_mode(defence_mode)
+            game_framework.change_mode(attack_mode)
 
 
 def pause():

@@ -61,7 +61,9 @@ def draw_hitter(hitter):
 
 
 def set_next_hitter(hitter):
+    hitter.out_sound.play()
     hitter.strike, hitter.ball = 0, 0
+    hitter.base.has_runner = False
     make_team.search_next_hitter(server.cur_hitter)
     game_world.remove_object(hitter)
     if server.out_count == 3:
@@ -134,10 +136,10 @@ class Hit:
     def enter(hitter, e):
         hitter.frame, hitter.frame_number, hitter.action = 0, 8, 9
         hitter.user_force = server.progress_bar.frame * 0.01 + (server.progress_bar.action % 3) * 0.1
-        hitter.hit = hitter.user_force + float(hitter.BA) * random.randint(0, 3)
+        # hitter.hit = hitter.user_force + float(hitter.BA) * random.randint(0, 3)
         # hitter.hit = 0.6 # 항상 볼
         # hitter.hit = 0.3  # 항상 스트라이크
-        # hitter.hit = 1.1  # 항상 hit
+        hitter.hit = 1.1  # 항상 hit
 
     @staticmethod
     def exit(hitter, e):
@@ -622,6 +624,7 @@ class Hitter:
     image = None
     hit_sound = None
     catch_sound = None
+    out_sound = None
 
     def __init__(self, pos, name, hit, home_run, BA, OPS):
         # 위치, 현재 프레임, 현재 action, 프레임의 길이
@@ -655,6 +658,8 @@ class Hitter:
             Hitter.hit_sound.set_volume(32)
             Hitter.catch_sound = load_wav('resource/sound/catchsound.wav')
             Hitter.catch_sound.set_volume(32)
+            Hitter.out_sound = load_wav('resource/sound/out.mp3')
+            Hitter.out_sound.set_volume(20)
 
         # 상태 머신 추가
         self.state_machine = None

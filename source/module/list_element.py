@@ -52,6 +52,8 @@ class Element:
         self.image.clip_draw(int(self.is_selected) * 360, 0, 360, 90, self.x, self.y)
         draw_rectangle(*self.get_bb())
         if self.position == '투수':
-            self.font.draw(self.x - 170, self.y + 20, f'이름: {self.player.name}', (0, 0, 0))
+            self.font.draw(self.x - 170, self.y + 20, f'포지션: {self.position}, 이름: {self.player.name}', (0, 0, 0))
+            self.font.draw(self.x - 170, self.y - 20, f'탈삼진: {self.player.strike_out}, 볼넷: {self.player.four_balls}, ERA: {self.player.ERA}', (0, 0, 0))
         else:
-            self.font.draw(self.x - 170, self.y + 20, f'이름: {self.player.name}', (255, 0, 0))
+            self.font.draw(self.x - 170, self.y + 20, f'포지션: {self.position}, 이름: {self.player.name}', (255, 0, 0))
+            self.font.draw(self.x - 170, self.y - 20, f'타율: {self.player.BA}, 홈런: {self.player.home_run}, OPS: {self.player.OPS}', (255, 0, 0))

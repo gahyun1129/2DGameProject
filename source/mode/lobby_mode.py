@@ -96,6 +96,7 @@ def finish():
 
     server.select_pitcher_num = 0
     server.select_hitter_num = 0
+    server.bgm.stop()
 
 
 def update():

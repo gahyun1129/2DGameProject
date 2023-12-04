@@ -14,6 +14,10 @@ class Background:
         self.window_left = (self.image.w - self.cw) // 2
         self.window_bottom = 0
 
+        # self.bgm = load_music('resource/sound/background.mp3')
+        # self.bgm.set_volume(32)
+        # self.bgm.repeat_play()
+
     def update(self):
         self.window_left = int(server.ball.pos[0]) - self.cw // 2
         self.window_bottom = int(server.ball.pos[1]) - self.ch // 2

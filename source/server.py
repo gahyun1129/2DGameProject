@@ -40,3 +40,5 @@ prev_user_page = 1
 
 game_status = None
 is_end = False
+
+bgm = None

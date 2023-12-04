@@ -1,4 +1,4 @@
-from pico2d import load_image, load_font, draw_rectangle
+from pico2d import load_image, load_font, draw_rectangle, load_music, load_wav
 
 import game_framework
 import server
@@ -150,6 +150,7 @@ class Hit:
             if hitter.frame == 4:  # 배트 돌리는 장면의 frame: 4
                 game_world.update_handle_event(('HIT_SUCCESS', 0))  # 공과 수비수들은 각자의 자리를 향해 뜀
                 server.ui_ment.draw_ment_ui('hit')  # hit ui 출력
+                hitter.hit_sound.play()
             if hitter.frame == hitter.frame_number:
                 hitter.strike, hitter.ball = 0, 0
                 hitter.state_machine.handle_event(('HIT_SUCCESS', 0))  # 타자는 1루를 향해 뜀
@@ -617,6 +618,8 @@ state_machines = {
 ## 클래스 ##
 class Hitter:
     image = None
+    hit_sound = None
+    defence_sound = None
 
     def __init__(self, pos, name, hit, home_run, BA, OPS):
         # 위치, 현재 프레임, 현재 action, 프레임의 길이
@@ -646,6 +649,8 @@ class Hitter:
         # 이미지 로드
         if Hitter.image is None:
             Hitter.image = load_image('resource/image/animation.png')
+            Hitter.hit_sound = load_wav('resource/sound/hitsound.wav')
+            Hitter.hit_sound.set_volume(32)
 
         # 상태 머신 추가
         self.state_machine = None

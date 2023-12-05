@@ -1,6 +1,7 @@
 from pico2d import load_image
 from sdl2 import SDL_KEYDOWN, SDLK_SPACE
 
+import game_framework
 import server
 
 
@@ -28,7 +29,9 @@ class Idle:
 
     @staticmethod
     def do(pitcher):
-        pitcher.frame = (pitcher.frame + 1) % pitcher.frame_number
+        pitcher.frame = int(
+            (pitcher.frame + pitcher.frame_number * pitcher.ACTION_PER_TIME * game_framework.frame_time)
+            % pitcher.frame_number)
 
     @staticmethod
     def draw(pitcher):
@@ -57,9 +60,11 @@ class Throw:
 
     @staticmethod
     def do(pitcher):
-        pitcher.frame = pitcher.frame + 1
-
-        if pitcher.frame == pitcher.frame_number:
+        pitcher.frame = int(
+            (pitcher.frame + pitcher.frame_number * pitcher.ACTION_PER_TIME * game_framework.frame_time)
+                % pitcher.frame_number)
+        print(pitcher.frame, pitcher.frame_number, pitcher.ACTION_PER_TIME, game_framework.frame_time)
+        if pitcher.frame == 0:
             pitcher.state_machine.handle_event(('THROW_DONE', 0))
 
     @staticmethod
@@ -114,6 +119,9 @@ class Pitcher:
         # 이미지 로드
         if Pitcher.image is None:
             Pitcher.image = load_image('resource/image/animation.png')
+
+        self.TIME_PER_ACTION = 1.0
+        self.ACTION_PER_TIME = 1.0 / self.TIME_PER_ACTION
 
         # 상태 머신 추가
         self.state_machine = None

@@ -106,7 +106,8 @@ class HitterIdle:
 
     @staticmethod
     def do(hitter):
-        hitter.frame = (hitter.frame + 1) % hitter.frame_number
+        hitter.frame = int((hitter.frame + hitter.frame_number * hitter.ACTION_PER_TIME * game_framework.frame_time)
+                           % hitter.frame_number)
 
     @staticmethod
     def draw(hitter):
@@ -124,7 +125,8 @@ class RunnerIdle:
 
     @staticmethod
     def do(runner):
-        runner.frame = (runner.frame + 1) % runner.frame_number
+        runner.frame = int((runner.frame + runner.frame_number * runner.ACTION_PER_TIME * game_framework.frame_time)
+                           % runner.frame_number)
 
     @staticmethod
     def draw(runner):
@@ -148,7 +150,7 @@ class Hit:
     @staticmethod
     def do(hitter):
         if hitter.hit > 1:  # hit 성공
-            hitter.frame = hitter.frame + 1
+            hitter.frame = int((hitter.frame + hitter.frame_number * hitter.ACTION_PER_TIME * game_framework.frame_time))
             if hitter.frame == 4:  # 배트 돌리는 장면의 frame: 4
                 game_world.update_handle_event(('HIT_SUCCESS', 0))  # 공과 수비수들은 각자의 자리를 향해 뜀
                 server.ui_ment.draw_ment_ui('hit')  # hit ui 출력
@@ -208,7 +210,8 @@ class HitterRun:
     @staticmethod
     def do(hitter):
         # 프레임 넘기기
-        hitter.frame = (hitter.frame + 1) % hitter.frame_number
+        hitter.frame = int((hitter.frame + hitter.frame_number * hitter.ACTION_PER_TIME * game_framework.frame_time)
+                           % hitter.frame_number)
 
         # 직선 이동 방정식
         x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
@@ -283,14 +286,14 @@ class RunnerRun:
     @staticmethod
     def do(hitter):
         # 프레임 넘기기
-        hitter.frame = (hitter.frame + 1) % hitter.frame_number
+        hitter.frame = int((hitter.frame + hitter.frame_number * hitter.ACTION_PER_TIME * game_framework.frame_time)
+                           % hitter.frame_number)
 
         # 직선 이동 방정식
         x = (1 - hitter.t) * hitter.current_position[0] + hitter.t * hitter.goal_position[0]
         y = (1 - hitter.t) * hitter.current_position[1] + hitter.t * hitter.goal_position[1]
         hitter.pos = (x, y)
-        hitter.t += 0.1 * ((
-                                   hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
+        hitter.t += 0.1 * ((hitter.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 run_done 이벤트 발생
         if hitter.t > 1:
@@ -331,7 +334,8 @@ class DefenderIdle:
 
     @staticmethod
     def do(defender):
-        defender.frame = (defender.frame + 1) % defender.frame_number
+        defender.frame = int((defender.frame + defender.frame_number * defender.ACTION_PER_TIME * game_framework.frame_time)
+                           % defender.frame_number)
 
     @staticmethod
     def draw(defender):
@@ -373,14 +377,15 @@ class RunToBall:
     @staticmethod
     def do(defender):
         # 프레임 넘기기
-        defender.frame = (defender.frame + 1) % defender.frame_number
+        defender.frame = int((defender.frame + defender.frame_number * defender.ACTION_PER_TIME * game_framework.frame_time)
+                           % defender.frame_number)
 
         # 직선 이동 방정식
         x = (1 - defender.t) * defender.current_position[0] + defender.t * defender.goal_position[0]
         y = (1 - defender.t) * defender.current_position[1] + defender.t * defender.goal_position[1]
         defender.pos = (x, y)
         defender.t += 0.1 * (
-                    (defender.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
+                (defender.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
         if defender.t > 1:
@@ -409,14 +414,16 @@ class RunToDefencePos:
     @staticmethod
     def do(defender):
         # 프레임 넘기기
-        defender.frame = (defender.frame + 1) % defender.frame_number
+        defender.frame = int(
+            (defender.frame + defender.frame_number * defender.ACTION_PER_TIME * game_framework.frame_time)
+            % defender.frame_number)
 
         # 직선 이동 방정식
         x = (1 - defender.t) * defender.current_position[0] + defender.t * defender.goal_position[0]
         y = (1 - defender.t) * defender.current_position[1] + defender.t * defender.goal_position[1]
         defender.pos = (x, y)
         defender.t += 0.1 * (
-                    (defender.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
+                (defender.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
         if defender.t > 1:
@@ -449,14 +456,16 @@ class DefenderCatchBall:
     @staticmethod
     def do(defender):
         # 프레임 넘기기
-        defender.frame = (defender.frame + 1) % defender.frame_number
+        defender.frame = int(
+            (defender.frame + defender.frame_number * defender.ACTION_PER_TIME * game_framework.frame_time)
+            % defender.frame_number)
 
         # 직선 이동 방정식
         x = (1 - defender.t) * defender.current_position[0] + defender.t * defender.goal_position[0]
         y = (1 - defender.t) * defender.current_position[1] + defender.t * defender.goal_position[1]
         defender.pos = (x, y)
         defender.t += 0.1 * (
-                    (defender.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
+                (defender.RUN_SPEED_KMPH * 1000.0 / 60.0) / 60.0) * PIXEL_PER_METER * game_framework.frame_time
 
         # 직선 이동이 끝날 때 RUN_DONE 이벤트 발생
         if defender.t > 1:
@@ -646,7 +655,8 @@ class Hitter:
         self.strike, self.ball = 0, 0
 
         # 타자의 달리기 속도
-        self.RUN_SPEED_KMPH = random.randint(4, 8) / 10
+        self.RUN_SPEED_KMPH = self.TIME_PER_ACTION = random.randint(4, 8) / 10
+        self.ACTION_PER_TIME = 1.0 / self.TIME_PER_ACTION
 
         # 수비수의 base 위치
         self.base = None

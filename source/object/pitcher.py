@@ -135,3 +135,9 @@ class Pitcher:
 
     def build_behavior_tree(self):
         pass
+
+    def set_team_color(self, color):
+        if color == '파랑':
+            self.team_color = 13
+        elif color == '빨강':
+            self.team_color = 0

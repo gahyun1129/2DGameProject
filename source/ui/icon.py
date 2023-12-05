@@ -87,8 +87,8 @@ class Icon:
                 # 팀 구성 완료
                 for o in server.user_team_element:
                     player = copy.copy(o)
-                    player.set_team_color('파랑')
-                    make_team.user_players.append(player)
+                    player.player.set_team_color('파랑')
+                    make_team.user_players.append(player.player)
                 game_framework.change_mode(attack_mode)
 
             case 'exit':

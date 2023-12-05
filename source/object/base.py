@@ -44,7 +44,8 @@ class Base:
         pass
 
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        pass
+        # draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         sx, sy = self.pos[0] - server.background.window_left, self.pos[1] - server.background.window_bottom

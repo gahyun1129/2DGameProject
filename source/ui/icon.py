@@ -27,7 +27,7 @@ class Icon:
     def draw(self):
         if self.is_draw:
             self.image.draw(self.x, self.y, self.size_x, self.size_y)
-            draw_rectangle(*self.get_bb())
+            # draw_rectangle(*self.get_bb())
 
     def handle_collide(self):
         match self.name:

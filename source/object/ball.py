@@ -199,7 +199,7 @@ class Ball:
 
     def draw(self):
         self.state_machine.draw()
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         sx, sy = self.pos[0] - server.background.window_left, self.pos[1] - server.background.window_bottom

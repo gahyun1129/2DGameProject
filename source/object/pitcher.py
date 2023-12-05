@@ -48,6 +48,10 @@ class Throw:
         server.ui_ment.is_draw_number = False
         server.ui_judge.is_draw = False
         server.ui_judge.is_draw_number = False
+        if e[0] == 'PLAY_NOW' and e[1] == 'ball':
+            server.pitcher_ball = -0.3
+        if e[0] == 'PLAY_NOW' and e[1] == 'strike':
+            server.pitcher_ball = -0.5
 
     @staticmethod
     def exit(pitcher, e):

@@ -22,8 +22,6 @@ def handle_events():
             for o in game_world.objects[5]:
                 if game_world.collide_with_mouse(o, (event.x, 600 - 1 - event.y)):
                     o.handle_collide()
-        else:
-            server.cur_pitcher.handle_event(event)
 
 
 def init():

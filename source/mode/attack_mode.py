@@ -85,6 +85,9 @@ def finish():
     # 게임 오브젝트 모두 삭제
     game_world.clear()
     game_world.clear_collision_pairs()
+    for i in base.bases:
+        i.has_runner = False
+
     pass
 
 

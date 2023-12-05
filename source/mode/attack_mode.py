@@ -19,7 +19,8 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.push_mode(play_esc_mode)
         else:
-            server.cur_pitcher.handle_event(event)
+            if not server.progress_bar.is_hit:
+                server.cur_pitcher.handle_event(event)
 
 
 def init():

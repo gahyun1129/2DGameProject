@@ -170,6 +170,8 @@ class Hit:
                 server.progress_bar.frame = 0
                 server.progress_bar.action = 0
                 server.progress_bar.is_hit = False
+                server.ui_ball_icon.is_draw = True
+                server.ui_strike_icon.is_draw = True
                 hitter.state_machine.handle_event(('HIT_FAIL', 0))
         else:  # strike의 경우
             if server.ball.pos == home:
@@ -183,6 +185,8 @@ class Hit:
                 server.progress_bar.frame = 0
                 server.progress_bar.action = 0
                 server.progress_bar.is_hit = False
+                server.ui_ball_icon.is_draw = True
+                server.ui_strike_icon.is_draw = True
                 hitter.state_machine.handle_event(('HIT_FAIL', 0))
 
     @staticmethod

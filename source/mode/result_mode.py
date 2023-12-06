@@ -27,6 +27,7 @@ def finish():
     server.gameMgr.out_count = 0
     server.gameMgr.cur_inning = 1
     server.gameMgr.cur_inning_turn = 0
+    server.gameMgr.state = None
 
     server.gameMgr.user_score = 0
     server.gameMgr.com_score = 0

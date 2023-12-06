@@ -21,21 +21,13 @@ class GameManager:
         self.user_score = 0
         self.com_score = 0
 
-        self.attack_team = None
-        self.defence_team = None
-
         # 한 이닝에 관련한 데이터
         self.out_count = 0
 
         self.cur_hitter = None
         self.cur_pitcher = None
 
-        self.run_end = False
-        self.defence_end = False
-        self.hitter_run_end = False
         self.state = None
-
-        self.need_to_set_next_hitter = False
 
     def set_next_hitter(self, hitter):
         hitter.out_sound.play()
@@ -48,6 +40,7 @@ class GameManager:
 
     def out_situation(self):
         self.out_count = 0
+        self.state = None
         self.cur_inning_turn = (self.cur_inning_turn + 1) % 2  # turn = 0: attack_mode, 초 turn = 1: defence_mode, 말
         if self.cur_inning_turn == 0:
             self.cur_inning += 1

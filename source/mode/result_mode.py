@@ -53,7 +53,7 @@ def draw():
     font.draw(200, 180, f'{server.user_score}', (0, 0, 0))
     font.draw(520, 180, f'{server.com_score}', (0, 0, 0))
     if server.user_score > server.com_score:
-        font.draw(220, 420, f'victory', (0, 0, 0))
+        font.draw(100, 420, f'victory', (0, 0, 0))
     elif server.user_score < server.com_score:
         font.draw(220, 420, f'lose', (0, 0, 0))
     else:

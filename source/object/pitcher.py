@@ -49,9 +49,9 @@ class Throw:
         server.ui_judge.is_draw = False
         server.ui_judge.is_draw_number = False
         if e[0] == 'PLAY_NOW' and e[1] == 'ball':
-            server.pitcher_ball = -0.3
+            server.pitcher_ball = -0.2
         if e[0] == 'PLAY_NOW' and e[1] == 'strike':
-            server.pitcher_ball = -0.5
+            server.pitcher_ball = -0.4
 
     @staticmethod
     def exit(pitcher, e):
@@ -67,7 +67,7 @@ class Throw:
         pitcher.frame = int(
             (pitcher.frame + pitcher.frame_number * pitcher.ACTION_PER_TIME * game_framework.frame_time)
                 % pitcher.frame_number)
-        print(pitcher.frame, pitcher.frame_number, pitcher.ACTION_PER_TIME, game_framework.frame_time)
+        # print(pitcher.frame, pitcher.frame_number, pitcher.ACTION_PER_TIME, game_framework.frame_time)
         if pitcher.frame == 0:
             pitcher.state_machine.handle_event(('THROW_DONE', 0))
 

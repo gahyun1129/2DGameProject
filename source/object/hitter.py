@@ -138,7 +138,7 @@ class Hit:
     def enter(hitter, e):
         hitter.frame, hitter.frame_number, hitter.action = 0, 8, 9
         hitter.user_force = server.progress_bar.frame * 0.01 + (server.progress_bar.action % 3) * 0.1
-        hitter.hit = hitter.user_force + float(hitter.BA) * random.randint(0, 3) + server.pitcher_ball
+        hitter.hit = hitter.user_force + float(hitter.BA) * random.randint(1, 3) + server.pitcher_ball
         # hitter.hit = 0.6 # 항상 볼
         # hitter.hit = 0.3  # 항상 스트라이크
         # hitter.hit = 1.1  # 항상 hit
@@ -539,9 +539,9 @@ class StateMachineRunner:
 
     def draw(self):
         self.cur_state.draw(self.hitter)
-        sx, sy = self.hitter.pos[0] - server.background.window_left, self.hitter.pos[
-            1] - server.background.window_bottom
-        self.hitter.font.draw(sx - 10, sy + 50, f'{self.hitter.name}', (0, 0, 255))
+        # sx, sy = self.hitter.pos[0] - server.background.window_left, self.hitter.pos[
+        #     1] - server.background.window_bottom
+        # self.hitter.font.draw(sx - 10, sy + 50, f'{self.hitter.name}', (0, 0, 255))
 
 
 class StateMachineDefender:
@@ -575,9 +575,9 @@ class StateMachineDefender:
 
     def draw(self):
         self.cur_state.draw(self.hitter)
-        sx, sy = self.hitter.pos[0] - server.background.window_left, self.hitter.pos[
-            1] - server.background.window_bottom
-        self.hitter.font.draw(sx - 10, sy + 50, f'{self.hitter.name}', (255, 255, 0))
+        # sx, sy = self.hitter.pos[0] - server.background.window_left, self.hitter.pos[
+        #     1] - server.background.window_bottom
+        # self.hitter.font.draw(sx - 10, sy + 50, f'{self.hitter.name}', (255, 255, 0))
 
 
 class CatcherIdle:

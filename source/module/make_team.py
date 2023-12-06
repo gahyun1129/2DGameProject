@@ -78,7 +78,7 @@ def set_player_from_data_file():
 
 def defence_position(players):
     # com 팀 투수의 위치 잡기
-    server.cur_pitcher = players[0]
+    server.gameMgr.cur_pitcher = players[0]
     players[0].pos = mound
 
     # com 팀 타자 중 8명의 수비 위치 잡기
@@ -106,17 +106,16 @@ def defence_position(players):
 
 def attack_position(players):
     # user 팀 1번 타자의 공격 위치 잡기
-    server.cur_hitter = players[1]
-    server.cur_hitter.pos = attack_zone
-    server.cur_hitter.base = number_to_bases[attack_zone]
-    game_world.add_collision_pair('hitter:base', server.cur_hitter, None)
+    server.gameMgr.cur_hitter = players[1]
+    server.gameMgr.cur_hitter.pos = attack_zone
+    server.gameMgr.cur_hitter.base = number_to_bases[attack_zone]
+    game_world.add_collision_pair('hitter:base', server.gameMgr.cur_hitter, None)
 
     # user 팀 1번 타자 game_world list 에 넣어 렌더링 하기
     # game_world.objects[2]
-    game_world.add_object(server.cur_hitter, 2)
+    game_world.add_object(server.gameMgr.cur_hitter, 2)
 
     # state_machine 구동 하기
-    # 일단은 pitcher 상태 머신 구현 하기 전이니, hitter 만 구동함.
     # '인자' 의 값에 따라서 다른 타입의 상태 머신 작동.
 
     for o in game_world.objects[2]:
@@ -132,7 +131,7 @@ def search_next_hitter(hitter):
     cur_hitter = server.attack_team[next_hitter_index]
     cur_hitter.pos = attack_zone
     cur_hitter.base = number_to_bases[attack_zone]
-    game_world.add_collision_pair('hitter:base', server.cur_hitter, None)
+    game_world.add_collision_pair('hitter:base', cur_hitter, None)
     cur_hitter.init_state_machine('타자')
     game_world.add_object(cur_hitter, 2)
-    server.cur_hitter = cur_hitter
+    server.gameMgr.cur_hitter = cur_hitter

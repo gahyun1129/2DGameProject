@@ -60,39 +60,6 @@ def draw_hitter(hitter):
     hitter.image.clip_draw(hitter.frame * 100, (hitter.action + hitter.team_color) * 100, 100, 100, sx, sy)
 
 
-def set_next_hitter(hitter):
-    hitter.out_sound.play()
-    hitter.strike, hitter.ball = 0, 0
-    hitter.base.has_runner = False
-    make_team.search_next_hitter(server.cur_hitter)
-    game_world.remove_object(hitter)
-    if server.out_count == 3:
-        out_situation()
-
-
-def out_situation():
-    server.out_count = 0
-    server.cur_inning_turn = (server.cur_inning_turn + 1) % 2  # turn = 0: attack_mode, 초 turn = 1: defence_mode, 말
-    if server.cur_inning_turn == 0:
-        server.cur_inning += 1
-    if server.cur_inning == 10:
-        server.game_status = 'end'
-        print('게임 끝!!!!!!!')
-        # game_framework.change_mode(result_mode)
-        # 나중에 여기서 결과 모드로 바꾸면 될 듯
-    else:
-        server.ui_inning.frame = server.cur_inning - 1
-        server.ui_inning.size = 1
-        if server.cur_inning_turn == 0:
-            server.ui_inning.turn = 3
-            game_framework.change_mode(attack_mode)
-            server.ui_hitter_info.hitter_image = load_image('resource/image/hitter_red.png')
-        else:
-            server.ui_inning.turn = 2
-            game_framework.change_mode(defence_mode)
-            server.ui_hitter_info.hitter_image = load_image('resource/image/hitter_blue.png')
-
-
 ## 상태 ##
 class HitterIdle:
     @staticmethod
@@ -138,9 +105,9 @@ class Hit:
     def enter(hitter, e):
         hitter.frame, hitter.frame_number, hitter.action = 0, 8, 9
         hitter.user_force = server.progress_bar.frame * 0.01 + (server.progress_bar.action % 3) * 0.1
-        # hitter.hit = hitter.user_force * 2 + float(hitter.BA) * random.randint(0, 3) + server.pitcher_ball
-        # hitter.hit = 0.6 # 항상 볼
-        hitter.hit = 0.3  # 항상 스트라이크
+        hitter.hit = hitter.user_force * 2 + float(hitter.BA) * random.randint(0, 5) + server.pitcher_ball
+        # hitter.hit = 0.6  # 항상 볼
+        # hitter.hit = 0.3  # 항상 스트라이크
         # hitter.hit = 1.1  # 항상 hit
 
     @staticmethod
@@ -150,7 +117,8 @@ class Hit:
     @staticmethod
     def do(hitter):
         if hitter.hit > 1:  # hit 성공
-            hitter.frame = int((hitter.frame + hitter.frame_number * hitter.ACTION_PER_TIME * game_framework.frame_time // 2))
+            hitter.frame = int(
+                (hitter.frame + hitter.frame_number * hitter.ACTION_PER_TIME * game_framework.frame_time // 2))
             if hitter.frame == 4:  # 배트 돌리는 장면의 frame: 4
                 game_world.update_handle_event(('HIT_SUCCESS', 0))  # 공과 수비수들은 각자의 자리를 향해 뜀
                 server.ui_ment.draw_ment_ui('hit')  # hit ui 출력
@@ -161,28 +129,15 @@ class Hit:
         elif hitter.hit > 0.4:  # ball의 경우
             if server.ball.pos == home:
                 hitter.ball += 1  # ball 개수 추가
-                server.ui_ment.draw_ment_ui('ball', hitter.ball)  # ball ui 출력
-                hitter.catch_sound.play()
+                server.gameMgr.state = 'ball'
                 if hitter.ball == 4:  # 4 ball인 경우
-                    hitter.strike, hitter.ball = 0, 0
-                    for runner in game_world.objects[2]:
-                        runner.state_machine.handle_event(('FOUR_BALL', 0))  # 타자와 주자는 1루를 향해 뜀
-                server.gameMgr.run_end = True
-                server.gameMgr.defence_end = True
-                hitter.state_machine.handle_event(('HIT_FAIL', 0))
+                    server.gameMgr.state = 'four_ball'
         else:  # strike의 경우
             if server.ball.pos == home:
                 hitter.strike += 1  # strike 개수 추가
-                server.ui_ment.draw_ment_ui('strike', hitter.strike)  # strike ui 출력
-                hitter.catch_sound.play()
+                server.gameMgr.state = 'strike'
                 if hitter.strike == 3:  # 3 스트라이크인 경우
-                    server.out_count += 1
-                    server.ui_judge.draw_judge_ui('out', server.out_count)  # 아웃 ui 출력
-                    server.gameMgr.need_to_set_next_hitter = True
-                    # set_next_hitter(hitter)  # 현재 타자 삭제 후 다음 타자 렌더링
-                server.gameMgr.run_end = True
-                server.gameMgr.defence_end = True
-                hitter.state_machine.handle_event(('HIT_FAIL', 0))
+                    server.gameMgr.state = '3strike'
 
     @staticmethod
     def draw(hitter):
@@ -201,6 +156,8 @@ class HitterRun:
 
         number_to_bases[one_base].will_be_filled = True
         number_to_bases[one_base].cur_runner = hitter
+        number_to_bases[attack_zone].has_runner = True
+        hitter.event = e
 
     @staticmethod
     def exit(hitter, e):
@@ -230,6 +187,9 @@ class HitterRun:
             hitter.base = number_to_bases[one_base]
             hitter.base.has_runner = True
             hitter.base.will_be_filled = False
+            if hitter.event[0] == 'FOUR_BALL':
+                print('dddd')
+                server.gameMgr.state = 'set_hitter'
             hitter.init_state_machine('주자')
 
     @staticmethod
@@ -258,6 +218,7 @@ class RunnerRun:
 
         # four ball 경우 전 베이스에 주자가 없었다면 뛰지 않음.
         if e[0] == 'FOUR_BALL' and not number_to_bases[runner.base.prev_base].has_runner:
+            print(runner.base.prev_base)
             runner.state_machine.handle_event(('RUN_DONE', 0))
             runner.pass_ = True
 
@@ -277,10 +238,10 @@ class RunnerRun:
             # home 에 도착한 경우,,,
             if runner.base.pos == home:
                 # goal_runner 말고 점수 업데이트 해 줘야 할 것 같다...
-                if server.cur_inning_turn == 0:
-                    server.user_score += 1
+                if server.gameMgr.cur_inning_turn == 0:
+                    server.gameMgr.user_score += 1
                 else:
-                    server.com_score += 1
+                    server.gameMgr.com_score += 1
                 game_world.remove_object(runner)
 
     @staticmethod
@@ -313,29 +274,21 @@ class DefenderIdle:
     def exit(defender, e):
         if e[0] == 'SUPER_CATCH':
             print('아이들 상태, 한 번에 잡음', defender.name)
-            server.out_count += 1
-            server.ui_judge.draw_judge_ui('out', server.out_count)  # 아웃 ui 출력
-            set_next_hitter(server.cur_hitter)
-            server.ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
-            # 수비수 (투수 제외)
-            for o in game_world.objects[1][2:9]:
-                if o.pos is not o.defence_position:
-                    print('돌아감', o.name)
-                    o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
+            server.gameMgr.state = 'out'
         elif e[0] == 'THROW_TO_NEAR_BASE':
             print('아이들 상태, 가까운 베이스로 보내기', defender.name)
             server.ball.state_machine.handle_event(('THROW_TO_NEAR_BASE', defender))
             # 수비수 (투수 제외)
             for o in game_world.objects[1][2:9]:
                 if o.pos is not o.defence_position:
+                    print('공 잡으러 감', o.name)
                     o.state_machine.handle_event(('TO_CATCH_BALL', 0))
-                    print('돌아감', o.name)
-                    # o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
 
     @staticmethod
     def do(defender):
-        defender.frame = int((defender.frame + defender.frame_number * defender.ACTION_PER_TIME * game_framework.frame_time)
-                           % defender.frame_number)
+        defender.frame = int(
+            (defender.frame + defender.frame_number * defender.ACTION_PER_TIME * game_framework.frame_time)
+            % defender.frame_number)
 
     @staticmethod
     def draw(defender):
@@ -356,15 +309,7 @@ class RunToBall:
     def exit(defender, e):
         if e[0] == 'SUPER_CATCH':
             print('run 상태, 한 번에 잡음', defender.name)
-            server.out_count += 1
-            server.ui_judge.draw_judge_ui('out', server.out_count)  # 아웃 ui 출력
-            set_next_hitter(server.cur_hitter)
-            server.ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
-            # 수비수 (투수 제외)
-            for o in game_world.objects[1][2:9]:
-                if o.pos is not o.defence_position:
-                    print('한 번에 잡아서 돌아감', o.name)
-                    o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
+            server.gameMgr.state = 'out'
         elif e[0] == 'THROW_TO_NEAR_BASE':
             print('run 상태, 가까운 베이스로 보내기', defender.name)
             server.ball.state_machine.handle_event(('THROW_TO_NEAR_BASE', defender))
@@ -377,8 +322,9 @@ class RunToBall:
     @staticmethod
     def do(defender):
         # 프레임 넘기기
-        defender.frame = int((defender.frame + defender.frame_number * defender.ACTION_PER_TIME * game_framework.frame_time)
-                           % defender.frame_number)
+        defender.frame = int(
+            (defender.frame + defender.frame_number * defender.ACTION_PER_TIME * game_framework.frame_time)
+            % defender.frame_number)
 
         # 직선 이동 방정식
         x = (1 - defender.t) * defender.current_position[0] + defender.t * defender.goal_position[0]

@@ -7,6 +7,7 @@ from pico2d import *
 
 import game_world
 import mode.lobby_mode as lobby_mode
+import server
 import ui.icon as icon
 
 
@@ -28,6 +29,7 @@ def finish():
     game_world.remove_object(main_ui)
     game_world.remove_object(retry_icon)
     game_world.remove_object(exit_ui)
+    server.bgm.repeat_play()
 
 
 def update():

@@ -105,9 +105,9 @@ class Icon:
                 if self.is_draw:
                     server.ui_ball_icon.is_draw = False
                     server.ui_strike_icon.is_draw = False
-                    server.cur_pitcher.state_machine.handle_event(('PLAY_NOW', 'ball'))
+                    server.gameMgr.cur_pitcher.state_machine.handle_event(('PLAY_NOW', 'ball'))
             case 'strike':
                 if self.is_draw:
                     server.ui_ball_icon.is_draw = False
                     server.ui_strike_icon.is_draw = False
-                    server.cur_pitcher.state_machine.handle_event(('PLAY_NOW', 'strike'))
+                    server.gameMgr.cur_pitcher.state_machine.handle_event(('PLAY_NOW', 'strike'))

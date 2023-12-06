@@ -20,7 +20,7 @@ def handle_events():
             game_framework.push_mode(play_esc_mode)
         else:
             if not server.progress_bar.is_hit:
-                server.cur_pitcher.handle_event(event)
+                server.gameMgr.cur_pitcher.handle_event(event)
 
 
 def init():

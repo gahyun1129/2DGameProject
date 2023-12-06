@@ -60,7 +60,7 @@ class Throw:
         server.ball.is_collision = False
 
         # 공이 날아오면서 타자는 공을 치는 애니메이션 시작!
-        server.cur_hitter.state_machine.handle_event(('HIT_START', 0))
+        server.gameMgr.cur_hitter.state_machine.handle_event(('HIT_START', 0))
 
     @staticmethod
     def do(pitcher):

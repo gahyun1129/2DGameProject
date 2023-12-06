@@ -24,19 +24,19 @@ def init():
 
 
 def finish():
-    server.out_count = 0
-    server.cur_inning = 1
-    server.cur_inning_turn = 0
+    server.gameMgr.out_count = 0
+    server.gameMgr.cur_inning = 1
+    server.gameMgr.cur_inning_turn = 0
 
-    server.user_score = 0
-    server.com_score = 0
+    server.gameMgr.user_score = 0
+    server.gameMgr.com_score = 0
 
     server.attack_team.clear()
     server.defence_team.clear()
 
     server.is_end = False
-    server.cur_hitter = None
-    server.cur_pitcher = None
+    server.gameMgr.cur_hitter = None
+    server.gameMgr.cur_pitcher = None
 
     server.game_status = None
     pass
@@ -50,11 +50,11 @@ def update():
 def draw():
     clear_canvas()
     image.draw(400, 300)
-    font.draw(200, 180, f'{server.user_score}', (0, 0, 0))
-    font.draw(520, 180, f'{server.com_score}', (0, 0, 0))
-    if server.user_score > server.com_score:
+    font.draw(200, 180, f'{server.gameMgr.user_score}', (0, 0, 0))
+    font.draw(520, 180, f'{server.gameMgr.com_score}', (0, 0, 0))
+    if server.gameMgr.user_score > server.gameMgr.com_score:
         font.draw(100, 420, f'victory', (0, 0, 0))
-    elif server.user_score < server.com_score:
+    elif server.gameMgr.user_score < server.gameMgr.com_score:
         font.draw(220, 420, f'lose', (0, 0, 0))
     else:
         font.draw(220, 420, f'draw', (0, 0, 0))

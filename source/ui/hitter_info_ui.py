@@ -16,6 +16,6 @@ class HitterInfoUI:
 
     def draw(self):
         self.image.draw(120, 100)
-        self.font.draw(130, 115, f'{server.cur_hitter.name}', (0, 0, 0))
-        self.font.draw(150, 70, f'{server.cur_hitter.BA}', (0, 0, 0))
+        self.font.draw(130, 115, f'{server.gameMgr.cur_hitter.name}', (0, 0, 0))
+        self.font.draw(150, 70, f'{server.gameMgr.cur_hitter.BA}', (0, 0, 0))
         self.hitter_image.draw(70, 100)

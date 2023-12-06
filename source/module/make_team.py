@@ -128,6 +128,7 @@ def search_next_hitter(hitter):
     # 만약 index 가 list 의 최대 값인 9를 넘거나, 투수의 번호인 0이 아니게 1로 변경함.
     next_hitter_index = server.attack_team.index(hitter) + 1
     next_hitter_index = 1 if next_hitter_index == 10 else next_hitter_index
+    print(next_hitter_index)
     cur_hitter = server.attack_team[next_hitter_index]
     cur_hitter.pos = attack_zone
     cur_hitter.base = number_to_bases[attack_zone]

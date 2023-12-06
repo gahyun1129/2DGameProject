@@ -24,6 +24,7 @@ import ui.game_info_ui as game_info_ui
 import ui.icon as icon
 import ui.mini_map_ui as mini_map_ui
 import module.list_element as list_element
+import module.game_manager as game_manager
 
 import mode.attack_mode as attack_mode
 import mode.defence_mode as defence_mode
@@ -33,10 +34,13 @@ def init():
     global background_image
     background_image = load_image('resource/image/lobby.png')
 
+    # 게임 데이터 관련 모든 것을 담은 클래스
+    server.gameMgr = game_manager.GameManager()
+
     # 데이터 읽어 오기
     make_team.set_player_from_data_file()
 
-    # com 팀과 user 팀 선수 랜덤 으로 정하기
+    # com 팀 선수 랜덤 으로 정하기
     make_team.make_team()
 
     # 공격에 사용될 공 생성
@@ -130,7 +134,7 @@ def handle_events():
                     o.handle_collide()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_a:
             make_team.make_auto_team()
-            game_framework.change_mode(attack_mode)
+            game_framework.change_mode(defence_mode)
 
 
 def pause():

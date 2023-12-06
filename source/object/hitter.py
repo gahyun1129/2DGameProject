@@ -138,9 +138,9 @@ class Hit:
     def enter(hitter, e):
         hitter.frame, hitter.frame_number, hitter.action = 0, 8, 9
         hitter.user_force = server.progress_bar.frame * 0.01 + (server.progress_bar.action % 3) * 0.1
-        hitter.hit = hitter.user_force + float(hitter.BA) * random.randint(1, 3) + server.pitcher_ball
+        # hitter.hit = hitter.user_force * 2 + float(hitter.BA) * random.randint(0, 3) + server.pitcher_ball
         # hitter.hit = 0.6 # 항상 볼
-        # hitter.hit = 0.3  # 항상 스트라이크
+        hitter.hit = 0.3  # 항상 스트라이크
         # hitter.hit = 1.1  # 항상 hit
 
     @staticmethod
@@ -150,7 +150,7 @@ class Hit:
     @staticmethod
     def do(hitter):
         if hitter.hit > 1:  # hit 성공
-            hitter.frame = int((hitter.frame + hitter.frame_number * hitter.ACTION_PER_TIME * game_framework.frame_time))
+            hitter.frame = int((hitter.frame + hitter.frame_number * hitter.ACTION_PER_TIME * game_framework.frame_time // 2))
             if hitter.frame == 4:  # 배트 돌리는 장면의 frame: 4
                 game_world.update_handle_event(('HIT_SUCCESS', 0))  # 공과 수비수들은 각자의 자리를 향해 뜀
                 server.ui_ment.draw_ment_ui('hit')  # hit ui 출력
@@ -167,11 +167,8 @@ class Hit:
                     hitter.strike, hitter.ball = 0, 0
                     for runner in game_world.objects[2]:
                         runner.state_machine.handle_event(('FOUR_BALL', 0))  # 타자와 주자는 1루를 향해 뜀
-                server.progress_bar.frame = 0
-                server.progress_bar.action = 0
-                server.progress_bar.is_hit = False
-                server.ui_ball_icon.is_draw = True
-                server.ui_strike_icon.is_draw = True
+                server.gameMgr.run_end = True
+                server.gameMgr.defence_end = True
                 hitter.state_machine.handle_event(('HIT_FAIL', 0))
         else:  # strike의 경우
             if server.ball.pos == home:
@@ -181,12 +178,10 @@ class Hit:
                 if hitter.strike == 3:  # 3 스트라이크인 경우
                     server.out_count += 1
                     server.ui_judge.draw_judge_ui('out', server.out_count)  # 아웃 ui 출력
-                    set_next_hitter(hitter)  # 현재 타자 삭제 후 다음 타자 렌더링
-                server.progress_bar.frame = 0
-                server.progress_bar.action = 0
-                server.progress_bar.is_hit = False
-                server.ui_ball_icon.is_draw = True
-                server.ui_strike_icon.is_draw = True
+                    server.gameMgr.need_to_set_next_hitter = True
+                    # set_next_hitter(hitter)  # 현재 타자 삭제 후 다음 타자 렌더링
+                server.gameMgr.run_end = True
+                server.gameMgr.defence_end = True
                 hitter.state_machine.handle_event(('HIT_FAIL', 0))
 
     @staticmethod
@@ -227,7 +222,7 @@ class HitterRun:
             # 위치를 확실히 하기 위해 한 번 더 정의
             hitter.pos = hitter.goal_position
 
-            make_team.search_next_hitter(hitter)
+            # make_team.search_next_hitter(hitter)
 
             # hitter의 base 업데이트 하기
             if hitter.base.cur_runner == hitter:

@@ -65,6 +65,7 @@ def init():
 def update():
     game_world.handle_collisions()
     game_world.update()
+    server.gameMgr.update()
     match server.game_status:
         case 'end':
             server.game_status = None

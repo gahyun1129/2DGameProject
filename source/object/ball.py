@@ -54,7 +54,6 @@ class Throw:
             ball.pos = home
             x = random.randint(100, 900)
             y = random.randint(300, 800)
-            # x, y = 700, 100
             ball.goal_position = (x, y)
 
         # 공이 다시 마운드, 투수에게로 돌아가는 상황
@@ -71,29 +70,27 @@ class Throw:
 
     @staticmethod
     def exit(ball, e):
-        if ball.event[0] == 'THROW_TO_NEAR_BASE' or ball.event[0] == 'BACK_TO_MOUND':
-            if ball.event[0] == 'THROW_TO_NEAR_BASE':
-                if number_to_bases[ball.goal_position].collisionObj == 'defender':
-                    print('ball - 수비수가 먼저 도착')
-                    server.out_count += 1
-                    server.ui_judge.draw_judge_ui('out', server.out_count)  # 아웃 ui 출력
-                    hitter.set_next_hitter(number_to_bases[server.ball.goal_position].cur_runner)
-                    server.ball.pos = mound
-                else:
-                    server.ui_judge.draw_judge_ui('safe')
-                # 수비수 (투수 제외)
-                for o in game_world.objects[1][2:9]:
-                    if o.pos is not o.defence_position:
-                        print('공 잡으러 갔다가 돌아감',  o.name, o.state_machine.cur_state)
-                        o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
-                number_to_bases[ball.goal_position].collisionObj = None
-                number_to_bases[ball.goal_position].check_collision = False
+        if ball.event[0] == 'THROW_TO_NEAR_BASE':
+            if number_to_bases[ball.goal_position].collisionObj == 'defender':
+                print('ball - 수비수가 먼저 도착')
+                server.out_count += 1
+                server.ui_judge.draw_judge_ui('out', server.out_count)  # 아웃 ui 출력
+                server.gameMgr.need_to_set_next_hitter = True
+                # hitter.set_next_hitter(number_to_bases[server.ball.goal_position].cur_runner)
+                ball.state_machine.handle_event(('BACK_TO_MOUND', 0))
+            else:
+                server.ui_judge.draw_judge_ui('safe')
                 server.ball.pos = mound
-            server.progress_bar.frame = 0
-            server.progress_bar.action = 0
-            server.progress_bar.is_hit = False
-            server.ui_ball_icon.is_draw = True
-            server.ui_strike_icon.is_draw = True
+                server.gameMgr.defence_end = True
+            # 수비수 (투수, 포수 제외)
+            for o in game_world.objects[1][2:9]:
+                if o.pos is not o.defence_position:
+                    # print('공 잡으러 갔다가 돌아감',  o.name, o.state_machine.cur_state)
+                    o.state_machine.handle_event(('BACK_TO_DEFENCE', 0))
+            number_to_bases[ball.goal_position].collisionObj = None
+            number_to_bases[ball.goal_position].check_collision = False
+        elif ball.event[0] == 'BACK_TO_MOUND':
+            server.gameMgr.defence_end = True
 
     @staticmethod
     def do(ball):

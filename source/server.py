@@ -48,3 +48,5 @@ is_end = False
 bgm = None
 
 pitcher_ball = 0
+
+gameMgr = None

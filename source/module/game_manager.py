@@ -40,7 +40,6 @@ class GameManager:
 
     def out_situation(self):
         self.out_count = 0
-        self.state = None
         self.cur_inning_turn = (self.cur_inning_turn + 1) % 2  # turn = 0: attack_mode, 초 turn = 1: defence_mode, 말
         if self.cur_inning_turn == 0:
             self.cur_inning += 1
@@ -128,4 +127,5 @@ class GameManager:
                 pass
             case 'set_next':
                 self.set_ui()
+                self.state = None
                 pass
